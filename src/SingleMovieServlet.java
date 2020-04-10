@@ -51,7 +51,7 @@ public class SingleMovieServlet extends HttpServlet {
 					"and stars_in_movies.movieId=movies.id " +
 					"and stars_in_movies.starId=stars.id " +
 					"and ratings.movieId=movies.id " +
-					"and movies.id='tt0378947';";
+					"and movies.id='" + id + "'";
 
 			ResultSet rs = statement.executeQuery(query);
 
