@@ -61,7 +61,13 @@ function handleResult(resultData) {
     rowHTML += "<th>" + resultData[0]["movie_title"] + "</th>";
     rowHTML += "<th>" + resultData[0]["movie_year"] + "</th>";
     rowHTML += "<th>" + resultData[0]["movie_director"] + "</th>";
-    rowHTML += "</tr>";
+    rowHTML += "<th>" + resultData[0]["movie_genres"] + "</th>";
+    rowHTML += "<th>" + resultData[0]["movie_stars"] + "</th>";
+    rowHTML += "<th>" + resultData[0]["movie_rating"] + "</th>";
+    // rowHTML += "</tr>";
+    console.log(resultData[0]["movie_director"]);
+    console.log(resultData[0]["movie_genres"]);
+    console.log(resultData[0]["movie_stars"]);
 
     // Append the row created to the table body, which will refresh the page
     movieTableBodyElement.append(rowHTML);

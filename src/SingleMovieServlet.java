@@ -32,7 +32,6 @@ public class SingleMovieServlet extends HttpServlet {
 
 		// Retrieve parameter id from url request.
 		String id = request.getParameter("id");
-
 		System.out.println("id: " + id);
 
 		// Output stream to STDOUT
@@ -43,38 +42,30 @@ public class SingleMovieServlet extends HttpServlet {
 			Connection dbcon = dataSource.getConnection();
 
 			Statement statement = dbcon.createStatement();
-			System.out.println("id: " + id);
-			// Construct a query with parameter represented by "?"
-			String query= "SELECT movies.title from movies where movies.id=" + id;
-			System.out.println("check1");
-			ResultSet rs = statement.executeQuery(query);
-			ResultSetMetaData rsmd = rs.getMetaData();
-			System.out.println("querying SELECT * FROM XXX");
-			int columnsNumber = rsmd.getColumnCount();
-			while (rs.next()) {
-				for (int i = 1; i <= columnsNumber; i++) {
-					if (i > 1) System.out.print(",  ");
-					String columnValue = rs.getString(i);
-					System.out.print(columnValue + " " + rsmd.getColumnName(i));
-				}
-				System.out.println("");
-			}
 
-			String movie_title = rs.getString("title");
-			System.out.println("title: " + movie_title);
+			// Construct a query with parameter represented by "?"
+			String query = "select movies.title, movies.year, movies.director, group_concat(distinct genres.name) as genres, group_concat(distinct stars.name) as stars,ratings.rating " +
+					"from movies, genres, stars,stars_in_movies,genres_in_movies,ratings " +
+					"where movies.id = genres_in_movies.movieId " +
+					"and genres_in_movies.genreId=genres.id " +
+					"and stars_in_movies.movieId=movies.id " +
+					"and stars_in_movies.starId=stars.id " +
+					"and ratings.movieId=movies.id " +
+					"and movies.id='tt0378947';";
+
+			ResultSet rs = statement.executeQuery(query);
 
 			JsonArray jsonArray = new JsonArray();
 
 			// Iterate through each row of rs
 			while (rs.next())
 			{
-				//String movie_title = rs.getString("title");
+				String movie_title = rs.getString("title");
 				String movie_year = rs.getString("year");
 				String movie_director = rs.getString("director");
+				String movie_genres = rs.getString("genres");
+				String movie_stars = rs.getString("stars");
 				String movie_rating = rs.getString("rating");
-				String movie_genres=rs.getString("genres");
-				String movie_stars=rs.getString("stars");
-
 
 				// Create a JsonObject based on the data we retrieve from rs
 
@@ -82,9 +73,9 @@ public class SingleMovieServlet extends HttpServlet {
 				jsonObject.addProperty("movie_title", movie_title);
 				jsonObject.addProperty("movie_year", movie_year);
 				jsonObject.addProperty("movie_director", movie_director);
-				jsonObject.addProperty("movie_rating", movie_rating);
 				jsonObject.addProperty("movie_genres", movie_genres);
 				jsonObject.addProperty("movie_stars", movie_stars);
+				jsonObject.addProperty("movie_rating", movie_rating);
 				jsonArray.add(jsonObject);
 
 			}
