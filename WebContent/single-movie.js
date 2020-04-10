@@ -65,16 +65,24 @@ function handleResult(resultData) {
 
     // stars hyperlinks
     rowHTML += "<th>";
+
     var stars_array = resultData[0]["movie_stars"].split(',');
-    for (let i = 0; i < stars_array.length; ++i) {
-        rowHTML +=
-            // Add a link to single-star.html
-            '<a href="single-star.html?name=' + stars_array[i] + '">'
-            + stars_array[i] + ','    // display star_name for the link text
-            '</a>';
+    for (let i = 0; i < stars_array.length; ++i)
+    {
+        if(i==stars_array.length-1)
+        {
+            rowHTML +=
+                '<a href="single-star.html?name=' + stars_array[i] + '">'  + stars_array[i]
+                + '</a>';
+        }
+        else {
+            rowHTML +=
+                '<a href="single-star.html?name=' + stars_array[i] + '">'
+                + stars_array[i] + ',' +   // display star_name for the link text
+                '</a>';
+        }
     }
     rowHTML += "</th>";
-    // rowHTML += "<th>" + resultData[0]["movie_stars"] + "</th>";
 
     rowHTML += "<th>" + resultData[0]["movie_rating"] + "</th>";
     // rowHTML += "</tr>";

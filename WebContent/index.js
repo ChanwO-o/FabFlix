@@ -7,7 +7,7 @@ function handleMovieResult(resultData) {
     // Iterate through resultData, no more than 20 entries
     for (let i = 0; i < Math.min(20, resultData.length); i++)
     {
-
+        console.log('aaaa');
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
         rowHTML += "<tr>";
@@ -26,7 +26,29 @@ function handleMovieResult(resultData) {
         for (i = 0; i < 3; ++i) {
             rowHTML += "<th>" + '<a href="single-movie.html?id=' + resultData[i]['movie_stars'] + '">' + resultData[i]["movie_stars"] + "</th>";
         }*/
-        rowHTML += "<th>" + resultData[i]["movie_stars"] + "</th>";
+
+
+        // stars hyperlinks
+        rowHTML += "<th>";
+        var stars_array = resultData[i]["movie_stars"].split(',');
+        console.log(stars_array);
+        for (let j = 0; j < stars_array.length; ++j) {
+            if(j==stars_array.length-1)
+            {
+                rowHTML +=
+                    '<a href="single-star.html?name=' + stars_array[j] + '">'  + stars_array[j]
+                + '</a>';
+            }
+            else {
+                rowHTML +=
+                    '<a href="single-star.html?name=' + stars_array[j] + '">'
+                    + stars_array[j] + ',' +   // display star_name for the link text
+                    '</a>';
+            }
+        }
+        rowHTML += "</th>";
+        // rowHTML += "<th>" + resultData[i]["movie_stars"] + "</th>";
+
         rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
         rowHTML += "</tr>";
 
