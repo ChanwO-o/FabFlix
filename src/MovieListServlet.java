@@ -41,9 +41,10 @@ public class MovieListServlet extends HttpServlet {
             // Declare our statement
             Statement statement = dbcon.createStatement();
 
-            String query = "select * from movies, ratings " +
-                    "where movies.id=ratings.movieId order by rating desc limit 20";
-
+            String query = "select movies.title,movies.year,movies.director,ratings.rating,substring_index(group_concat(distinct genres.name separator ','), ',', 3) as genres, " +
+                    "substring_index(group_concat(distinct stars.name separator ','), ',', 3) as stars from movies inner join genres_in_movies" +
+                    " on movies.id=genres_in_movies.movieId inner join ratings on ratings.movieId=movies.id inner join genres on genres.id=genres_in_movies.genreId " +
+                    "inner join stars_in_movies on movies.id=stars_in_movies.movieId inner join stars on stars_in_movies.starId=stars.id group by movies.id order by rating desc limit 20";
             // Perform the query
             ResultSet rs = statement.executeQuery(query);
 
@@ -51,13 +52,15 @@ public class MovieListServlet extends HttpServlet {
 
             // Iterate through each row of rs
 
-            while (rs.next()) {
+            while (rs.next())
+            {
 
                 String movie_title = rs.getString("title");
                 String movie_year = rs.getString("year");
                 String movie_director = rs.getString("director");
                 String movie_rating = rs.getString("rating");
-                String movie_id=rs.getString("id");
+                String movie_genres=rs.getString("genres");
+                String movie_stars=rs.getString("stars");
 
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
@@ -65,6 +68,8 @@ public class MovieListServlet extends HttpServlet {
                 jsonObject.addProperty("movie_year", movie_year);
                 jsonObject.addProperty("movie_director", movie_director);
                 jsonObject.addProperty("movie_rating", movie_rating);
+                jsonObject.addProperty("movie_genres", movie_genres);
+                jsonObject.addProperty("movie_stars", movie_stars);
                 jsonArray.add(jsonObject);
 
             }
