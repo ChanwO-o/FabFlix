@@ -15,8 +15,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 
-// Declaring a WebServlet called MovieListServlet, which maps to url "/api/stars"
-@WebServlet(name = "MovieListServlet", urlPatterns = "/api/stars")
+// Declaring a WebServlet called MovieListServlet, which maps to url "/api/movies"
+@WebServlet(name = "MovieListServlet", urlPatterns = "/api/movies")
 public class MovieListServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -41,7 +41,7 @@ public class MovieListServlet extends HttpServlet {
             // Declare our statement
             Statement statement = dbcon.createStatement();
 
-            String query = "select movies.title,movies.year,movies.director,ratings.rating,substring_index(group_concat(distinct genres.name separator ','), ',', 3) as genres, " +
+            String query = "select movies.id,movies.title,movies.year,movies.director,ratings.rating,substring_index(group_concat(distinct genres.name separator ','), ',', 3) as genres, " +
                     "substring_index(group_concat(distinct stars.name separator ','), ',', 3) as stars from movies inner join genres_in_movies" +
                     " on movies.id=genres_in_movies.movieId inner join ratings on ratings.movieId=movies.id inner join genres on genres.id=genres_in_movies.genreId " +
                     "inner join stars_in_movies on movies.id=stars_in_movies.movieId inner join stars on stars_in_movies.starId=stars.id group by movies.id order by rating desc limit 20";
@@ -54,7 +54,7 @@ public class MovieListServlet extends HttpServlet {
 
             while (rs.next())
             {
-
+                String movie_id=rs.getString("id");
                 String movie_title = rs.getString("title");
                 String movie_year = rs.getString("year");
                 String movie_director = rs.getString("director");
@@ -64,6 +64,7 @@ public class MovieListServlet extends HttpServlet {
 
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("movie_id", movie_id);
                 jsonObject.addProperty("movie_title", movie_title);
                 jsonObject.addProperty("movie_year", movie_year);
                 jsonObject.addProperty("movie_director", movie_director);
