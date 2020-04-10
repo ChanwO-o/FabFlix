@@ -15,13 +15,13 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 
-// Declaring a WebServlet called StarsServlet, which maps to url "/api/stars"
-@WebServlet(name = "StarsServlet", urlPatterns = "/api/stars")
-public class StarsServlet extends HttpServlet {
+// Declaring a WebServlet called MovieListServlet, which maps to url "/api/stars"
+@WebServlet(name = "MovieListServlet", urlPatterns = "/api/stars")
+public class MovieListServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     // Create a dataSource which registered in web.xml
-    @Resource(name = "jdbc/moviedbexample")
+    @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
 
     /**
@@ -41,7 +41,8 @@ public class StarsServlet extends HttpServlet {
             // Declare our statement
             Statement statement = dbcon.createStatement();
 
-            String query = "SELECT * from stars";
+            String query = "select * from movies, ratings " +
+                    "where movies.id=ratings.movieId order by rating desc limit 20";
 
             // Perform the query
             ResultSet rs = statement.executeQuery(query);
@@ -49,18 +50,23 @@ public class StarsServlet extends HttpServlet {
             JsonArray jsonArray = new JsonArray();
 
             // Iterate through each row of rs
+
             while (rs.next()) {
-                String star_id = rs.getString("id");
-                String star_name = rs.getString("name");
-                String star_dob = rs.getString("birthYear");
+
+                String movie_title = rs.getString("title");
+                String movie_year = rs.getString("year");
+                String movie_director = rs.getString("director");
+                String movie_rating = rs.getString("rating");
+                String movie_id=rs.getString("id");
 
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("star_id", star_id);
-                jsonObject.addProperty("star_name", star_name);
-                jsonObject.addProperty("star_dob", star_dob);
-
+                jsonObject.addProperty("movie_title", movie_title);
+                jsonObject.addProperty("movie_year", movie_year);
+                jsonObject.addProperty("movie_director", movie_director);
+                jsonObject.addProperty("movie_rating", movie_rating);
                 jsonArray.add(jsonObject);
+
             }
             
             // write JSON string to output
