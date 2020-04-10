@@ -21,27 +21,21 @@ function handleMovieResult(resultData) {
         rowHTML += "<th>" + resultData[i]["movie_year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["movie_director"] + "</th>";
         rowHTML += "<th>" + resultData[i]["movie_genres"] + "</th>";
-        /*let s = resultData[i]["movie_stars"];
-
-        for (i = 0; i < 3; ++i) {
-            rowHTML += "<th>" + '<a href="single-movie.html?id=' + resultData[i]['movie_stars'] + '">' + resultData[i]["movie_stars"] + "</th>";
-        }*/
-
-
         // stars hyperlinks
         rowHTML += "<th>";
         var stars_array = resultData[i]["movie_stars"].split(',');
+        var stars_id_array=resultData[i]["star_id"].split(',');
         console.log(stars_array);
-        for (let j = 0; j < stars_array.length; ++j) {
-            if(j==stars_array.length-1)
+        for (let j = 0; j < 3; ++j) {
+            if(j==2)
             {
                 rowHTML +=
-                    '<a href="single-star.html?name=' + stars_array[j] + '">'  + stars_array[j]
+                    '<a href="single-star.html?id=' + stars_id_array[j] + '">'  + stars_array[j]
                 + '</a>';
             }
             else {
                 rowHTML +=
-                    '<a href="single-star.html?name=' + stars_array[j] + '">'
+                    '<a href="single-star.html?id=' + stars_id_array[j] + '">'
                     + stars_array[j] + ',' +   // display star_name for the link text
                     '</a>';
             }
