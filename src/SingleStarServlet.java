@@ -44,7 +44,7 @@ public class SingleStarServlet extends HttpServlet {
             Statement statement = dbcon.createStatement();
 
             // Construct a query with parameter represented by "?"
-            String query = "SELECT stars.name, stars.birthYear,group_concat(distinct movies.title) as movie_lists FROM movies, stars_in_movies, stars " +
+            String query = "SELECT stars.name, stars.birthYear, group_concat(movies.id) as id,group_concat(distinct movies.title) as movie_lists FROM movies, stars_in_movies, stars " +
                     "where stars.id='" + id + "' " +
                     "and movies.id=stars_in_movies.movieId and stars.id=stars_in_movies.starId group by stars.id";
 
@@ -58,7 +58,7 @@ public class SingleStarServlet extends HttpServlet {
                 String star_name = rs.getString("name");
                 String star_dob = rs.getString("birthYear");
                 String star_movies = rs.getString("movie_lists");
-
+                String movie_id=rs.getString("id");
 
                 // Create a JsonObject based on the data we retrieve from rs
 
@@ -66,6 +66,7 @@ public class SingleStarServlet extends HttpServlet {
                 jsonObject.addProperty("star_name", star_name);
                 jsonObject.addProperty("star_dob", star_dob);
                 jsonObject.addProperty("star_movies", star_movies);
+                jsonObject.addProperty("movie_id",movie_id);
                 jsonArray.add(jsonObject);
 
             }

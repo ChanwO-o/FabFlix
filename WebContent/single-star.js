@@ -42,23 +42,22 @@ function handleResult(resultData) {
     rowHTML += "<tr>";
     rowHTML += "<th>" + resultData[0]["star_name"] + "</th>";
     rowHTML += "<th>" + resultData[0]["star_dob"] + "</th>";
-    rowHTML += "<th>" + resultData[0]["star_movies"] + "</th>";
     // stars hyperlinks
     rowHTML += "<th>";
-
-    var stars_array = resultData[0]["star_movies"].split(',');
-    for (let i = 0; i < stars_array.length; ++i)
+    var movie_array=resultData[0]["star_movies"].split(',');
+    var movie_id_array = resultData[0]["movie_id"].split(',');
+    for (let i = 0; i < movie_array.length; ++i)
     {
-        if(i==stars_array.length-1)
+        if(i==movie_array.length-1)
         {
             rowHTML +=
-                '<a href="single-movie.html?name=' + stars_array[i] + '">'  + stars_array[i]
+                '<a href="single-movie.html?id=' + movie_id_array[i] + '">'  + movie_array[i]
                 + '</a>';
         }
         else {
             rowHTML +=
-                '<a href="single-movie.html?name=' + stars_array[i] + '">'
-                + stars_array[i] + ',' +   // display star_name for the link text
+                '<a href="single-movie.html?id=' + movie_id_array[i] + '">'
+                + movie_array[i] + ',' +   // display star_name for the link text
                 '</a>';
         }
     }

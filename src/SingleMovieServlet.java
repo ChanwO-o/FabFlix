@@ -44,7 +44,7 @@ public class SingleMovieServlet extends HttpServlet {
 			Statement statement = dbcon.createStatement();
 
 			// Construct a query with parameter represented by "?"
-			String query = "select movies.title, movies.year, movies.director, stars.id as stars_id, group_concat(distinct genres.name) as genres, group_concat(distinct stars.name) as stars,ratings.rating " +
+			String query = "select movies.title, movies.year, movies.director, group_concat(stars.id) as stars_id, group_concat(distinct genres.name) as genres, group_concat(stars.name) as stars,ratings.rating " +
 					"from movies, genres, stars,stars_in_movies,genres_in_movies,ratings " +
 					"where movies.id = genres_in_movies.movieId " +
 					"and genres_in_movies.genreId=genres.id " +
