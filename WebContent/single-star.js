@@ -74,8 +74,9 @@ function handleResult(resultData) {
  */
 
 // Get id from URL
-let star_id = getParameterByName('star.id');
+let star_id = getParameterByName('id');
 
+console.log(star_id);
 // Makes the HTTP GET request and registers on success callback function handleResult
 jQuery.ajax({
     dataType: "json",  // Setting return data type

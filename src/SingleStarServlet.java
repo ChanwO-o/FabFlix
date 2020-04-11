@@ -26,12 +26,13 @@ public class SingleStarServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        System.out.println("asdfasdfasdf");
 
         response.setContentType("application/json"); // Response mime type
 
         // Retrieve parameter id from url request.
-        String starid = request.getParameter("id");
-        System.out.println("id: " + starid);
+        String id = request.getParameter("id");
+        System.out.println("id: " + id);
 
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
@@ -44,7 +45,7 @@ public class SingleStarServlet extends HttpServlet {
 
             // Construct a query with parameter represented by "?"
             String query = "SELECT stars.name, stars.birthYear,group_concat(distinct movies.title) as movie_lists FROM movies, stars_in_movies, stars " +
-                    "where stars.id='" + starid + "' " +
+                    "where stars.id='" + id + "' " +
                     "and movies.id=stars_in_movies.movieId and stars.id=stars_in_movies.starId group by stars.id";
 
             ResultSet rs = statement.executeQuery(query);
