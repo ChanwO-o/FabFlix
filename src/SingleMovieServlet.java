@@ -44,7 +44,7 @@ public class SingleMovieServlet extends HttpServlet {
 			Statement statement = dbcon.createStatement();
 
 			// Construct a query with parameter represented by "?"
-			String query = "select movies.title, movies.year, movies.director, stars.id, group_concat(distinct genres.name) as genres, group_concat(distinct stars.name) as stars,ratings.rating " +
+			String query = "select movies.title, movies.year, movies.director, stars.id as stars_id, group_concat(distinct genres.name) as genres, group_concat(distinct stars.name) as stars,ratings.rating " +
 					"from movies, genres, stars,stars_in_movies,genres_in_movies,ratings " +
 					"where movies.id = genres_in_movies.movieId " +
 					"and genres_in_movies.genreId=genres.id " +
@@ -66,6 +66,7 @@ public class SingleMovieServlet extends HttpServlet {
 				String movie_genres = rs.getString("genres");
 				String movie_stars = rs.getString("stars");
 				String movie_rating = rs.getString("rating");
+				String stars_id=rs.getString("stars_id");
 
 				// Create a JsonObject based on the data we retrieve from rs
 
@@ -76,6 +77,7 @@ public class SingleMovieServlet extends HttpServlet {
 				jsonObject.addProperty("movie_genres", movie_genres);
 				jsonObject.addProperty("movie_stars", movie_stars);
 				jsonObject.addProperty("movie_rating", movie_rating);
+				jsonObject.addProperty("stars_id",stars_id);
 				jsonArray.add(jsonObject);
 
 			}

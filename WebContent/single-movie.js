@@ -50,17 +50,18 @@ function handleResult(resultData) {
     rowHTML += "<th>";
 
     var stars_array = resultData[0]["movie_stars"].split(',');
+    var stars_id_array=resultData[0]["stars_id"].split(',');
     for (let i = 0; i < stars_array.length; ++i)
     {
         if(i==stars_array.length-1)
         {
             rowHTML +=
-                '<a href="single-star.html?name=' + stars_array[i] + '">'  + stars_array[i]
+                '<a href="single-star.html?id=' + stars_id_array[i] + '">'  + stars_array[i]
                 + '</a>';
         }
         else {
             rowHTML +=
-                '<a href="single-star.html?name=' + stars_array[i] + '">'
+                '<a href="single-star.html?id=' + stars_id_array[i] + '">'
                 + stars_array[i] + ',' +   // display star_name for the link text
                 '</a>';
         }
@@ -83,7 +84,7 @@ function handleResult(resultData) {
  */
 
 // Get id from URL
-let movie_id = getParameterByName('movie.id');
+let movie_id = getParameterByName('id');
 
 // Makes the HTTP GET request and registers on success callback function handleResult
 jQuery.ajax({

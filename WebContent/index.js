@@ -7,7 +7,7 @@ function handleMovieResult(resultData) {
     // Iterate through resultData, no more than 20 entries
     for (let i = 0; i < Math.min(20, resultData.length); i++)
     {
-        console.log('aaaa');
+        console.log("id: ", resultData[i]['movie_id']);
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
         rowHTML += "<tr>";
