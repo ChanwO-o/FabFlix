@@ -1,26 +1,75 @@
-<!-- This page will be seen if you logged in -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Fablix</title>
+    <title>Page Title</title>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="layout.css" />
+    <link rel="stylesheet" href="common.css" />
+    <link rel="stylesheet" href="navigation.css" />
 </head>
-<body>
-Welcome to Fablix!
-<p id="sessionID"></p>
-<p id="lastAccessTime"></p>
-<form ACTION="#" id="cart" METHOD="get">
-    <label>Item Purchased</label>
-    <br>
-    <label>
-        <input name="item" required="required" type="text">
-    </label>
-    <input type="submit" VALUE="add">
-</form>
-<div id="item_list"></div>
 
-<!-- include your own JS file -->
-<script src='https://code.jquery.com/jquery-3.1.0.min.js'></script>
-<script type='text/javascript' src='mainpage.js'></script>
+<body>
+<!-- header -->
+<div id="header">
+    <div class="header_inner">
+        Fablix
+    </div>
+</div>
+
+<div id="logout">
+    <div class ="log_out">
+        <ul class="menu_list">
+            <li class="home">
+                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='mainpage.html'" >Home</button>
+            </li>
+            <li class="Search">
+                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='search.html'" >Search</button>
+            </li>
+            <li class="Cart">
+                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='index.html'" >Cart</button>
+            </li>
+            <li class="logout">
+                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='login.html'" >Logout</button>
+            </li>
+        </ul>
+
+    </div>
+</div>
+<!-- // header -->
+
+<!-- contents -->
+<div id="content" class="clearfix">
+    <div class="section_main">
+        <div class="section">section</div>
+        <div class="article">article</div>
+    </div>
+
+    <div class="aside">
+        aside
+    </div>
+</div>
+<!-- // contents -->
+
+<!-- footer -->
+<div id="footer">
+    <div class="footer_inner">
+        footer
+    </div>
+</div>
+<!-- // footer -->
+
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
