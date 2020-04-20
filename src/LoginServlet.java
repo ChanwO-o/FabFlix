@@ -27,9 +27,6 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        /* This example only allows username/password to be test/test
-        /  in the real project, you should talk to the database to verify username/password
-        */
         try
         {
             Connection dbcon = dataSource.getConnection();
@@ -37,27 +34,49 @@ public class LoginServlet extends HttpServlet {
 
             String query = "SELECT email, password from customers";
             ResultSet rs = statement.executeQuery(query);
-            rs.next();
-            String temp = rs.getString("email");
-            System.out.println(temp);
+            boolean emailSuccess = false;
+            boolean pwSuccess =false;
+            while(rs.next())
+            {
+                String email_list = rs.getString("email");
+                String pw_list = rs.getString("password");
+                if(emailSuccess==true)
+                    break;
+                if(username.equals(email_list))
+                {
+                    emailSuccess = true;
+                    if(password.equals(pw_list))
+                    {
+                        pwSuccess=true;
+                    }
+                    else
+                    {
+                        pwSuccess=false;
+                    }
+                }
+
+            }
             JsonObject responseJsonObject = new JsonObject();
-            if (username.equals("anteater") && password.equals("123456")) {
+
+            if (emailSuccess && pwSuccess)
+            {
                 // Login success:
-
                 // set this user into the session
-                request.getSession().setAttribute("user", new User(username));
-
+                request.getSession().setAttribute("email", new User(username));
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "success");
 
-            } else {
+            }
+            else
+            {
                 // Login fail
                 responseJsonObject.addProperty("status", "fail");
-
-                // sample error messages. in practice, it is not a good idea to tell user which one is incorrect/not exist.
-                if (!username.equals("anteater")) {
+                if (!emailSuccess)
+                {
                     responseJsonObject.addProperty("message", "user " + username + " doesn't exist");
-                } else {
+                }
+                else
+                {
                     responseJsonObject.addProperty("message", "incorrect password");
                 }
             }
