@@ -3,12 +3,14 @@
 <head>
     <title>Page Title</title>
     <link rel="stylesheet" href="reset.css" />
-    <link rel="stylesheet" href="layout.css" />
+    <link rel="stylesheet" href="mainpage.css" />
     <link rel="stylesheet" href="common.css" />
-    <link rel="stylesheet" href="navigation.css" />
+    <link rel="stylesheet" href="search.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
-<body>
+<body bgcolor= #ffe4c4>
+
 <!-- header -->
 <div id="header">
     <div class="header_inner">
@@ -19,20 +21,19 @@
 <div id="logout">
     <div class ="log_out">
         <ul class="menu_list">
-            <li class="home">
-                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='mainpage.html'" >Home</button>
-            </li>
-            <li class="Search">
-                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='search.html'" >Search</button>
+            <li class="logout">
+                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='login.html'" >Logout</button>
             </li>
             <li class="Cart">
                 <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='index.html'" >Cart</button>
             </li>
-            <li class="logout">
-                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='login.html'" >Logout</button>
+            <li class="Search">
+                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='search.html'" >Search</button>
+            </li>
+            <li class="home">
+                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='mainpage.html'" >Home</button>
             </li>
         </ul>
-
     </div>
 </div>
 <!-- // header -->
@@ -40,8 +41,17 @@
 <!-- contents -->
 <div id="content" class="clearfix">
     <div class="section_main">
-        <div class="section">section</div>
-        <div class="article">article</div>
+        <div class="search">Search movies
+            <!-- The form -->
+            <form class="example" action="mainpage.html">
+                <input type="text" placeholder="Search.." name="search">
+                <button type="submit"><i class="fa fa-search" onclick="location.href='mainpage.html'" ></i></button>
+            </form>
+            Advanced Search Options
+            Title:
+
+        </div>
+        <div class="browse">Browsing</div>
     </div>
 
     <div class="aside">
