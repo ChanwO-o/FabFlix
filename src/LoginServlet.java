@@ -24,7 +24,7 @@ public class LoginServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
-        String username = request.getParameter("username");
+        String email = request.getParameter("email");
         String password = request.getParameter("password");
 
         try
@@ -42,7 +42,7 @@ public class LoginServlet extends HttpServlet {
                 String pw_list = rs.getString("password");
                 if(emailSuccess==true)
                     break;
-                if(username.equals(email_list))
+                if(email.equals(email_list))
                 {
                     emailSuccess = true;
                     if(password.equals(pw_list))
@@ -62,7 +62,7 @@ public class LoginServlet extends HttpServlet {
             {
                 // Login success:
                 // set this user into the session
-                request.getSession().setAttribute("email", new User(username));
+                request.getSession().setAttribute("email", new User(email));
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "success");
 
@@ -73,7 +73,7 @@ public class LoginServlet extends HttpServlet {
                 responseJsonObject.addProperty("status", "fail");
                 if (!emailSuccess)
                 {
-                    responseJsonObject.addProperty("message", "user " + username + " doesn't exist");
+                    responseJsonObject.addProperty("message", "user " + email + " doesn't exist");
                 }
                 else
                 {
