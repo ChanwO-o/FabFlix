@@ -1,8 +1,12 @@
 @charset "UTF-8";
 
+body {
+    background-image: url('movie-background.jpg');
+}
+
 /* layout */
 #header{
-    background: lightblue;
+    background: none;
     height: 100px;
     margin-bottom: 20px;
 }
