@@ -41,14 +41,46 @@
 <!-- contents -->
 <div id="content" class="clearfix">
     <div class="section_main">
-        <div class="search">Search movies
-            <!-- The form -->
-            <form class="example" action="mainpage.html">
-                <input type="text" placeholder="Search.." name="search">
-                <button type="submit"><i class="fa fa-search" onclick="location.href='mainpage.html'" ></i></button>
-            </form>
-            Advanced Search Options
-            Title:
+        <div class="search">
+
+            <!-- General Search -->
+            <div class="generalsearch">
+                <h2>Search movies</h2>
+                <form class="example" action="mainpage.html">
+                    <input type="text" placeholder="Search.." name="search">
+                    <button type="submit"><i class="fa fa-search" onclick="location.href='mainpage.html'" ></i></button>
+                </form>
+            </div>
+            <!-- End General Search -->
+
+            <!-- Advanced Search -->
+            <div class="advancedsearch">
+                <h2>Advanced Search Options</h2>
+                <br>
+                <form class="example" action="mainpage.html">
+                    <input type="text" placeholder="Title" name="search">
+                    <input type="text" placeholder="Year" name="search">
+                    <input type="text" placeholder="Director" name="search">
+                    <input type="text" placeholder="Star" name="search">
+                    <button type="submit"><i class="fa fa-search" onclick="location.href='mainpage.html'" >Advanced Search</i></button>
+                </form>
+
+<!--                <form method="POST" action="#">-->
+<!--                    <div class="input-group">-->
+<!--                        <label class="label">Title:</label>-->
+<!--                        <input class="input&#45;&#45;style-1" type="text" name="title" placeholder="Name of movie" required="required">-->
+<!--                        <label class="label">Year:</label>-->
+<!--                        <input class="input&#45;&#45;style-1" type="number" name="year" placeholder="Year released">-->
+<!--                        <label class="label">Director:</label>-->
+<!--                        <input class="input&#45;&#45;style-1" type="text" name="director" placeholder="Name of director">-->
+<!--                        <label class="label">Star:</label>-->
+<!--                        <input class="input&#45;&#45;style-1" type="text" name="star" placeholder="Name of featured star">-->
+<!--                    </div>-->
+<!--                    <button class="btn-submit" type="submit">Advanced Search</button>-->
+<!--                </form>-->
+
+            </div>
+            <!-- End Advanced Search -->
 
         </div>
         <div class="browse">Browsing</div>

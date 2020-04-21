@@ -2,6 +2,14 @@
     box-sizing: border-box;
 }
 
+.generalsearch {
+    margin: 30px;
+}
+
+.advancedsearch {
+    margin: 30px;
+}
+
 /* Style the search field */
 form.example input[type=text] {
     padding: 10px;
