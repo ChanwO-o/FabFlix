@@ -9,39 +9,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
-<body bgcolor= #ffe4c4>
+<body>
 
 <!-- header -->
 <div id="header">
-    <div class="header_inner">
-        Fablix
-    </div>
+    Fablix
 </div>
 
 <div id="logout">
-    <div class ="log_out">
-        <ul class="menu_list">
-            <li class="logout">
-                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='login.html'" >Logout</button>
-            </li>
-            <li class="Cart">
-                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='index.html'" >Cart</button>
-            </li>
-            <li class="Search">
-                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='search.html'" >Search</button>
-            </li>
-            <li class="home">
-                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='mainpage.html'" >Home</button>
-            </li>
-        </ul>
-    </div>
+
+    <ul class="menu_list">
+        <li class="logout">
+            <button type="button" class="btn btn-primary" style="color: black; width:100px; height:40px; margin-left:10px;" onclick="location.href='login.html'" >Logout</button>
+        </li>
+        <li class="Cart">
+            <button type="button" class="btn btn-primary" style="color: black; width:100px; height:40px; margin-left:10px;" onclick="location.href='index.html'" >Cart</button>
+        </li>
+        <li class="Search">
+            <button type="button" class="btn btn-primary" style=" color: black; width:100px; height:40px; margin-left:10px;" onclick="location.href='search.html'" >Search</button>
+        </li>
+        <li class="home">
+            <button type="button" class="btn btn-primary" style=" color: black; width:100px; height:40px; margin-left:10px;" onclick="location.href='mainpage.html'" >Home</button>
+        </li>
+    </ul>
+
 </div>
 <!-- // header -->
 
 <!-- contents -->
 <div id="content" class="clearfix">
     <div class="section_main">
-        <div class="search">
+        <div class="search_section">
 
             <!-- General Search -->
             <div class="generalsearch">
@@ -58,10 +56,10 @@
                 <h2>Advanced Search Options</h2>
                 <br>
                 <form class="example" action="mainpage.html">
-                    <input type="text" placeholder="Title" name="search">
-                    <input type="text" placeholder="Year" name="search">
-                    <input type="text" placeholder="Director" name="search">
-                    <input type="text" placeholder="Star" name="search">
+                    <input type="text" placeholder="Title" name="title">
+                    <input type="text" placeholder="Year" name="year">
+                    <input type="text" placeholder="Director" name="director">
+                    <input type="text" placeholder="Star" name="star">
                     <button type="submit"><i class="fa fa-search" onclick="location.href='mainpage.html'" >Advanced Search</i></button>
                 </form>
 
@@ -83,22 +81,12 @@
             <!-- End Advanced Search -->
 
         </div>
-        <div class="browse">Browsing</div>
     </div>
 
-    <div class="aside">
-        aside
-    </div>
 </div>
 <!-- // contents -->
 
-<!-- footer -->
-<div id="footer">
-    <div class="footer_inner">
-        footer
-    </div>
-</div>
-<!-- // footer -->
+
 
 </body>
 </html>
