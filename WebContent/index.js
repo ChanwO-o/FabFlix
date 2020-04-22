@@ -52,28 +52,23 @@ function handleMovieResult(resultData) {
 }
 
 
-const mySearchParams = new URLSearchParams();
-for (const [key, value] of mySearchParams.entries()) {
-    console.log(key, value);
-}
-console.log(window.location.href);
-
-// let queryString = "";
-// queryString += 'title:' + mySearchParams.get('title');
-// queryString += 'year:' + mySearchParams.get('year');
-// queryString += 'director:' + mySearchParams.get('director');
-// queryString += 'star:' + mySearchParams.get('star');
-// let title = mySearchParams.get('title');
-// queryString += 'year:' + mySearchParams.get('year');
-// queryString += 'director:' + mySearchParams.get('director');
-// queryString += 'star:' + mySearchParams.get('star');
-// console.log(title);
+let queryString = window.location.href.split('?')[1];
+console.log(queryString);
+let title = queryString.split('&')[0].substr(6);
+let year = queryString.split('&')[1].substr(5);
+let director = queryString.split('&')[2].substr(9);
+let star = queryString.split('&')[3].substr(5);
 
 // Makes the HTTP GET request and registers on success callback function handleMovieResult
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
     url: "api/movies",
-
+    data: {
+        title: title,
+        year: year,
+        director: director,
+        star: star
+    },
     success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
 });

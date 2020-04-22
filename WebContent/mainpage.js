@@ -58,24 +58,6 @@ function handleCartInfo(cartEvent) {
     });
 }
 
-/**
- * Submit advanced search form
- */
-function submitAdvancedSearchForm(searchEvent) {
-    console.log("submit advanced search form");
-    searchEvent.preventDefault();
-    $.ajax("api/movies", {
-        method: "GET",
-        data: advancedsearch_form.serialize(),
-        success: handleSearchSubmit
-    });
-}
-
-function handleSearchSubmit(resultDataString) {
-    console.log("success submit advanced search form");
-    window.location.replace("index.html");
-}
-
 $.ajax("api/mainpage", {
     method: "GET",
     success: handleSessionData
@@ -83,4 +65,3 @@ $.ajax("api/mainpage", {
 
 // Bind the submit action of the forms to a event handler function
 cart.submit(handleCartInfo);
-// advancedsearch_form.submit(submitAdvancedSearchForm);
