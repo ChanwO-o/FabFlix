@@ -123,13 +123,13 @@ public class MovieListServlet extends HttpServlet {
                         "inner join stars on stars_in_movies.starId=stars.id" ;
 
                 if(!title.isEmpty())
-                    query+=" and movies.title like '" + title+ "%' ";
+                    query+=" and movies.title like '%" + title+ "%' ";
                 if(!year.isEmpty())
                     query+=" and movies.year = " + year;
                 if(!director.isEmpty())
-                    query+=" and movies.director like '" + director + "%' ";
+                    query+=" and movies.director like '%" + director + "%' ";
                 if(!star.isEmpty())
-                    query+=" and stars.name like '" + star + "%' ";
+                    query+=" and stars.name like '%" + star + "%' ";
 
                 query+=" group by movies.id order by rating desc";
                 System.out.println(query);
