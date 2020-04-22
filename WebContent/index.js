@@ -51,10 +51,29 @@ function handleMovieResult(resultData) {
     }
 }
 
+
+const mySearchParams = new URLSearchParams();
+for (const [key, value] of mySearchParams.entries()) {
+    console.log(key, value);
+}
+console.log(window.location.href);
+
+// let queryString = "";
+// queryString += 'title:' + mySearchParams.get('title');
+// queryString += 'year:' + mySearchParams.get('year');
+// queryString += 'director:' + mySearchParams.get('director');
+// queryString += 'star:' + mySearchParams.get('star');
+// let title = mySearchParams.get('title');
+// queryString += 'year:' + mySearchParams.get('year');
+// queryString += 'director:' + mySearchParams.get('director');
+// queryString += 'star:' + mySearchParams.get('star');
+// console.log(title);
+
 // Makes the HTTP GET request and registers on success callback function handleMovieResult
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
     url: "api/movies",
+
     success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
 });

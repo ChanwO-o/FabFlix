@@ -55,27 +55,13 @@
             <div class="advancedsearch">
                 <h2>Advanced Search Options</h2>
                 <br>
-                <form class="example" action="mainpage.html">
+                <form id="advancedsearch_form" class="example" method="GET" action="index.html">
                     <input type="text" placeholder="Title" name="title">
                     <input type="text" placeholder="Year" name="year">
                     <input type="text" placeholder="Director" name="director">
                     <input type="text" placeholder="Star" name="star">
-                    <button type="submit"><i class="fa fa-search" onclick="location.href='mainpage.html'" >Advanced Search</i></button>
+                    <button type="submit"><i class="fa fa-search"> Advanced Search</i></button>
                 </form>
-
-<!--                <form method="POST" action="#">-->
-<!--                    <div class="input-group">-->
-<!--                        <label class="label">Title:</label>-->
-<!--                        <input class="input&#45;&#45;style-1" type="text" name="title" placeholder="Name of movie" required="required">-->
-<!--                        <label class="label">Year:</label>-->
-<!--                        <input class="input&#45;&#45;style-1" type="number" name="year" placeholder="Year released">-->
-<!--                        <label class="label">Director:</label>-->
-<!--                        <input class="input&#45;&#45;style-1" type="text" name="director" placeholder="Name of director">-->
-<!--                        <label class="label">Star:</label>-->
-<!--                        <input class="input&#45;&#45;style-1" type="text" name="star" placeholder="Name of featured star">-->
-<!--                    </div>-->
-<!--                    <button class="btn-submit" type="submit">Advanced Search</button>-->
-<!--                </form>-->
 
             </div>
             <!-- End Advanced Search -->
@@ -86,7 +72,10 @@
 </div>
 <!-- // contents -->
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="mainpage.js"></script>
 
 </body>
 </html>

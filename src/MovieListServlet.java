@@ -31,6 +31,13 @@ public class MovieListServlet extends HttpServlet {
 
         response.setContentType("application/json"); // Response mime type
 
+        // Retrieve parameters from url request
+        String title = request.getParameter("title");
+        String year = request.getParameter("year");
+        String director = request.getParameter("director");
+        String star = request.getParameter("star");
+        System.out.println("received params: " + title + " " + year + " " + director + " " + star + " ");
+
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
