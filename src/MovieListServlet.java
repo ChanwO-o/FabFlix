@@ -45,7 +45,7 @@ public class MovieListServlet extends HttpServlet
         System.out.println("received genres: " + genres);
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
-        if (genres == null || genres == "")
+        if (genres == null || genres == "") //check browse by genres
         {
             if ((title == null || title.equals("")) && (year == null || year.equals("")) &&
                     (director == null || director.equals("")) && (star == null || star.equals("")))
@@ -280,7 +280,7 @@ public class MovieListServlet extends HttpServlet
                 out.close();
             }
         }
-        else
+        else //browse by genres query on
         {
             try {
                 // Get a connection from dataSource
@@ -312,9 +312,10 @@ public class MovieListServlet extends HttpServlet
                     String movie_stars = rs.getString("stars");
 
                     // Create a JsonObject based on the data we retrieve from rs
-                    System.out.println(movie_genres);
-                    System.out.println(genres);
+                    System.out.println("movie_genres:" + movie_genres);
+                    //System.out.println("Genres that query gives:" +genres);
                     if(movie_genres.contains(genres)) {
+                        //System.out.println(movie_genres);
                         JsonObject jsonObject = new JsonObject();
                         jsonObject.addProperty("movie_id", movie_id);
                         jsonObject.addProperty("star_id", star_id);
