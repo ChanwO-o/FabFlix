@@ -3,8 +3,9 @@
 <head>
     <title>Page Title</title>
     <link rel="stylesheet" href="reset.css" />
-    <link rel="stylesheet" href="mainpage.css" />
     <link rel="stylesheet" href="common.css" />
+    <link rel="stylesheet" href="mainpage.css" />
+
     <link rel="stylesheet" href="search.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -13,24 +14,24 @@
 
 <!-- header -->
 <div id="header">
-    Fablix
+    <span class="gradtext">FabFlix</span>
 </div>
 
 <div id="logout">
 
     <ul class="menu_list">
-        <li class="logout">
-            <button type="button" class="btn btn-primary" style="color: black; width:100px; height:40px; margin-left:10px;" onclick="location.href='login.html'" >Logout</button>
-        </li>
-        <li class="Cart">
-            <button type="button" class="btn btn-primary" style="color: black; width:100px; height:40px; margin-left:10px;" onclick="location.href='index.html'" >Cart</button>
-        </li>
-        <li class="Search">
-            <button type="button" class="btn btn-primary" style=" color: black; width:100px; height:40px; margin-left:10px;" onclick="location.href='search.html'" >Search</button>
-        </li>
+
         <li class="home">
-            <button type="button" class="btn btn-primary" style=" color: black; width:100px; height:40px; margin-left:10px;" onclick="location.href='mainpage.html'" >Home</button>
+            <button type="button" class="btn_home" onclick="location.href='mainpage.html'" >Home</button>
         </li>
+
+        <li class="Cart">
+            <button type="button" class="btn_cart"  onclick="location.href='index.html'" >Cart</button>
+        </li>
+        <li class="logout">
+            <button type="button" class="btn_logout"  onclick="location.href='login.html'" >Logout</button>
+        </li>
+
     </ul>
 
 </div>
@@ -70,29 +71,55 @@
     </div>
 
 </div>
-
 <div id="content2" class="clearfix">
-    <h2>Browser</h2>
+    <h2 style = "margin:40px 0px 0px 40px">Browser</h2>
     <br>
     <div class = "genres">
+        <h2 style="text-align: center"> Browse by Genres </h2>
+        <br>
         <ul class="genre_list">
-            <a href="index.html" > Action </a> <a href="index.html"> Adult </a> <a href="index.html"> Adventure </a> <a href="index.html"> Animation </a>
+            <a href="index.html?genres=Action" > Action </a> <a href="index.html?genres=Adult"> Adult </a> <a href="index.html?genres=Adventure"> Adventure </a>
+            <a href="index.html?genres=Animation"> Animation </a>
             <br>
-            <a href="index.html"> Biography </a> <a href="index.html"> Comedy </a> <a href="index.html"> Crime </a> <a href="index.html"> Documentary </a>
+            <a href="index.html?genres=Biography"> Biography </a> <a href="index.html?genres=Comedy"> Comedy </a> <a href="index.html?genres=Crime"> Crime </a>
+            <a href="index.html?genres=Documentary"> Documentary </a>
             <br>
-            <a href = "index.html"> Drama</a><a href = "index.html"> Family</a> <a href = "index.html"> Fantasy</a> <a href = "index.html"> History</a>
+            <a href = "index.html?genres=Drama"> Drama</a><a href = "index.html?genres=Family"> Family</a> <a href = "index.html?genres=Fantasy"> Fantasy</a>
+            <a href = "index.html?genres=History"> History</a>
             <br>
-            <a href="index.html" > Horror </a> <a href="index.html"> Music </a> <a href="index.html"> Musical </a> <a href="index.html"> Mystery </a>
+            <a href="index.html?genres=Horror" > Horror </a> <a href="index.html?genres=Music"> Music </a> <a href="index.html?genres=Musical"> Musical </a> <a href="index.html?genres=Mystery"> Mystery </a>
             <br>
-            <a href="index.html"> Reality-TV </a> <a href="index.html"> Romance </a> <a href="index.html"> Sci-Fi </a> <a href="index.html"> Sport </a>
+            <a href="index.html?genres=Reality-TV"> Reality-TV </a> <a href="index.html?genres=Romance"> Romance </a> <a href="index.html?genres=Sci-Fi"> Sci-Fi </a>
+            <a href="index.html?genres=Sport"> Sport </a>
             <br>
-            <a href = "index.html"> Thriller </a><a href = "index.html"> War </a> <a href = "index.html"> Western </a>
-
-
+            <a href = "index.html?genres=Thriller"> Thriller </a><a href = "index.html?genres=War"> War </a> <a href = "index.html?genres=Western"> Western </a>
 
         </ul>
     </div>
+    <div class = "movie_title" >
+        <h2 style="text-align: center"> Browse by Movie Title </h2>
+        <br>
+        <table class="movie_title_list">
+            <td valign="top" style="text-align:center">
+                <a href="index.html?title_start=0"> 0 </a>  |  <a href="index.html?title_start=1"> 1 </a>  |  <a href="index.html?title_start=2"> 2 </a>  |
+                <a href="index.html?title_start=3"> 3 </a>  |  <a href="index.html?title_start=4"> 4 </a>  |
+                <a href="index.html?title_start=5"> 5 </a>  |  <a href="index.html?title_start=6"> 6 </a>  |  <a href="index.html?title_start=7"> 7 </a>  |
+                <a href="index.html?title_start=8"> 8 </a>  |  <a href="index.html?title_start=9"> 9 </a>  |
+                <br>
+                <a href="index.html?title_start=A"> A </a>  |  <a href="index.html?title_start=B"> B </a>  |  <a href="index.html?title_start=C"> C </a>  |  <a href="index.html"> D </a>  |  <a href="index.html"> E </a>  |
+                <a href="index.html"> F </a>  |  <a href="index.html"> G </a>  |  <a href="index.html"> H </a>  |  <a href="index.html"> I </a>  |  <a href="index.html"> J </a>  |
+                <br>
+                <a href="index.html"> K </a>  |  <a href="index.html"> L </a>  |  <a href="index.html"> M </a>  |  <a href="index.html"> N </a>  |  <a href="index.html"> O </a>  |
+                <a href="index.html"> P </a>  |  <a href="index.html"> Q </a>  |  <a href="index.html"> R </a>  |  <a href="index.html"> S </a>  |
+                <br>
+                <a href="index.html"> T </a>  |  <a href="index.html"> U </a>  |  <a href="index.html"> V </a>  |  <a href="index.html"> W </a>  |  <a href="index.html"> X </a>  |
+                <a href="index.html"> Y </a>  |  <a href="index.html"> Z </a>  |  <a href="index.html"> * </a>  |
+
+            </td>
+        </table>
+    </div>
 </div>
+
 <!-- // contents -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

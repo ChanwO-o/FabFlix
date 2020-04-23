@@ -20,6 +20,7 @@ function handleMovieResult(resultData) {
             "</th>";
         rowHTML += "<th>" + resultData[i]["movie_year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["movie_director"] + "</th>";
+
         rowHTML += "<th>" + resultData[i]["movie_genres"] + "</th>";
         // stars hyperlinks
         rowHTML += "<th>";
@@ -50,46 +51,85 @@ function handleMovieResult(resultData) {
         movieTableBodyElement.append(rowHTML);
     }
 }
+function getParameterByName(target) {
+    // Get request URL
+    let url = window.location.href;
+    // Encode target parameter name to url encoding
+    target = target.replace(/[\[\]]/g, "\\$&");
 
+    // Ues regular expression to find matched parameter value
+    let regex = new RegExp("[?&]" + target + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
 
-let queryString = window.location.href.split('?');
-console.log(queryString.length);
+    // Return the decoded parameter value
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 
-if(queryString.length > 1) {
+let title_start=getParameterByName('title_start');
+console.log(title_start);
 
-    let params = queryString[1].split('&');
-    if (params.length > 0) {
-        let title = params[0].substr(6);
-        let year = params[1].substr(5);
-        let director = params[2].substr(9);
-        let star = params[3].substr(5);
+if(title_start.length >0)
+{
+    jQuery.ajax({
+        dataType: "json",  // Setting return data type
+        method: "GET",// Setting request method
+        url: "api/movies?title_start=" + title_start,
+        success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+    });
+}
+else
+{
+    let test = getParameterByName('genres');
+    if(test.length >1)
+    {
         jQuery.ajax({
-            dataType: "json", // Setting return data type
-            method: "GET", // Setting request method
-            url: "api/movies",
-            data: {
-                title: title,
-                year: year,
-                director: director,
-                star: star
-            },
-            success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
+            dataType: "json",  // Setting return data type
+            method: "GET",// Setting request method
+            url: "api/movies?genres=" + test,
+            success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
         });
     }
     else {
-        jQuery.ajax({
-            dataType: "json", // Setting return data type
-            method: "GET", // Setting request method
-            url: "api/movies",
-            success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
-        });
+        let queryString = window.location.href.split('?');
+        console.log(queryString);
+
+        if (queryString.length > 1) {
+
+            let params = queryString[1].split('&');
+            if (params.length > 0) {
+                let title = params[0].substr(6);
+                let year = params[1].substr(5);
+                let director = params[2].substr(9);
+                let star = params[3].substr(5);
+                jQuery.ajax({
+                    dataType: "json", // Setting return data type
+                    method: "GET", // Setting request method
+                    url: "api/movies",
+                    data: {
+                        title: title,
+                        year: year,
+                        director: director,
+                        star: star
+                    },
+                    success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
+                });
+            } else {
+                jQuery.ajax({
+                    dataType: "json", // Setting return data type
+                    method: "GET", // Setting request method
+                    url: "api/movies",
+                    success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
+                });
+            }
+        } else {
+            jQuery.ajax({
+                dataType: "json", // Setting return data type
+                method: "GET", // Setting request method
+                url: "api/movies",
+                success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
+            });
+        }
     }
-}
-else {
-    jQuery.ajax({
-        dataType: "json", // Setting return data type
-        method: "GET", // Setting request method
-        url: "api/movies",
-        success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
-    });
 }
