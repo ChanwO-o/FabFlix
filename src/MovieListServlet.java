@@ -133,13 +133,11 @@ public class MovieListServlet extends HttpServlet
                                 "group_concat(stars.name) as stars from movies inner join genres_in_movies on movies.id=genres_in_movies.movieId " +
                                 "inner join ratings on ratings.movieId=movies.id inner join genres on genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
                                 "inner join stars on stars_in_movies.starId=stars.id ";
-                        System.out.println("here");
-                        System.out.println(title_start);
+
                         if (!title_start.isEmpty())
                         {
                             if(title_start.contains("*"))
                             {
-                                System.out.println("FAFAFAFAF");
                                 query += " and movies.title not REGEXP '^[0-9a-z]'";
                             }
                             else
