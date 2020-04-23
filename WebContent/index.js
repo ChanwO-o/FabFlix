@@ -1,3 +1,4 @@
+
 function handleMovieResult(resultData) {
     console.log("handleMovieResult: populating movies from resultData");
 
@@ -10,7 +11,12 @@ function handleMovieResult(resultData) {
 
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
+
         rowHTML += "<tr>";
+        rowHTML += "<td>";
+
+        //rowHTML += "<img src=http://image.tmdb.org/t/p/w500/oZRVDpNtmHk8M1VYy1aeOWUXgbC.jpg>";
+        rowHTML += "</td>";
         rowHTML +=
             "<th>" +
             // Add a link to single-movie.html with id passed with GET url parameter
@@ -47,8 +53,17 @@ function handleMovieResult(resultData) {
         rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
         rowHTML += "</tr>";
 
+        // $.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + resultData[i]["movie_title"],function(json)
+        // {
+        //     let k="";
+        //     movieTableBodyElement.append("<img src=\"http://image.tmdb.org/t/p/w500/" + json.results[0].poster_path + "/>");
+        //
+        //
+        // });
+
         // Append the row created to the table body, which will refresh the page
         movieTableBodyElement.append(rowHTML);
+        console.log(rowHTML);
     }
 }
 function getParameterByName(target) {
@@ -70,7 +85,8 @@ function getParameterByName(target) {
 let title_start=getParameterByName('title_start');
 console.log(title_start);
 
-if(title_start.length >0)
+
+if(title_start!=null && title_start.length >0)
 {
     jQuery.ajax({
         dataType: "json",  // Setting return data type
@@ -82,7 +98,7 @@ if(title_start.length >0)
 else
 {
     let test = getParameterByName('genres');
-    if(test.length >1)
+    if(test!=null && test.length >1 )
     {
         jQuery.ajax({
             dataType: "json",  // Setting return data type
