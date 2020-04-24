@@ -1,39 +1,54 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=BioRhyme&display=swap" rel="stylesheet">
     <title>Single Movie Page</title>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="common.css" />
+    <link rel="stylesheet" href="single-movie.css" />
+
+    <link rel="stylesheet" href="search.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<h1>Single Movie Page</h1>
+<div id="header">
+    <span class="gradtext">FabFlix</span>
+</div>
+<div id="logout">
 
-<h3 id="movie_info"></h3>
-<table id=movie_table class="table table-striped">
-    <thead>
-    <tr id=movie_list_columns>
-        <th>Title</th>
-        <th>Year</th>
-        <th>Director</th>
-        <th>Genres</th>
-        <th>Stars</th>
-        <th>Rating</th>
-    </tr>
-    <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='movielist.html'" >Back to MovieLists</button>
-    </thead>
+    <ul class="menu_list">
 
-    <!-- Table body is left empty here, will be populated with the data retrieved with single-movie.js -->
-    <!-- single-movie.js will find this html element by it's id "movie_table_body" -->
-    <tbody id=movie_table_body></tbody>
-</table>
+        <li class="home">
+            <button type="button" class="btn_home" onclick="location.href='mainpage.html'" >Home</button>
+        </li>
+
+        <li class="Cart">
+            <button type="button" class="btn_cart"  onclick="location.href='movielist.html'" >Cart</button>
+        </li>
+        <li class="logout">
+            <button type="button" class="btn_logout"  onclick="location.href='login.html'" >Logout</button>
+        </li>
+
+    </ul>
+
+</div>
+<div id="content" class="clearfix">
+    <div class="section_main">
+        <div class="search_section">
+            <div class="advancedsearch">
+                <h1>Single Movie Page</h1>
+                <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='movielist.html'" >Back to MovieLists</button>
+                <br>
+                <h3 id="movie_info"></h3>
+
+
+            </div>
+            <!-- End Advanced Search -->
+
+        </div>
+    </div>
+
+</div>
+
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
