@@ -123,6 +123,8 @@ public class MovieListServlet extends HttpServlet
                 }
                 else
                 {
+
+
                     try {
                         // Get a connection from dataSource
                         Connection dbcon = dataSource.getConnection();

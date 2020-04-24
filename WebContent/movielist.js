@@ -15,7 +15,7 @@ function handleMovieResult(resultData) {
         rowHTML +=
             "<th>" +
             // Add a link to single-movie.html with id passed with GET url parameter
-            '<a href="single-movie.html?id=' + resultData[i]['movie_id'] + '">'
+            '<a href="single-movie.html?id=' + resultData[i]['movie_id']  +'&check_counter=1' + '">'
             + resultData[i]["movie_title"] +     // display movie_title for the link text
             '</a>' +
             "</th>";
@@ -102,6 +102,7 @@ if(title_start!=null && title_start.length >0)
     jQuery.ajax({
         dataType: "json",  // Setting return data type
         method: "GET",// Setting request method
+        cache: true,
         url: "api/movies?title_start=" + title_start,
         success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
     });
@@ -114,6 +115,7 @@ else
         jQuery.ajax({
             dataType: "json",  // Setting return data type
             method: "GET",// Setting request method
+            cache: true,
             url: "api/movies?genres=" + test,
             success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
         });
@@ -133,6 +135,7 @@ else
                 jQuery.ajax({
                     dataType: "json", // Setting return data type
                     method: "GET", // Setting request method
+                    cache: true,
                     url: "api/movies",
                     data: {
                         title: title,
@@ -146,6 +149,7 @@ else
                 jQuery.ajax({
                     dataType: "json", // Setting return data type
                     method: "GET", // Setting request method
+                    cache: true,
                     url: "api/movies",
                     success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
                 });
@@ -154,6 +158,7 @@ else
             jQuery.ajax({
                 dataType: "json", // Setting return data type
                 method: "GET", // Setting request method
+                cache: true,
                 url: "api/movies",
                 success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
             });

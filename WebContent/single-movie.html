@@ -36,7 +36,6 @@
         <div class="search_section">
             <div class="advancedsearch">
                 <h1>Single Movie Page</h1>
-                <button type="button" class="btn btn-primary" style="float:right" button onclick="goBack()" >Back to MovieLists</button>
                 <br>
                 <h3 id="movie_info"></h3>
 
@@ -46,7 +45,7 @@
 
         </div>
     </div>
-
+    <button type="button" class="goback_button" style="float:right" button onclick="goBack()" >Back to Search results</button>
 </div>
 
 
@@ -61,8 +60,16 @@
      otherwise the url is relative to the root path-->
 <script src="single-movie.js"></script>
 <script>
-    function goBack() {
-        window.history.go(-2);
+    let check_counter = getParameterByName('check_counter');
+    console.log("couter = " + check_counter);
+    let C= parseInt(check_counter);
+    console.log("FAFAFA = " + C);
+    function goBack()
+    {
+        let b = parseInt(check_counter);
+        console.log("b= " + b);
+        b= b*-1;
+        window.history.go(b);
     }
 </script>
 </body>

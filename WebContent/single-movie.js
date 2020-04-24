@@ -109,6 +109,7 @@ let movie_id = getParameterByName('id');
 jQuery.ajax({
     dataType: "json",  // Setting return data type
     method: "GET",// Setting request method
+    cache: true,
     url: "api/single-movie?id=" + movie_id,
     success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
 });
