@@ -94,39 +94,49 @@ function getParameterByName(target) {
 }
 
 function sortByTitleAscending() {
+    clearMovieListTable();
     jQuery.ajax({
         dataType: "json",
         method: "GET",
-        url: "api/movies?sortby=title&sortorder=asc",
+        url: "api/movies" + window.location.search + "&sortby=title&sortorder=asc",
         success: (resultData) => handleMovieResult(resultData)
     });
 }
 
 function sortByTitleDescending() {
+    clearMovieListTable();
+    const queryString = window.location.search;
+    console.log(queryString);
     jQuery.ajax({
         dataType: "json",
         method: "GET",
-        url: "api/movies?sortby=title&sortorder=desc",
+        url: "api/movies" + window.location.search + "&sortby=title&sortorder=desc",
         success: (resultData) => handleMovieResult(resultData)
     });
 }
 
 function sortByRatingAscending() {
+    clearMovieListTable();
     jQuery.ajax({
         dataType: "json",
         method: "GET",
-        url: "api/movies?sortby=rating&sortorder=asc",
+        url: "api/movies" + window.location.search + "&sortby=rating&sortorder=asc",
         success: (resultData) => handleMovieResult(resultData)
     });
 }
 
 function sortByRatingDescending() {
+    clearMovieListTable();
     jQuery.ajax({
         dataType: "json",
         method: "GET",
-        url: "api/movies?sortby=rating&sortorder=desc",
+        url: "api/movies" + window.location.search + "&sortby=rating&sortorder=desc",
         success: (resultData) => handleMovieResult(resultData)
     });
+}
+
+function clearMovieListTable() {
+    $("#movie_table_body tr").remove(); // remove all rows from table
 }
 
 let title_start=getParameterByName('title_start');
