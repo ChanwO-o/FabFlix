@@ -69,6 +69,14 @@ body {
     color:white;
     background-color: skyblue;
 }
+#div_horizontal_buttons {
+    background-color:#eeeeee;
+    display:inline;
+}
+#ul_horizontal_buttons li{
+    display: inline;
+    float: right;
+}
 
 .genre_list {
     text-align:center;

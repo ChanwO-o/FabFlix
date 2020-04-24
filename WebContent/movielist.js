@@ -1,13 +1,16 @@
+let movieResults = null;
 
 function handleMovieResult(resultData) {
     console.log("handleMovieResult: populating movies from resultData");
+    movieResults = resultData;
 
     // Find the empty table body by id "movie_table_body"
     let movieTableBodyElement = jQuery("#movie_table_body");
 
-    // Iterate through resultData, no more than 20 entries
-    console.log(resultData);
-    for (let i = 0; i < resultData.length; i++)
+    // Iterate through resultData
+    console.log('movieResults: ', movieResults);
+
+    for (let i = 0; i < movieResults.length; i++)
     {
 
         // Concatenate the html tags with resultData jsonObject
@@ -15,18 +18,18 @@ function handleMovieResult(resultData) {
         rowHTML +=
             "<th>" +
             // Add a link to single-movie.html with id passed with GET url parameter
-            '<a href="single-movie.html?id=' + resultData[i]['movie_id'] + '">'
-            + resultData[i]["movie_title"] +     // display movie_title for the link text
+            '<a href="single-movie.html?id=' + movieResults[i]['movie_id'] + '">'
+            + movieResults[i]["movie_title"] +     // display movie_title for the link text
             '</a>' +
             "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_year"] + "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_director"] + "</th>";
+        rowHTML += "<th>" + movieResults[i]["movie_year"] + "</th>";
+        rowHTML += "<th>" + movieResults[i]["movie_director"] + "</th>";
 
-        rowHTML += "<th>" + resultData[i]["movie_genres"] + "</th>";
+        rowHTML += "<th>" + movieResults[i]["movie_genres"] + "</th>";
         // stars hyperlinks
         rowHTML += "<th>";
-        var stars_array = resultData[i]["movie_stars"].split(',');
-        var stars_id_array=resultData[i]["star_id"].split(',');
+        var stars_array = movieResults[i]["movie_stars"].split(',');
+        var stars_id_array=movieResults[i]["star_id"].split(',');
 
         for (let j = 0; j < 3; ++j) {
             if(j==2)
@@ -45,11 +48,12 @@ function handleMovieResult(resultData) {
         rowHTML += "</th>";
         // rowHTML += "<th>" + resultData[i]["movie_stars"] + "</th>";
 
-        rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
+        rowHTML += "<th>" + movieResults[i]["movie_rating"] + "</th>";
 
-        $.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + resultData[i]["movie_title"],function(json)
+        $.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + movieResults[i]["movie_title"],function(json)
         {
-            console.log(json.results[0].poster_path);
+            console.log('json:', json);
+            //console.log(json.results[0].poster_path);
             let count =0;
             let k="";
             let p=0;
@@ -65,9 +69,9 @@ function handleMovieResult(resultData) {
               //  count++;
             }
             if(count ==1)
-                rowHTML="<tr><th>"+"<img src="+ '"'+"http://image.tmdb.org/t/p/w500/" + k +'" '+ "width=" + "100 " +"height="+"100/>"+"</th>"+  rowHTML + "</tr>";
+                rowHTML="<th>"+"<img src="+ '"'+"http://image.tmdb.org/t/p/w500/" + k +'" '+ "width=" + "100 " +"height="+"100/>"+"</th>"+  rowHTML;
             else
-                rowHTML="<tr><th>"+"<img src="+'"'+"no_image.png"+ '"' + " width=" + "100 " +"height="+"100/>"+"</th>"+  rowHTML + "</tr>";
+                rowHTML="<th>"+"<img src="+'"'+"no_image.png"+ '"' + " width=" + "100 " +"height="+"100/>"+"</th>"+  rowHTML;
             rowHTML = "<tr>" + rowHTML + "</tr>"; // surround row with tr tags
             movieTableBodyElement.append(rowHTML);
         });
@@ -90,6 +94,56 @@ function getParameterByName(target) {
 
     // Return the decoded parameter value
     return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function sortByTitleAscending() {
+    movieResults.sort(function(obj1, obj2) {
+        console.log('sorting title: ', obj1.movie_title, ' vs ', obj2.movie_title);
+        return obj1.movie_title.localeCompare(obj2.movie_title);
+    });
+    console.log("after sort by title: ", movieResults);
+    clearMovieListTable();
+    handleMovieResult(movieResults);
+}
+
+function sortByTitleDescending() {
+    movieResults.sort(function(obj1, obj2) {
+        return obj2.movie_title.localeCompare(obj1.movie_title);
+    });
+    clearMovieListTable();
+    handleMovieResult(movieResults);
+}
+
+function sortByRatingAscending() {
+    movieResults.sort(function(obj1, obj2) {
+        console.log('sorting rating: ', obj1.movie_rating, ' vs ', obj2.movie_rating);
+        if (obj1.movie_rating == null)
+            return -1;
+        else if (obj2.movie_rating == null)
+            return 1;
+        return obj1.movie_rating - obj2.movie_rating;
+    });
+    console.log("after sort by rating: ", movieResults);
+    clearMovieListTable();
+    handleMovieResult(movieResults);
+}
+
+function sortByRatingDescending() {
+    movieResults.sort(function(obj1, obj2) {
+        if (obj2.movie_rating == null)
+            return -1;
+        else if (obj1.movie_rating == null)
+            return 1;
+        return obj2.movie_rating - obj1.movie_rating;
+    });
+    console.log("after sort by rating: ", movieResults);
+    clearMovieListTable();
+    handleMovieResult(movieResults);
+}
+
+function clearMovieListTable() {
+    // remove all rows from table
+    $("#movie_table_body tr").remove();
 }
 
 let title_start=getParameterByName('title_start');
