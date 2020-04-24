@@ -62,7 +62,7 @@ public class MovieListServlet extends HttpServlet
                         String query = "select movies.id,movies.title,movies.year,movies.director,ratings.rating,group_concat(stars.id) as star_id" +
                                 ", substring_index(group_concat(distinct genres.name separator ','), ',', 3) as genres, " +
                                 "group_concat(stars.name) as stars from movies inner join genres_in_movies on movies.id=genres_in_movies.movieId " +
-                                "inner join ratings on ratings.movieId=movies.id inner join genres on genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
+                                "left join ratings on ratings.movieId=movies.id inner join genres on genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
                                 "inner join stars on stars_in_movies.starId=stars.id group by movies.id order by rating desc limit 20";
                         // Perform the query
                         ResultSet rs = statement.executeQuery(query);
@@ -131,7 +131,7 @@ public class MovieListServlet extends HttpServlet
                         String query = "select movies.id,movies.title,movies.year,movies.director,ratings.rating,group_concat(stars.id) as star_id" +
                                 ", substring_index(group_concat(distinct genres.name separator ','), ',', 3) as genres, " +
                                 "group_concat(stars.name) as stars from movies inner join genres_in_movies on movies.id=genres_in_movies.movieId " +
-                                "inner join ratings on ratings.movieId=movies.id inner join genres on genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
+                                "left join ratings on ratings.movieId=movies.id inner join genres on genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
                                 "inner join stars on stars_in_movies.starId=stars.id ";
 
                         if (!title_start.isEmpty())
@@ -212,7 +212,7 @@ public class MovieListServlet extends HttpServlet
                     String query = "select movies.id,movies.title,movies.year,movies.director,ratings.rating,group_concat(stars.id) as star_id" +
                             ", substring_index(group_concat(distinct genres.name separator ','), ',', 3) as genres, " +
                             "group_concat(stars.name) as stars from movies inner join genres_in_movies on movies.id=genres_in_movies.movieId" +
-                            " inner join ratings on ratings.movieId=movies.id inner join genres on " +
+                            " left join ratings on ratings.movieId=movies.id inner join genres on " +
                             "genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
                             "inner join stars on stars_in_movies.starId=stars.id ";
 
@@ -292,7 +292,7 @@ public class MovieListServlet extends HttpServlet
                 String query = "select movies.id,movies.title,movies.year,movies.director,ratings.rating,group_concat(stars.id) as star_id" +
                         ", substring_index(group_concat(distinct genres.name separator ','), ',', 3) as genres, " +
                         "group_concat(stars.name) as stars from movies inner join genres_in_movies on movies.id=genres_in_movies.movieId" +
-                        " inner join ratings on ratings.movieId=movies.id inner join genres on " +
+                        " left join ratings on ratings.movieId=movies.id inner join genres on " +
                         "genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
                         "inner join stars on stars_in_movies.starId=stars.id group by movies.id";
                 // Perform the query
