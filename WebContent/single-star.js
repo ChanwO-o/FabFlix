@@ -71,6 +71,7 @@ console.log(star_id);
 jQuery.ajax({
     dataType: "json",  // Setting return data type
     method: "GET",// Setting request method
+    cache: true,
     url: "api/single-star?id=" + star_id+"&check_counter="+check_counter,
     success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
 });

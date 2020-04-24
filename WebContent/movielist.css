@@ -69,7 +69,14 @@ body {
     color:white;
     background-color: skyblue;
 }
-
+.div_horizontal_buttons {
+    background-color:#eeeeee;
+    display:inline;
+}
+.ul_horizontal_buttons li{
+    display: inline;
+    float: left;
+}
 .genre_list {
     text-align:center;
     font-size: 20px;

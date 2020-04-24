@@ -12,6 +12,7 @@ function handleMovieResult(resultData) {
 
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
+        rowHTML += "<tr>";
         rowHTML +=
             "<th>" +
             // Add a link to single-movie.html with id passed with GET url parameter
@@ -47,34 +48,35 @@ function handleMovieResult(resultData) {
 
         rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
 
-        $.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + resultData[i]["movie_title"],function(json)
-        {
-            //console.log(json.results[0].poster_path);
-            let count =0;
-            let k="";
-            let p=0;
-            for(p=0; p< json.results.length ; p++)
-            {
-                console.log(json.results[count]);
-                if(json.results[p].poster_path !=null)
-                {
-                    count=1;
-                    k += json.results[p].poster_path;
-                    break;
-                }
-              //  count++;
-            }
-            if(count ==1)
-                rowHTML="<th>"+"<img src="+ '"'+"http://image.tmdb.org/t/p/w500/" + k +'" '+ "width=" + "100 " +"height="+"100/>"+"</th>"+  rowHTML;
-            else {
-                rowHTML = "<th>" + "<img src=" + '"' + "no_image.png" + '"' + " width=" + "100 " + "height=" + "100/>" + "</th>" + rowHTML ;
-            }
-                rowHTML = "<tr>" + rowHTML + "</tr>"; // surround row with tr tags
-            movieTableBodyElement.append(rowHTML);
-        });
+        // $.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + resultData[i]["movie_title"],function(json)
+        // {
+        //     //console.log(json.results[0].poster_path);
+        //     let count =0;
+        //     let k="";
+        //     let p=0;
+        //     for(p=0; p< json.results.length ; p++)
+        //     {
+        //         console.log(json.results[count]);
+        //         if(json.results[p].poster_path !=null)
+        //         {
+        //             count=1;
+        //             k += json.results[p].poster_path;
+        //             break;
+        //         }
+        //       //  count++;
+        //     }
+        //     if(count ==1)
+        //         rowHTML="<th>"+"<img src="+ '"'+"http://image.tmdb.org/t/p/w500/" + k +'" '+ "width=" + "100 " +"height="+"100/>"+"</th>"+  rowHTML;
+        //     else {
+        //         rowHTML = "<th>" + "<img src=" + '"' + "no_image.png" + '"' + " width=" + "100 " + "height=" + "100/>" + "</th>" + rowHTML ;
+        //     }
+        //         rowHTML = "<tr>" + rowHTML + "</tr>"; // surround row with tr tags
+        //     movieTableBodyElement.append(rowHTML);
+        // });
 
         // Append the row created to the table body, which will refresh the page
-        // movieTableBodyElement.append(rowHTML);
+        rowHTML += "</tr>";
+         movieTableBodyElement.append(rowHTML);
     }
 }
 function getParameterByName(target) {
@@ -93,9 +95,24 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-let title_start=getParameterByName('title_start');
-console.log(title_start);
+// let first_sortby=getParameterByName('first_sortby');
+// let second_sortvy=getParameterByName('second_sortby');
+//
+//
+// console.log(title_start);
+//
+// if(first_sortby!=null && first_sortby.length>0)
+// {
+//     jQuery.ajax({
+//         dataType: "json",  // Setting return data type
+//         method: "GET",// Setting request method
+//         cache: true,
+//         url: "api/movies?first_sortby=" + first_sortby+"&title",
+//         success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+//     });
+// }
 
+let title_start=getParameterByName('title_start');
 
 if(title_start!=null && title_start.length >0)
 {
@@ -105,6 +122,7 @@ if(title_start!=null && title_start.length >0)
         cache: true,
         url: "api/movies?title_start=" + title_start,
         success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+
     });
 }
 else
@@ -128,6 +146,8 @@ else
 
             let params = queryString[1].split('&');
             if (params.length > 0) {
+                let first_sortby = getParameterByName('first_sortby');
+                let second_sortby = getParameterByName('second_sortby');
                 let title = params[0].substr(6);
                 let year = params[1].substr(5);
                 let director = params[2].substr(9);
@@ -138,6 +158,8 @@ else
                     cache: true,
                     url: "api/movies",
                     data: {
+                        first_sortby: first_sortby,
+                        second_sortby:second_sortby,
                         title: title,
                         year: year,
                         director: director,
