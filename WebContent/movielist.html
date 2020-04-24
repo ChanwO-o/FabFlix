@@ -31,26 +31,25 @@
 <div id="content" class="clearfix">
     <div class="section_main">
         <div class="search_section">
+            <div id="div_horizontal_buttons">
+                <ul id="ul_horizontal_buttons">
+                    <li>
+                        <button type="button" onclick="sortByTitleAscending()"><img src="arrowup.png" alt="Ascending" width="20" height="20"/>Title</button>
+                    </li>
+                    <li>
+                        <button type="button" onclick="sortByTitleDescending()"><img src="arrowdown.png" alt="Descending" width="20" height="20"/>Title</button>
+                    </li>
+                    <li>
+                        <button type="button" onclick="sortByRatingAscending()"><img src="arrowup.png" alt="Ascending" width="20" height="20"/>Rating</button>
+                    </li>
+                    <li>
+                        <button type="button" onclick="sortByRatingDescending()"><img src="arrowdown.png" alt="Descending" width="20" height="20"/>Rating</button>
+                    </li>
+                </ul>
+            </div>
+
             <div class="advancedsearch">
                 <h2>Search Results</h2>
-
-                <div id="div_horizontal_buttons">
-                    <ul id="ul_horizontal_buttons">
-                        <li>
-                            <button type="button" onclick="sortByTitleAscending()"><img src="arrowup.png" alt="Ascending" width="20" height="20"/>Title</button>
-                        </li>
-                        <li>
-                            <button type="button" onclick="sortByTitleDescending()"><img src="arrowdown.png" alt="Descending" width="20" height="20"/>Title</button>
-                        </li>
-                        <li>
-                            <button type="button" onclick="sortByRatingAscending()"><img src="arrowup.png" alt="Ascending" width="20" height="20"/>Rating</button>
-                        </li>
-                        <li>
-                            <button type="button" onclick="sortByRatingDescending()"><img src="arrowdown.png" alt="Descending" width="20" height="20"/>Rating</button>
-                        </li>
-                    </ul>
-                </div>
-
                 <br>
                 <table id=movie_table class="table table-striped">
                     <thead>

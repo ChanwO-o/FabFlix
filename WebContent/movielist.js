@@ -1,4 +1,5 @@
 let movieResults = null;
+let firstSortOption = null;
 
 function handleMovieResult(resultData) {
     console.log("handleMovieResult: populating movies from resultData");
@@ -97,53 +98,103 @@ function getParameterByName(target) {
 }
 
 function sortByTitleAscending() {
+    if (firstSortOption == null)
+        firstSortOption = 'title';
     movieResults.sort(function(obj1, obj2) {
-        console.log('sorting title: ', obj1.movie_title, ' vs ', obj2.movie_title);
-        return obj1.movie_title.localeCompare(obj2.movie_title);
+        if (firstSortOption === 'title')
+            return obj1.movie_title.localeCompare(obj2.movie_title);
+        else if (firstSortOption === 'rating') {
+            if (obj1.movie_rating === obj2.movie_rating) // must break tie with title comparison
+                return obj1.movie_title.localeCompare(obj2.movie_title);
+            // now do normal sorting by rating
+            if (obj1.movie_rating == null)
+                return -1;
+            else if (obj2.movie_rating == null)
+                return 1;
+            return obj1.movie_rating - obj2.movie_rating;
+        }
     });
-    console.log("after sort by title: ", movieResults);
     clearMovieListTable();
     handleMovieResult(movieResults);
 }
 
 function sortByTitleDescending() {
+    if (firstSortOption == null)
+        firstSortOption = 'title';
     movieResults.sort(function(obj1, obj2) {
-        return obj2.movie_title.localeCompare(obj1.movie_title);
+        if (firstSortOption === 'title')
+            return obj2.movie_title.localeCompare(obj1.movie_title);
+        else if (firstSortOption === 'rating') {
+            if (obj1.movie_rating === obj2.movie_rating) // must break tie with title comparison
+                return obj2.movie_title.localeCompare(obj1.movie_title);
+            // now do normal sorting by rating
+            if (obj1.movie_rating == null)
+                return -1;
+            else if (obj2.movie_rating == null)
+                return 1;
+            return obj1.movie_rating - obj2.movie_rating;
+        }
     });
     clearMovieListTable();
     handleMovieResult(movieResults);
 }
 
 function sortByRatingAscending() {
+    if (firstSortOption == null)
+        firstSortOption = 'rating';
     movieResults.sort(function(obj1, obj2) {
-        console.log('sorting rating: ', obj1.movie_rating, ' vs ', obj2.movie_rating);
-        if (obj1.movie_rating == null)
-            return -1;
-        else if (obj2.movie_rating == null)
-            return 1;
-        return obj1.movie_rating - obj2.movie_rating;
+        if (firstSortOption === 'rating') {
+            if (obj1.movie_rating == null)
+                return -1;
+            else if (obj2.movie_rating == null)
+                return 1;
+            return obj1.movie_rating - obj2.movie_rating;
+        }
+        else if (firstSortOption === 'title') {
+            if (obj1.movie_title === obj2.movie_title) { // must break tie with rating comparison
+                if (obj1.movie_rating == null)
+                    return -1;
+                else if (obj2.movie_rating == null)
+                    return 1;
+                return obj1.movie_rating - obj2.movie_rating;
+            }
+            // now do normal sorting by title
+            return obj1.movie_title.localeCompare(obj2.movie_title);
+        }
     });
-    console.log("after sort by rating: ", movieResults);
     clearMovieListTable();
     handleMovieResult(movieResults);
 }
 
 function sortByRatingDescending() {
+    if (firstSortOption == null)
+        firstSortOption = 'rating';
     movieResults.sort(function(obj1, obj2) {
-        if (obj2.movie_rating == null)
-            return -1;
-        else if (obj1.movie_rating == null)
-            return 1;
-        return obj2.movie_rating - obj1.movie_rating;
+        if (firstSortOption === 'rating') {
+            if (obj2.movie_rating == null)
+                return -1;
+            else if (obj1.movie_rating == null)
+                return 1;
+            return obj2.movie_rating - obj1.movie_rating;
+        }
+        else if (firstSortOption === 'title') {
+            if (obj1.movie_title === obj2.movie_title) { // must break tie with rating comparison
+                if (obj1.movie_rating == null)
+                    return -1;
+                else if (obj2.movie_rating == null)
+                    return 1;
+                return obj1.movie_rating - obj2.movie_rating;
+            }
+            // now do normal sorting by title
+            return obj1.movie_title.localeCompare(obj2.movie_title);
+        }
     });
-    console.log("after sort by rating: ", movieResults);
     clearMovieListTable();
     handleMovieResult(movieResults);
 }
 
 function clearMovieListTable() {
-    // remove all rows from table
-    $("#movie_table_body tr").remove();
+    $("#movie_table_body tr").remove(); // remove all rows from table
 }
 
 let title_start=getParameterByName('title_start');
