@@ -32,12 +32,12 @@ function handleMovieResult(resultData) {
             if(j==2)
             {
                 rowHTML +=
-                    '<a href="single-star.html?id=' + stars_id_array[j] + '">'  + stars_array[j]
+                    '<a href="single-star.html?id=' + stars_id_array[j] + '&check_counter=1' + '">'  + stars_array[j]
                 + '</a>';
             }
             else {
                 rowHTML +=
-                    '<a href="single-star.html?id=' + stars_id_array[j] + '">'
+                    '<a href="single-star.html?id=' + stars_id_array[j] + '&check_counter=1' + '">'
                     + stars_array[j] + ',' +   // display star_name for the link text
                     '</a>';
             }
