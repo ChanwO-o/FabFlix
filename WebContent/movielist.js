@@ -140,9 +140,6 @@ function clearMovieListTable() {
 }
 
 let title_start=getParameterByName('title_start');
-console.log(title_start);
-
-
 if(title_start!=null && title_start.length >0)
 {
     jQuery.ajax({

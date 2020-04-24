@@ -65,7 +65,19 @@ public class MovieListServlet extends HttpServlet
                                 ", substring_index(group_concat(distinct genres.name separator ','), ',', 3) as genres, " +
                                 "group_concat(stars.name) as stars from movies inner join genres_in_movies on movies.id=genres_in_movies.movieId " +
                                 "left join ratings on ratings.movieId=movies.id inner join genres on genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
-                                "inner join stars on stars_in_movies.starId=stars.id group by movies.id order by rating desc limit 20";
+                                "inner join stars on stars_in_movies.starId=stars.id group by movies.id";
+
+                        // add sort options to query
+                        if (sortby != null) {
+                            if (sortby.equals("title"))
+                                query += " order by movies.title";
+                            else if (sortby.equals("rating"))
+                                query += " order by ratings.rating";
+                        }
+                        if (sortorder != null && sortorder.equals("desc"))
+                            query += " desc";
+                        query += " limit 20";
+
                         // Perform the query
                         ResultSet rs = statement.executeQuery(query);
                         JsonArray jsonArray = new JsonArray();
@@ -121,7 +133,7 @@ public class MovieListServlet extends HttpServlet
                     }
                     out.close();
                 }
-                else
+                else // browsed by title_start
                 {
                     try {
                         // Get a connection from dataSource
@@ -147,6 +159,16 @@ public class MovieListServlet extends HttpServlet
                         }
                         query += " group by movies.id ";
 
+                        // add sort options to query
+                        if (sortby != null) {
+                            if (sortby.equals("title"))
+                                query += " order by movies.title";
+                            else if (sortby.equals("rating"))
+                                query += " order by ratings.rating";
+                        }
+                        if (sortorder != null && sortorder.equals("desc"))
+                            query += " desc";
+
                         // Perform the query
                         ResultSet rs = statement.executeQuery(query);
                         JsonArray jsonArray = new JsonArray();
@@ -202,7 +224,7 @@ public class MovieListServlet extends HttpServlet
                     }
                     out.close();
                 }
-            } else {
+            } else { // user did advanced search
 
                 try {
                     // Get a connection from dataSource
@@ -227,8 +249,18 @@ public class MovieListServlet extends HttpServlet
                     if (!star.isEmpty())
                         query += " and stars.name like '%" + star + "%' ";
 
-                    query += " group by movies.id order by rating desc";
-                    System.out.println(query);
+                    query += " group by movies.id ";
+
+                    // add sort options to query
+                    if (sortby != null) {
+                        if (sortby.equals("title"))
+                            query += " order by movies.title";
+                        else if (sortby.equals("rating"))
+                            query += " order by ratings.rating";
+                    }
+                    if (sortorder != null && sortorder.equals("desc"))
+                        query += " desc";
+
                     // Perform the query
                     ResultSet rs = statement.executeQuery(query);
 
@@ -282,7 +314,7 @@ public class MovieListServlet extends HttpServlet
                 out.close();
             }
         }
-        else //browse by genres query on
+        else // browsed by genre
         {
             try {
                 // Get a connection from dataSource
@@ -297,6 +329,17 @@ public class MovieListServlet extends HttpServlet
                         " left join ratings on ratings.movieId=movies.id inner join genres on " +
                         "genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
                         "inner join stars on stars_in_movies.starId=stars.id group by movies.id";
+
+                // add sort options to query
+                if (sortby != null) {
+                    if (sortby.equals("title"))
+                        query += " order by movies.title";
+                    else if (sortby.equals("rating"))
+                        query += " order by ratings.rating";
+                }
+                if (sortorder != null && sortorder.equals("desc"))
+                    query += " desc";
+
                 // Perform the query
                 ResultSet rs = statement.executeQuery(query);
                 JsonArray jsonArray = new JsonArray();
