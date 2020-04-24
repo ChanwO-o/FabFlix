@@ -93,6 +93,22 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+function sortByTitleAscending() {
+    console.log('sortByTitleAscending()');
+}
+
+function sortByTitleDescending() {
+    console.log('sortByTitleDescending()');
+}
+
+function sortByRatingAscending() {
+    console.log('sortByRatingAscending()');
+}
+
+function sortByRatingDescending() {
+    console.log('sortByRatingDescending()');
+}
+
 let title_start=getParameterByName('title_start');
 console.log(title_start);
 
