@@ -2,7 +2,7 @@ let advancedsearch_form = $("#advancedsearch_form");
 let cart = $("#cart");
 
 /**
- * Handle the data returned by IndexServlet
+ * Handle the data returned by MainPageServlet
  * @param resultDataString jsonObject, consists of session info
  */
 function handleSessionData(resultDataString) {
