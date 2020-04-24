@@ -31,19 +31,19 @@ public class MovieListServlet extends HttpServlet
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-
         response.setContentType("application/json"); // Response mime type
 
         // Retrieve parameters from url request
-
         String title = request.getParameter("title");
         String year = request.getParameter("year");
         String director = request.getParameter("director");
         String star = request.getParameter("star");
-        System.out.println("received params: " + title + " " + year + " " + director + " " + star + " ");
         String genres = request.getParameter("genres");
         String title_start=request.getParameter("title_start");
-        System.out.println("received genres: " + genres);
+        String sortby = request.getParameter("sortby");
+        String sortorder = request.getParameter("sortorder");
+        System.out.println("received params: " + title + " " + year + " " + director + " " + star + " " + genres + " " + title_start + " " + sortby + " " + sortorder);
+
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 

@@ -94,19 +94,39 @@ function getParameterByName(target) {
 }
 
 function sortByTitleAscending() {
-    console.log('sortByTitleAscending()');
+    jQuery.ajax({
+        dataType: "json",
+        method: "GET",
+        url: "api/movies?sortby=title&sortorder=asc",
+        success: (resultData) => handleMovieResult(resultData)
+    });
 }
 
 function sortByTitleDescending() {
-    console.log('sortByTitleDescending()');
+    jQuery.ajax({
+        dataType: "json",
+        method: "GET",
+        url: "api/movies?sortby=title&sortorder=desc",
+        success: (resultData) => handleMovieResult(resultData)
+    });
 }
 
 function sortByRatingAscending() {
-    console.log('sortByRatingAscending()');
+    jQuery.ajax({
+        dataType: "json",
+        method: "GET",
+        url: "api/movies?sortby=rating&sortorder=asc",
+        success: (resultData) => handleMovieResult(resultData)
+    });
 }
 
 function sortByRatingDescending() {
-    console.log('sortByRatingDescending()');
+    jQuery.ajax({
+        dataType: "json",
+        method: "GET",
+        url: "api/movies?sortby=rating&sortorder=desc",
+        success: (resultData) => handleMovieResult(resultData)
+    });
 }
 
 let title_start=getParameterByName('title_start');
