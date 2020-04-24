@@ -34,15 +34,19 @@ function handleResult(resultData) {
     let rowHTML = "";
     for (let i = 0; i < movie_array.length; ++i)
     {
+        let x= parseInt(check_counter) +1;
+        console.log("X = " + x);
+        var counter= x.toString();
+        console.log(counter);
         if(i==movie_array.length-1)
         {
             rowHTML +=
-                '<a href="single-movie.html?id=' + movie_id_array[i] + '">'  + movie_array[i]
+                '<a href="single-movie.html?id=' + movie_id_array[i] + '&check_counter=' + counter + '">'  + movie_array[i]
                 + '</a>';
         }
         else {
             rowHTML +=
-                '<a href="single-movie.html?id=' + movie_id_array[i] + '">'
+                '<a href="single-movie.html?id=' + movie_id_array[i] + '&check_counter=' + counter + '">'
                 + movie_array[i] + ',' +   // display star_name for the link text
                 '</a>';
         }
@@ -61,12 +65,12 @@ function handleResult(resultData) {
 
 // Get id from URL
 let star_id = getParameterByName('id');
-
+let check_counter= getParameterByName('check_counter');
 console.log(star_id);
 // Makes the HTTP GET request and registers on success callback function handleResult
 jQuery.ajax({
     dataType: "json",  // Setting return data type
     method: "GET",// Setting request method
-    url: "api/single-star?id=" + star_id,
+    url: "api/single-star?id=" + star_id+"&check_counter="+check_counter,
     success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
 });
