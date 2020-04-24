@@ -12,9 +12,6 @@ function handleMovieResult(resultData) {
 
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
-
-
-        rowHTML += "<tr>";
         rowHTML +=
             "<th>" +
             // Add a link to single-movie.html with id passed with GET url parameter
@@ -49,37 +46,34 @@ function handleMovieResult(resultData) {
         // rowHTML += "<th>" + resultData[i]["movie_stars"] + "</th>";
 
         rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
-        rowHTML += "</tr>";
 
-        // $.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + resultData[i]["movie_title"],function(json)
-        // {
-        //     console.log(json.results[0].poster_path);
-        //     console.log(rowHTML);
-        //     let count =0;
-        //     let k="";
-        //     let p=0;
-        //     for(p=0; p< json.results.length ; p++)
-        //     {
-        //         console.log(json.results[count]);
-        //         if(json.results[p].poster_path !=null)
-        //         {
-        //             count=1;
-        //             k += json.results[p].poster_path;
-        //             break;
-        //         }
-        //       //  count++;
-        //     }
-        //     if(count ==1)
-        //         rowHTML="<tr><th>"+"<img src="+ '"'+"http://image.tmdb.org/t/p/w500/" + k +'" '+ "width=" + "100 " +"height="+"100/>"+"</th>"+  rowHTML + "</tr>";
-        //     else
-        //         rowHTML="<tr><th>"+"<img src="+'"'+"no_image.png"+ '"' + " width=" + "100 " +"height="+"100/>"+"</th>"+  rowHTML + "</tr>";
-        //     console.log(rowHTML);
-        //     movieTableBodyElement.append(rowHTML);
-        //    // movieTableBodyElement.append("<img src=\"http://image.tmdb.org/t/p/w500/" + json.results[0].poster_path + "/>");
-        // });
+        $.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + resultData[i]["movie_title"],function(json)
+        {
+            console.log(json.results[0].poster_path);
+            let count =0;
+            let k="";
+            let p=0;
+            for(p=0; p< json.results.length ; p++)
+            {
+                console.log(json.results[count]);
+                if(json.results[p].poster_path !=null)
+                {
+                    count=1;
+                    k += json.results[p].poster_path;
+                    break;
+                }
+              //  count++;
+            }
+            if(count ==1)
+                rowHTML="<tr><th>"+"<img src="+ '"'+"http://image.tmdb.org/t/p/w500/" + k +'" '+ "width=" + "100 " +"height="+"100/>"+"</th>"+  rowHTML + "</tr>";
+            else
+                rowHTML="<tr><th>"+"<img src="+'"'+"no_image.png"+ '"' + " width=" + "100 " +"height="+"100/>"+"</th>"+  rowHTML + "</tr>";
+            rowHTML = "<tr>" + rowHTML + "</tr>"; // surround row with tr tags
+            movieTableBodyElement.append(rowHTML);
+        });
 
         // Append the row created to the table body, which will refresh the page
-        movieTableBodyElement.append(rowHTML);
+        // movieTableBodyElement.append(rowHTML);
     }
 }
 function getParameterByName(target) {
