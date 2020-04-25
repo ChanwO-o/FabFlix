@@ -100,7 +100,7 @@ function handleCartResult(resultData) {
     console.log("handleCartResult()");
 }
 
-function addToCart() {
+function addToCart(movie_id) {
     console.log("addToCart()");
     jQuery.ajax({
         dataType: "json",  // Setting return data type
