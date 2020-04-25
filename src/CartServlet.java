@@ -96,6 +96,11 @@ public class CartServlet extends HttpServlet {
 			out.write(jsonArray.toString());
 			// set response status to 200 (OK)
 			response.setStatus(200);
+			System.out.println("cart jsonArray sent to frontend");
+
+			rs.close();
+			statement.close();
+			dbcon.close();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

@@ -15,6 +15,19 @@ function handleSessionData(resultDataString) {
     $("#lastAccessTime").text("Last access time: " + resultDataJson["lastAccessTime"]);
 }
 
+function handleCartResult(resultDataJson) {
+    console.log("handleCartResult(): ", resultDataJson);
+    for (let i = 0; i < resultDataJson.length; i++) {
+        let rowHTML = "<th>" + resultDataJson[i]["movie_title"] + "</th>";
+        rowHTML += "<th>" + resultDataJson[i]["movie_year"] + "</th>";
+        rowHTML += "<th>" + resultDataJson[i]["movie_director"] + "</th>";
+        rowHTML += "<th>" + resultDataJson[i]["movie_rating"] + "</th>";
+
+        rowHTML = "<tr>" + rowHTML + "</tr>"; // surround with row tags
+        cartTableBodyElement.append(rowHTML);
+    }
+}
+
 /**
  * Handle the items in item list
  * @param resultDataString jsonObject, needs to be parsed to html
@@ -72,5 +85,10 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-// let new_movie_id = getParameterByName('movie_id');
-// console.log('adding new movie: ', new_movie_id);
+let cartTableBodyElement = jQuery("#cart_table_body");
+$.ajax({
+    dataType: "json",
+    method: "GET",
+    url: "api/cart",
+    success: (resultData) => handleCartResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+});
