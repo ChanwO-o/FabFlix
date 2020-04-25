@@ -94,8 +94,21 @@ function handleResult(resultData) {
     });
     // movieInfoElement.append("<p>Movie Title: " + resultData[0]["movie_title"] + "</p>" +
     //     "<p>Year: " + resultData[0]["movie_year"] + "</p>");
+}
 
+function handleCartResult(resultData) {
+    console.log("handleCartResult()");
+}
 
+function addToCart() {
+    console.log("addToCart()");
+    jQuery.ajax({
+        dataType: "json",  // Setting return data type
+        method: "GET",// Setting request method
+        cache: true,
+        url: "api/cart?id=" + movie_id,
+        success: (resultData) => handleCartResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+    });
 }
 
 /**
