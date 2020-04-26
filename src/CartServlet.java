@@ -45,11 +45,13 @@ public class CartServlet extends HttpServlet {
 
 		String movieId = request.getParameter("id"); // Get parameter that sent by GET request url
 		String remove = request.getParameter("remove");
-		System.out.println("movieId: " + movieId + " remove: " + remove);
+		String update = request.getParameter("update");
+		String quantity = request.getParameter("qty");
+		System.out.println("movieId: " + movieId + " remove: " + remove + " update: " + update + " quantity: " + quantity);
 
 		// Case 1: add movie to cart
 		// In order to prevent multiple clients, requests from altering cartList at the same time, we lock the cartList while updating
-		if (movieId != null && remove == null) {
+		if (movieId != null && remove == null && update == null) {
 			synchronized (cartList) {
 				if (cartList.containsKey(movieId)) {
 					System.out.println("add to cartList: movie existing, incrementing by 1");
@@ -63,12 +65,20 @@ public class CartServlet extends HttpServlet {
 				System.out.println("cartList updated: " + cartList);
 			}
 		}
-
 		// Case 2: remove movie from cart
-		if (movieId != null && remove != null && remove.equals("true")) {
+		else if (movieId != null && remove != null && remove.equals("true") && update == null) {
 			System.out.println("removing movie with movieId: " + movieId);
 			synchronized (cartList) {
 				cartList.remove(movieId);
+				session.setAttribute("cartList", cartList); // save updated cartList to user session
+				System.out.println("cartList updated: " + cartList);
+			}
+		}
+		// Case 3: update existing movie in cart to quantity
+		else if (movieId != null && remove == null && update != null && update.equals("true") && quantity != null) {
+			System.out.println("updating movie with movieId: " + movieId + " to quantity: " + quantity);
+			synchronized (cartList) {
+				cartList.put(movieId, Integer.parseInt(quantity));
 				session.setAttribute("cartList", cartList); // save updated cartList to user session
 				System.out.println("cartList updated: " + cartList);
 			}
