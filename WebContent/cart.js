@@ -6,6 +6,10 @@ function handleCartResult(resultDataJson) {
         rowHTML += "<th>" + resultDataJson[i]["movie_genres"] + "</th>";
         rowHTML += "<th>" + resultDataJson[i]["movie_stars"] + "</th>";
         rowHTML += "<th>" + resultDataJson[i]["movie_rating"] + "</th>";
+        rowHTML += "<th>$" + resultDataJson[i]["movie_price"] + "</th>";
+        rowHTML += "<th><input name=\"quantity\" type=\"number\" value='" + resultDataJson[i]["movie_quantity"] + "'></th>";
+        rowHTML += "<th><input name=\"update\" type=\"submit\" value=\"Update\"></th>";
+        rowHTML += "<th><input name=\"remove\" type=\"submit\" value=\"Remove\"></th>";
 
         $.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + resultDataJson[i]["movie_title"], function(json) {
             let posterPath = "";
