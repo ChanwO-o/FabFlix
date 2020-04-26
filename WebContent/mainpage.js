@@ -1,67 +1,39 @@
-let advancedsearch_form = $("#advancedsearch_form");
-let cart = $("#cart");
+function getParameterByName(target) {
+    // Get request URL
+    let url = window.location.href;
+    // Encode target parameter name to url encoding
+    target = target.replace(/[\[\]]/g, "\\$&");
 
-/**
- * Handle the data returned by MainPageServlet
- * @param resultDataString jsonObject, consists of session info
- */
-function handleSessionData(resultDataString) {
-    let resultDataJson = JSON.parse(resultDataString);
+    // Ues regular expression to find matched parameter value
+    let regex = new RegExp("[?&]" + target + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
 
-    console.log("handle session response");
-    console.log(resultDataJson);
-    console.log(resultDataJson["sessionID"]);
-
-    // show the session information
-    $("#sessionID").text("Session ID: " + resultDataJson["sessionID"]);
-    $("#lastAccessTime").text("Last access time: " + resultDataJson["lastAccessTime"]);
+    // Return the decoded parameter value
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+function handleResult(resultData) {
+    console.log(resultData[0]['genre_name']);
+    let starInfoElement = jQuery("#genre_list");
+    let rowHTML = "";
+    for (let i = 0; i < resultData.length; i++)
+    {
+        console.log(resultData[i]['genre_name']);
+        rowHTML += '<a href="movielist.html?genres=' + resultData[i]['genre_name']  + '">' + resultData[i]['genre_name']+ " | "
 
-/**
- * Handle the items in item list
- * @param resultDataString jsonObject, needs to be parsed to html
- */
-function handleCartArray(resultDataString) {
-    const resultArray = resultDataString.split(",");
-    console.log(resultArray);
-    let item_list = $("#item_list");
-    // change it to html list
-    let res = "<ul>";
-    for (let i = 0; i < resultArray.length; i++) {
-        // each item will be in a bullet point
-        res += "<li>" + resultArray[i] + "</li>";
+            +'</a>';
+        if(i%4==0 && i!=0)
+            rowHTML += "<br>"
     }
-    res += "</ul>";
-
-    // clear the old array and show the new array in the frontend
-    item_list.html("");
-    item_list.append(res);
+    starInfoElement.append(rowHTML);
+   // $("#movie_info").html("<a href=\"html_images.asp\">HTML bbb</a>");
 }
 
-/**
- * Submit form content with POST method
- * @param cartEvent
- */
-function handleCartInfo(cartEvent) {
-    console.log("submit cart form");
-    /**
-     * When users click the submit button, the browser will not direct
-     * users to the url defined in HTML form. Instead, it will call this
-     * event handler when the event is triggered.
-     */
-    cartEvent.preventDefault();
-
-    $.ajax("api/mainpage", {
-        method: "POST",
-        data: cart.serialize(),
-        success: handleCartArray
-    });
-}
-
-$.ajax("api/mainpage", {
-    method: "GET",
-    success: handleSessionData
+jQuery.ajax({
+    dataType: "json",  // Setting return data type
+    method: "GET",// Setting request method
+    cache: true,
+    url: "api/mainpage",
+    success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
 });
-
-// Bind the submit action of the forms to a event handler function
-cart.submit(handleCartInfo);

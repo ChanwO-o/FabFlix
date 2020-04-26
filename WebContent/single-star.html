@@ -1,32 +1,68 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=BioRhyme&display=swap" rel="stylesheet">
-    <title>Star Lists</title>
+    <title>Single Movie Page</title>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="common.css" />
+    <link rel="stylesheet" href="single-star.css" />
+    <link rel="stylesheet" href="search.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<h1>Star Lists</h1>
-<h3 id="star_info"></h3>
-<table id=star_table class="table table-striped">
-    <thead>
-    <tr id=movie_list_columns>
-        <th>Name</th>
-        <th>Year of Birth</th>
-        <th>Movies</th>
-    </tr>
-    <button type="button" class="btn btn-primary" style="float:right" onclick="location.href='movielist.html'" >Back to MovieLists</button>
-    </thead>
-    <tbody id=star_table_body></tbody>
-</table>
+<div id="header">
+    <span class="gradtext">FabFlix</span>
+</div>
+<div id="logout">
+
+    <ul class="menu_list">
+
+        <li class="home">
+            <button type="button" class="btn_home" onclick="location.href='mainpage.html'" >Home</button>
+        </li>
+
+        <li class="Cart">
+            <button type="button" class="btn_cart"  onclick="location.href='movielist.html'" >Cart</button>
+        </li>
+        <li class="logout">
+            <button type="button" class="btn_logout"  onclick="location.href='login.html'" >Logout</button>
+        </li>
+
+    </ul>
+
+</div>
+
+<div id="content" class="clearfix">
+    <div class="section_main">
+        <div class="search_section">
+            <div class="advancedsearch">
+                <h1>Single Star Page</h1>
+                <br>
+                <h3 id="star_info"></h3>
+
+
+            </div>
+            <!-- End Advanced Search -->
+        </div>
+    </div>
+    <button type="button" class="goback_button" style="float:right" button onclick="goBack()" >Back to Search results</button>
+</div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="single-star.js"></script>
+<script>
+   // let check_counter = getParameterByName('check_counter');
+    console.log("couter = " + check_counter);
+    let C= parseInt(check_counter);
+    console.log("FAFAFA = " + C);
+    function goBack()
+    {
+        let b = parseInt(check_counter);
+        console.log("b= " + b);
+        b= b*-1;
+        window.history.go(b);
+    }
+</script>
 </body>
 </html>

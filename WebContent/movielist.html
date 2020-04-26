@@ -27,14 +27,33 @@
         </li>
     </ul>
 </div>
-
+<div>
+    <div class="div_horizontal_buttons">
+        <ul class="ul_horizontal_buttons">
+            <li>
+                <button type="button" onclick="check_order()">Rating Asc</button>
+            </li>
+            <li>
+                <button type="button" onclick="check_order2()">Rating DSC</button>
+            </li>
+            <li>
+                <button type="button" onclick="check_order3()">Title ASC</button>
+            </li>
+            <li>
+                <button type="button" onclick="check_order4()">Title DSC</button>
+            </li>
+        </ul>
+    </div>
+</div>
+<br>
 <div id="content" class="clearfix">
     <div class="section_main">
         <div class="search_section">
+
+
+
             <div class="advancedsearch">
                 <h2>Search Results</h2>
-                <button> sort by title  </button>
-                <br>
                 <table id=movie_table class="table table-striped">
                     <thead>
                     <tr id=movie_list_columns>
@@ -65,7 +84,96 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script>
+    function check_order()
+    {
+        let k=  window.location.href;
+        console.log(k);
+        let first_sortby = getParameterByName('first_sortby');
+        if(first_sortby != null && first_sortby.length >1)
+        {
+            let second_sortby= getParameterByName('second_sortby');
+            if(second_sortby != null && second_sortby.length>1)
+            {
 
+            }
+            else {
+                location.replace(window.location.search + "&second_sortby=rating_asc");
+            }
+        }
+        else
+        {
+            location.replace(window.location.search + "&first_sortby=rating_asc");
+            console.log("location = " + location);
+        }
+    }
+    function check_order2()
+    {
+        let k=  window.location.href;
+        console.log(k);
+        let first_sortby = getParameterByName('first_sortby');
+        if(first_sortby != null && first_sortby.length >1)
+        {
+            let second_sortby= getParameterByName('second_sortby');
+            if(second_sortby != null && second_sortby.length>1)
+            {
+
+            }
+            else {
+                location.replace(window.location.search + "&second_sortby=rating_dsc");
+            }
+        }
+        else
+        {
+            location.replace(window.location.search + "&first_sortby=rating_dsc");
+            console.log("location = " + location);
+        }
+    }
+    function check_order3()
+    {
+        let k=  window.location.href;
+        console.log(k);
+        let first_sortby = getParameterByName('first_sortby');
+        if(first_sortby != null && first_sortby.length >1)
+        {
+            let second_sortby= getParameterByName('second_sortby');
+            if(second_sortby != null && second_sortby.length>1)
+            {
+
+            }
+            else {
+                location.replace(window.location.search + "&second_sortby=title_asc");
+            }
+        }
+        else
+        {
+            location.replace(window.location.search + "&first_sortby=title_asc");
+            console.log("location = " + location);
+        }
+    }
+    function check_order4()
+    {
+        let k=  window.location.href;
+        console.log(k);
+        let first_sortby = getParameterByName('first_sortby');
+        if(first_sortby != null && first_sortby.length >1)
+        {
+            let second_sortby= getParameterByName('second_sortby');
+            if(second_sortby != null && second_sortby.length>1)
+            {
+
+            }
+            else {
+                location.replace(window.location.search + "&second_sortby=title_dsc");
+            }
+        }
+        else
+        {
+            location.replace(window.location.search + "&first_sortby=title_dsc");
+            console.log("location = " + location);
+        }
+    }
+</script>
 <script src="movielist.js"></script>
 </body>
 
