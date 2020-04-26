@@ -97,3 +97,20 @@ body {
     height: 600px;
     margin: 20px auto 20px auto;
 }
+
+/* space out table columns */
+table {
+    border-collapse: separate;
+    border-spacing: 50px 0;
+}
+
+td {
+    padding: 10px 0;
+}
+
+#grand_total {
+    display: inline;
+    padding: 15px;
+    margin-right: 40px;
+    float: right;
+}
