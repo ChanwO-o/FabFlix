@@ -78,7 +78,11 @@ public class CartServlet extends HttpServlet {
 		else if (movieId != null && remove == null && update != null && update.equals("true") && quantity != null) {
 			System.out.println("updating movie with movieId: " + movieId + " to quantity: " + quantity);
 			synchronized (cartList) {
-				cartList.put(movieId, Integer.parseInt(quantity));
+				int q = Integer.parseInt(quantity);
+				if (q <= 0) // remove movie if updated quantity is 0 or less
+					cartList.remove(movieId);
+				else
+					cartList.put(movieId, q);
 				session.setAttribute("cartList", cartList); // save updated cartList to user session
 				System.out.println("cartList updated: " + cartList);
 			}

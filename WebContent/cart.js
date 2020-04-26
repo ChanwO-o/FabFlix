@@ -5,7 +5,7 @@ function handleCartResult(resultDataJson) {
         let movieId = resultDataJson[i]["movie_id"];
 
         let qtyInputId = "qty_" + movieId; // id of quantity input for current row
-        itemQtyIds.push(qtyInputId);
+        itemQtyIds[qtyInputId] = qtyInputId;
 
         let rowHTML = "<td>" + resultDataJson[i]["movie_title"] + "</td>";
         // rowHTML += "<td>" + resultDataJson[i]["movie_year"] + "</td>";
@@ -15,7 +15,7 @@ function handleCartResult(resultDataJson) {
         // rowHTML += "<td>" + resultDataJson[i]["movie_rating"] + "</td>";
         rowHTML += "<td>$" + resultDataJson[i]["movie_price"] + "</td>";
         rowHTML += "<td><input id='" + qtyInputId + "' name=\"quantity\" type=\"number\" value='" + resultDataJson[i]["movie_quantity"] + "'></td>";
-        rowHTML += "<td><input name=\"update\" type=\"submit\" value=\"Update\" onclick=\"updateItem('" + movieId + "', " + i + ")\"></td>";
+        rowHTML += "<td><input name=\"update\" type=\"submit\" value=\"Update\" onclick=\"updateItem('" + movieId + "')\"></td>";
         rowHTML += "<td><input name=\"remove\" type=\"submit\" value=\"Remove\" onclick=\"removeItem('" + movieId + "')\"></td>";
 
         $.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + resultDataJson[i]["movie_title"], function(json) {
@@ -38,10 +38,11 @@ function handleCartResult(resultDataJson) {
     grandTotalElement.append(grandTotalHTML);
 }
 
-function updateItem(movieId, row) {
-    console.log("updateItem() ", "id: ", movieId, " row: ", row);
-    let qtyInput = document.getElementById(itemQtyIds[row]);
-    console.log("found qtyInput: ", qtyInput, 'value: ', qtyInput.value);
+function updateItem(movieId) {
+    console.log("updateItem() ", "id: ", movieId);
+    let qtyInput = document.getElementById(itemQtyIds['qty_' + movieId]); // find input field for selected movie
+    console.log("found qtyInput: ", qtyInput);
+    console.log('value of qtyInput: ', qtyInput.value);
     $.ajax({
         dataType: "json",
         method: "GET",
@@ -69,7 +70,7 @@ function clearCart() {
 let cartTableBodyElement = jQuery("#cart_table_body");
 let grandTotalElement = jQuery("#grand_total");
 let grandTotal = 0.00;
-let itemQtyIds = []; // ids of inputs for each cart item row (used to read input element value when update is clicked)
+let itemQtyIds = {}; // ids of inputs for each cart item row (used to read input element value when update is clicked)
 
 $.ajax({
     dataType: "json",
