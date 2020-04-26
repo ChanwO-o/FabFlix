@@ -43,7 +43,7 @@ public class CartServlet extends HttpServlet {
 		}
 
 		String newMovieId = request.getParameter("id"); // Get parameter that sent by GET request url
-		System.out.println("newMovieId: " + newMovieId);
+//		System.out.println("newMovieId: " + newMovieId);
 
 		// In order to prevent multiple clients, requests from altering cartList at the same time, we
 		// lock the ArrayList while updating
@@ -53,12 +53,14 @@ public class CartServlet extends HttpServlet {
 				session.setAttribute("cartList", cartList); // save updated cartList to user session
 			}
 		}
-		System.out.println("cartList: " + cartList);
+//		System.out.println("cartList: " + cartList);
 
 		try {
 			Connection dbcon = dataSource.getConnection(); // Get a connection from dataSource
 			Statement statement = dbcon.createStatement(); // Declare our statement
-			String query = "select movies.id,movies.title,movies.year,movies.director,ratings.rating from movies, ratings " +
+			String query = "select movies.id,movies.title,movies.year,movies.director," +
+					"group_concat(distinct genres.name separator ',') as genres,group_concat(distinct stars.name separator ',') as stars,ratings.rating " +
+					"from movies, ratings, genres, genres_in_movies, stars, stars_in_movies " +
 					"where ratings.movieId=movies.id and movies.id in (";
 
 			// append each movie id in cart to query
@@ -67,9 +69,11 @@ public class CartServlet extends HttpServlet {
 				if (i != cartList.size() - 1)
 					query += ",";
 			}
-			query += ");";
+			query += ") "; // closing bracket for movieId group
 
-			System.out.println("query: " + query);
+			query += "and movies.id=genres_in_movies.movieId and genres_in_movies.genreId=genres.id " +
+					"and movies.id=stars_in_movies.movieId and stars.id=stars_in_movies.starId " +
+					"group by movies.id"; // finish the query
 
 			ResultSet rs = statement.executeQuery(query);
 			JsonArray jsonArray = new JsonArray();
@@ -79,6 +83,8 @@ public class CartServlet extends HttpServlet {
 				String movie_title = rs.getString("title");
 				String movie_year = rs.getString("year");
 				String movie_director = rs.getString("director");
+				String movie_genres = rs.getString("genres");
+				String movie_stars = rs.getString("stars");
 				String movie_rating = rs.getString("rating");
 
 				// Create a JsonObject based on the data we retrieve from rs
@@ -87,6 +93,8 @@ public class CartServlet extends HttpServlet {
 				jsonObject.addProperty("movie_title", movie_title);
 				jsonObject.addProperty("movie_year", movie_year);
 				jsonObject.addProperty("movie_director", movie_director);
+				jsonObject.addProperty("movie_genres", movie_genres);
+				jsonObject.addProperty("movie_stars", movie_stars);
 				jsonObject.addProperty("movie_rating", movie_rating);
 				jsonArray.add(jsonObject);
 			}

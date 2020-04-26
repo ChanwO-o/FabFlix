@@ -21,6 +21,8 @@ function handleCartResult(resultDataJson) {
         let rowHTML = "<th>" + resultDataJson[i]["movie_title"] + "</th>";
         rowHTML += "<th>" + resultDataJson[i]["movie_year"] + "</th>";
         rowHTML += "<th>" + resultDataJson[i]["movie_director"] + "</th>";
+        rowHTML += "<th>" + resultDataJson[i]["movie_genres"] + "</th>";
+        rowHTML += "<th>" + resultDataJson[i]["movie_stars"] + "</th>";
         rowHTML += "<th>" + resultDataJson[i]["movie_rating"] + "</th>";
 
         rowHTML = "<tr>" + rowHTML + "</tr>"; // surround with row tags
