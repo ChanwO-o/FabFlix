@@ -316,7 +316,7 @@ public class MovieListServlet extends HttpServlet
                     String movie_stars = rs.getString("stars");
 
                     // Create a JsonObject based on the data we retrieve from rs
-                    System.out.println("movie_genres:" + movie_genres);
+//                    System.out.println("movie_genres:" + movie_genres);
                     //System.out.println("Genres that query gives:" +genres);
                     if(movie_genres.contains(genres)) {
                         //System.out.println(movie_genres);
