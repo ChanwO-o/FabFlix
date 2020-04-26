@@ -43,23 +43,42 @@ public class CartServlet extends HttpServlet {
 			cartList = (HashMap<String, Integer>) session.getAttribute("cartList"); // reassign cartList variable to newly created list
 		}
 
-		String newMovieId = request.getParameter("id"); // Get parameter that sent by GET request url
-		System.out.println("newMovieId: " + newMovieId);
+		String movieId = request.getParameter("id"); // Get parameter that sent by GET request url
+		String remove = request.getParameter("remove");
+		System.out.println("movieId: " + movieId + " remove: " + remove);
 
+		// Case 1: add movie to cart
 		// In order to prevent multiple clients, requests from altering cartList at the same time, we lock the cartList while updating
-		if (newMovieId != null) {
+		if (movieId != null && remove == null) {
 			synchronized (cartList) {
-				if (cartList.containsKey(newMovieId)) {
+				if (cartList.containsKey(movieId)) {
 					System.out.println("add to cartList: movie existing, incrementing by 1");
-					cartList.put(newMovieId, cartList.get(newMovieId) + 1); // increment quantity by 1
+					cartList.put(movieId, cartList.get(movieId) + 1); // increment quantity by 1
 				}
 				else {
 					System.out.println("add to cartList: new movie, qty set to 1");
-					cartList.put(newMovieId, 1); // new movie added to cart
+					cartList.put(movieId, 1); // new movie added to cart
 				}
 				session.setAttribute("cartList", cartList); // save updated cartList to user session
 				System.out.println("cartList updated: " + cartList);
 			}
+		}
+
+		// Case 2: remove movie from cart
+		if (movieId != null && remove != null && remove.equals("true")) {
+			System.out.println("removing movie with movieId: " + movieId);
+			synchronized (cartList) {
+				cartList.remove(movieId);
+				session.setAttribute("cartList", cartList); // save updated cartList to user session
+				System.out.println("cartList updated: " + cartList);
+			}
+		}
+
+		if (cartList.isEmpty()) { // if cart is empty, no need to query anything!
+			out.write(new JsonArray().toString());
+			response.setStatus(200);
+			out.close();
+			return;
 		}
 
 		try {
@@ -83,7 +102,7 @@ public class CartServlet extends HttpServlet {
 			query += "and movies.id=genres_in_movies.movieId and genres_in_movies.genreId=genres.id " +
 					"and movies.id=stars_in_movies.movieId and stars.id=stars_in_movies.starId " +
 					"group by movies.id"; // finish the query
-//			System.out.println("query: " + query);
+			System.out.println("query: " + query);
 
 			ResultSet rs = statement.executeQuery(query);
 			JsonArray jsonArray = new JsonArray();
