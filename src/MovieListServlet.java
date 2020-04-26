@@ -482,7 +482,6 @@ public class MovieListServlet extends HttpServlet
                 JsonArray jsonArray = new JsonArray();
 
                 // Iterate through each row of rs
-
                 while (rs.next()) {
                     String movie_id = rs.getString("id");
                     String star_id = rs.getString("star_id");
@@ -504,7 +503,6 @@ public class MovieListServlet extends HttpServlet
                     jsonObject.addProperty("movie_genres", movie_genres);
                     jsonObject.addProperty("movie_stars", movie_stars);
                     jsonArray.add(jsonObject);
-
                 }
 
                 // write JSON string to output
@@ -521,7 +519,6 @@ public class MovieListServlet extends HttpServlet
             }
             catch (Exception e)
             {
-
                 // write error message JSON object to output
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("errorMessage", e.getMessage());
@@ -531,8 +528,6 @@ public class MovieListServlet extends HttpServlet
                 response.setStatus(500);
 
             }
-
-
         }
     }
 }
