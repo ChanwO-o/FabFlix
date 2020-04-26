@@ -113,14 +113,22 @@ function getParameterByName(target) {
 // }
 
 let title_start=getParameterByName('title_start');
-
+let first_sortby=getParameterByName('first_sortby');
+let second_sortby=getParameterByName('second_sortby');
+console.log(first_sortby);
+console.log(second_sortby);
 if(title_start!=null && title_start.length >0)
 {
     jQuery.ajax({
         dataType: "json",  // Setting return data type
         method: "GET",// Setting request method
         cache: true,
-        url: "api/movies?title_start=" + title_start,
+        url: "api/movies",
+        data: {
+            first_sortby: first_sortby,
+            second_sortby:second_sortby,
+            title_start: title_start
+        },
         success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
 
     });
@@ -128,13 +136,23 @@ if(title_start!=null && title_start.length >0)
 else
 {
     let test = getParameterByName('genres');
+    console.log("DADADADAD");
+    let first_sortby = getParameterByName('first_sortby');
+    let second_sortby = getParameterByName('second_sortby');
     if(test!=null && test.length >1 )
     {
+
+        console.log(test);
         jQuery.ajax({
             dataType: "json",  // Setting return data type
             method: "GET",// Setting request method
             cache: true,
-            url: "api/movies?genres=" + test,
+            url: "api/movies",
+            data: {
+                first_sortby: first_sortby,
+                second_sortby:second_sortby,
+                genres: getParameterByName('genres')
+            },
             success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
         });
     }

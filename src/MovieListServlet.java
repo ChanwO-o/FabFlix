@@ -43,7 +43,9 @@ public class MovieListServlet extends HttpServlet
         System.out.println("received params: " + title + " " + year + " " + director + " " + star + " ");
         String genres = request.getParameter("genres");
         String title_start=request.getParameter("title_start");
+        System.out.println("received title_start: " + title_start);
         System.out.println("received genres: " + genres);
+
         String first_sort= request.getParameter("first_sortby");
         System.out.println("received sortby: " + first_sort);
         String second_sort= request.getParameter("second_sortby");
@@ -362,11 +364,12 @@ public class MovieListServlet extends HttpServlet
         }
         else // sorting here
         {
+            System.out.println("E!#!#!");
             try {
                 // Get a connection from dataSource
                 Connection dbcon = dataSource.getConnection();
-
-                // Declare our statement
+                System.out.println("#!#!#!#");
+                                // Declare our statement
                 Statement statement = dbcon.createStatement();
                 String query = "select movies.id,movies.title,movies.year,movies.director,ratings.rating,group_concat(stars.id) as star_id" +
                         ", substring_index(group_concat(distinct genres.name separator ','), ',', 3) as genres, " +
@@ -374,106 +377,78 @@ public class MovieListServlet extends HttpServlet
                         " left join ratings on ratings.movieId=movies.id inner join genres on " +
                         "genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
                         "inner join stars on stars_in_movies.starId=stars.id ";
-                if (!title.isEmpty())
-                    query += " and movies.title like '%" + title + "%' ";
-                if (!year.isEmpty())
-                    query += " and movies.year = " + year;
-                if (!director.isEmpty())
-                    query += " and movies.director like '%" + director + "%' ";
-                if (!star.isEmpty())
-                    query += " and stars.name like '%" + star + "%' ";
+                System.out.println("#!#!#!#");
+                System.out.println(title);
 
-                query += " group by movies.title ";
-                if(first_sort.equals("title_asc"))
+                if (title != null && !title.isEmpty()) {
+                    query += " and movies.title like '%" + title + "%' ";
+                }
+                System.out.println("1");
+                if (year != null && !year.isEmpty())
+                    query += " and movies.year = " + year;
+                System.out.println("2");
+                if (director != null && !director.isEmpty())
+                    query += " and movies.director like '%" + director + "%' ";
+                System.out.println("3");
+                if (star != null && !star.isEmpty())
+                    query += " and stars.name like '%" + star + "%' ";
+                System.out.println("4");
+                if (title_start !=null && !title_start.isEmpty())
                 {
-                    if(second_sort.equals("title_asc"))
-                    {
-                        query += "order by movies.title";
-                    }
-                    else if(second_sort.equals("title_dsc"))
-                    {
-                        query += "order by movies.title desc";
-                    }
-                    else if(second_sort.equals("rating_asc"))
-                    {
-                        query += "order by movies.title, rating ASC ";
-                    }
-                    else if(second_sort.equals("rating_dsc"))
-                    {
-                        query += "order by movies.title, rating DESC";
+                    if (title_start.contains("*")) {
+                        query += " and movies.title not REGEXP '^[0-9a-z]'";
                     }
                     else
-                    {
+                        query += " and movies.title like '" + title_start + "%' ";
+                }
+                query += " group by movies.title ";
+                if (first_sort.equals("title_asc")) {
+                    if (second_sort.equals("title_asc")) {
+                        query += "order by movies.title";
+                    } else if (second_sort.equals("title_dsc")) {
+                        query += "order by movies.title desc";
+                    } else if (second_sort.equals("rating_asc")) {
+                        query += "order by movies.title, rating ASC ";
+                    } else if (second_sort.equals("rating_dsc")) {
+                        query += "order by movies.title, rating DESC";
+                    } else {
                         System.out.println("OPTIONSFAFA");
                         query += "order by movies.title";
                     }
-                }
-                else if(first_sort.equals("title_dsc"))
-                {
-                    if(second_sort.equals("title_asc"))
-                    {
+                } else if (first_sort.equals("title_dsc")) {
+                    if (second_sort.equals("title_asc")) {
                         query += "order by movies.title";
-                    }
-                    else if(second_sort.equals("title_dsc"))
-                    {
+                    } else if (second_sort.equals("title_dsc")) {
                         query += "order by movies.title desc";
-                    }
-                    else if(second_sort.equals("rating_asc"))
-                    {
+                    } else if (second_sort.equals("rating_asc")) {
                         query += "order by movies.title desc, rating ASC";
-                    }
-                    else if(second_sort.equals("rating_dsc"))
-                    {
+                    } else if (second_sort.equals("rating_dsc")) {
                         query += "order by movies.title desc, rating desc";
-                    }
-                    else
-                    {
+                    } else {
                         query += "order by movies.title desc";
                     }
-                }
-                else if(first_sort.equals("rating_asc"))
-                {
-                    if(second_sort.equals("title_asc"))
-                    {
+                } else if (first_sort.equals("rating_asc")) {
+                    if (second_sort.equals("title_asc")) {
                         query += "order by rating ASC, movies.title ASC";
-                    }
-                    else if(second_sort.equals("title_dsc"))
-                    {
+                    } else if (second_sort.equals("title_dsc")) {
                         query += "order by rating ASC, movies.title desc";
-                    }
-                    else if(second_sort.equals("rating_asc"))
-                    {
+                    } else if (second_sort.equals("rating_asc")) {
                         query += "order by rating ASC";
-                    }
-                    else if(second_sort.equals("rating_dsc"))
-                    {
+                    } else if (second_sort.equals("rating_dsc")) {
                         query += "order by rating desc";
-                    }
-                    else
-                    {
+                    } else {
                         query += "order by rating ASC";
                     }
-                }
-                else
-                {
-                    if(second_sort.equals("title_asc"))
-                    {
+                } else {
+                    if (second_sort.equals("title_asc")) {
                         query += "order by rating desc, movies.title ASC";
-                    }
-                    else if(second_sort.equals("title_dsc"))
-                    {
+                    } else if (second_sort.equals("title_dsc")) {
                         query += "order by rating desc, movies.title desc";
-                    }
-                    else if(second_sort.equals("rating_asc"))
-                    {
+                    } else if (second_sort.equals("rating_asc")) {
                         query += "order by rating ASC";
-                    }
-                    else if(second_sort.equals("rating_dsc"))
-                    {
+                    } else if (second_sort.equals("rating_dsc")) {
                         query += "order by rating desc";
-                    }
-                    else
-                    {
+                    } else {
                         System.out.println("FAFAFAFASF@#$#");
                         query += "order by rating desc";
                     }
@@ -492,18 +467,36 @@ public class MovieListServlet extends HttpServlet
                     String movie_rating = rs.getString("rating");
                     String movie_genres = rs.getString("genres");
                     String movie_stars = rs.getString("stars");
-
-                    // Create a JsonObject based on the data we retrieve from rs
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("movie_id", movie_id);
-                    jsonObject.addProperty("star_id", star_id);
-                    jsonObject.addProperty("movie_title", movie_title);
-                    jsonObject.addProperty("movie_year", movie_year);
-                    jsonObject.addProperty("movie_director", movie_director);
-                    jsonObject.addProperty("movie_rating", movie_rating);
-                    jsonObject.addProperty("movie_genres", movie_genres);
-                    jsonObject.addProperty("movie_stars", movie_stars);
-                    jsonArray.add(jsonObject);
+                    if (genres == null || genres == "") //check browse by genres
+                    {
+                        // Create a JsonObject based on the data we retrieve from rs
+                        JsonObject jsonObject = new JsonObject();
+                        jsonObject.addProperty("movie_id", movie_id);
+                        jsonObject.addProperty("star_id", star_id);
+                        jsonObject.addProperty("movie_title", movie_title);
+                        jsonObject.addProperty("movie_year", movie_year);
+                        jsonObject.addProperty("movie_director", movie_director);
+                        jsonObject.addProperty("movie_rating", movie_rating);
+                        jsonObject.addProperty("movie_genres", movie_genres);
+                        jsonObject.addProperty("movie_stars", movie_stars);
+                        jsonArray.add(jsonObject);
+                    }
+                    else {//genre sorting here
+                        System.out.println("HERERERERER");
+                        if (movie_genres.contains(genres)) {
+                            //System.out.println(movie_genres);
+                            JsonObject jsonObject = new JsonObject();
+                            jsonObject.addProperty("movie_id", movie_id);
+                            jsonObject.addProperty("star_id", star_id);
+                            jsonObject.addProperty("movie_title", movie_title);
+                            jsonObject.addProperty("movie_year", movie_year);
+                            jsonObject.addProperty("movie_director", movie_director);
+                            jsonObject.addProperty("movie_rating", movie_rating);
+                            jsonObject.addProperty("movie_genres", movie_genres);
+                            jsonObject.addProperty("movie_stars", movie_stars);
+                            jsonArray.add(jsonObject);
+                        }
+                    }
 
                 }
 
@@ -518,9 +511,7 @@ public class MovieListServlet extends HttpServlet
                 System.out.println(query);
                 // Perform the query
                 //ResultSet rs = statement.executeQuery(query);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
 
                 // write error message JSON object to output
                 JsonObject jsonObject = new JsonObject();
@@ -531,6 +522,7 @@ public class MovieListServlet extends HttpServlet
                 response.setStatus(500);
 
             }
+
 
 
         }
