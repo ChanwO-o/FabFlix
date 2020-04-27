@@ -1,4 +1,3 @@
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
@@ -17,45 +16,65 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-// Declaring a WebServlet called ItemsServlet, which maps to url "/items"
 @WebServlet(name = "PaymentServlet", urlPatterns = "/api/payment")
 public class PaymentServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
-	// Create a dataSource which registered in web.xml
 	@Resource(name = "jdbc/moviedb")
 	private DataSource dataSource;
 
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		// Get a instance of current session on the request
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
+	{
 		HttpSession session = request.getSession();
-
 		PrintWriter out = response.getWriter();
 		// Retrieve data named "cartList" from session
 		Map<String, Integer> cartList = (HashMap<String, Integer>) session.getAttribute("cartList");
 
-		// If "cartList" is not found on session, means this is a new user, thus we create a new cartList for the user
-		if (cartList == null) {
-			System.out.println("no cartList found; creating new cartList for user");
-			// Add the newly created cartList to session, so that it could be retrieved next time
-			session.setAttribute("cartList", new HashMap<String, Integer>());
-			cartList = (HashMap<String, Integer>) session.getAttribute("cartList"); // reassign cartList variable to newly created list
+		String fname = request.getParameter("fname");
+		String lname = request.getParameter("lname");
+		String card = request.getParameter("card");
+		String exp = request.getParameter("exp");
+		System.out.println("fname = " + fname);
+		System.out.println("lname = " + lname);
+		System.out.println("card = " + card);
+		System.out.println("exp = " + exp);
+
+		try
+		{
+			Connection dbcon = dataSource.getConnection();
+			Statement statement = dbcon.createStatement();
+
+			String query = "select * from creditcards " +
+					"where id= '"+card+"'"+ " and firstName='" + fname + "'" +  "and lastName='" + lname + "'" + " and expiration='"+ exp + "'";
+			ResultSet rs = statement.executeQuery(query);
+			boolean cardsuccess = false;
+			boolean fnamesuccess=false;
+			boolean lnamesuccess=false;
+			boolean expsuccess=false;
+
+			JsonObject responseJsonObject = new JsonObject();
+
+			if (!rs.isBeforeFirst() ) {
+				System.out.println("No data");
+				responseJsonObject.addProperty("message",  " Wrong Information");
+			}
+			else { // payment success
+				responseJsonObject.addProperty("status", "success");
+				responseJsonObject.addProperty("message", "success");
+				synchronized (cartList) {
+					cartList.clear();
+				}
+			}
+			response.getWriter().write(responseJsonObject.toString());
+			rs.close();
+			statement.close();
+			dbcon.close();
 		}
-
-		double total = 0.00;
-		for (Map.Entry<String, Integer> entry : cartList.entrySet()) {
-			total += generateMoviePrice(entry.getKey()) * entry.getValue();
+		catch (IOException | SQLException e) {
+			e.printStackTrace();
 		}
-		System.out.println("total: " + total);
-		JsonObject jsonObject = new JsonObject();
-		jsonObject.addProperty("grand_total", total);
-		out.write(jsonObject.toString());
-
-		out.close();
-	}
-
-	private double generateMoviePrice(String movie_id) {
-		return 15.00;
 	}
 }

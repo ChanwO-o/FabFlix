@@ -35,13 +35,13 @@
             <!-- Place Order -->
             <div class="placeorder_section">
                 <form id="placeorder_form" class="example" method="POST" action="payment.html">
-                    <input type="text" placeholder="First name" name="title">
-                    <input type="text" placeholder="Last name" name="year">
-                    <input type="text" placeholder="Credit Card Number" name="director">
-                    <input type="text" placeholder="Expire date" name="star">
+                    <input type="text" placeholder="First name" name="fname">
+                    <input type="text" placeholder="Last name" name="lname">
+                    <input type="text" placeholder="Credit Card Number" name="card">
+                    <input type="text" placeholder="Expire date" name="exp">
                     <button type="submit"><i class="fa fa-shopping-cart">Place order</i></button>
                 </form>
-
+                <div id="payment_error"></div>
             </div>
             <!-- End Place Order -->
         </div>
@@ -56,3 +56,4 @@
 </body>
 
 </html>
+
