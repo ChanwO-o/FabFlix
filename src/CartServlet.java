@@ -14,7 +14,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 // Declaring a WebServlet called ItemsServlet, which maps to url "/items"
 @WebServlet(name = "ItemServlet", urlPatterns = "/api/cart")
@@ -32,28 +33,67 @@ public class CartServlet extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		// Retrieve data named "cartList" from session
-		ArrayList<String> cartList = (ArrayList<String>) session.getAttribute("cartList");
+		Map<String, Integer> cartList = (HashMap<String, Integer>) session.getAttribute("cartList");
 
 		// If "cartList" is not found on session, means this is a new user, thus we create a new cartList for the user
 		if (cartList == null) {
 			System.out.println("no cartList found; creating new cartList for user");
-			// Add the newly created ArrayList to session, so that it could be retrieved next time
-			session.setAttribute("cartList", new ArrayList<String>());
-			cartList = (ArrayList<String>) session.getAttribute("cartList"); // reassign cartList variable to newly created list
+			// Add the newly created cartList to session, so that it could be retrieved next time
+			session.setAttribute("cartList", new HashMap<String, Integer>());
+			cartList = (HashMap<String, Integer>) session.getAttribute("cartList"); // reassign cartList variable to newly created list
 		}
 
-		String newMovieId = request.getParameter("id"); // Get parameter that sent by GET request url
-//		System.out.println("newMovieId: " + newMovieId);
+		String movieId = request.getParameter("id"); // Get parameter that sent by GET request url
+		String remove = request.getParameter("remove");
+		String update = request.getParameter("update");
+		String quantity = request.getParameter("qty");
+		System.out.println("movieId: " + movieId + " remove: " + remove + " update: " + update + " quantity: " + quantity);
 
-		// In order to prevent multiple clients, requests from altering cartList at the same time, we
-		// lock the ArrayList while updating
-		if (newMovieId != null) {
+		// Case 1: add movie to cart
+		// In order to prevent multiple clients, requests from altering cartList at the same time, we lock the cartList while updating
+		if (movieId != null && remove == null && update == null) {
 			synchronized (cartList) {
-				cartList.add(newMovieId); // Add the new item to the cartList
+				if (cartList.containsKey(movieId)) {
+					System.out.println("add to cartList: movie existing, incrementing by 1");
+					cartList.put(movieId, cartList.get(movieId) + 1); // increment quantity by 1
+				}
+				else {
+					System.out.println("add to cartList: new movie, qty set to 1");
+					cartList.put(movieId, 1); // new movie added to cart
+				}
 				session.setAttribute("cartList", cartList); // save updated cartList to user session
+				System.out.println("cartList updated: " + cartList);
 			}
 		}
-//		System.out.println("cartList: " + cartList);
+		// Case 2: remove movie from cart
+		else if (movieId != null && remove != null && remove.equals("true") && update == null) {
+			System.out.println("removing movie with movieId: " + movieId);
+			synchronized (cartList) {
+				cartList.remove(movieId);
+				session.setAttribute("cartList", cartList); // save updated cartList to user session
+				System.out.println("cartList updated: " + cartList);
+			}
+		}
+		// Case 3: update existing movie in cart to quantity
+		else if (movieId != null && remove == null && update != null && update.equals("true") && quantity != null) {
+			System.out.println("updating movie with movieId: " + movieId + " to quantity: " + quantity);
+			synchronized (cartList) {
+				int q = Integer.parseInt(quantity);
+				if (q <= 0) // remove movie if updated quantity is 0 or less
+					cartList.remove(movieId);
+				else
+					cartList.put(movieId, q);
+				session.setAttribute("cartList", cartList); // save updated cartList to user session
+				System.out.println("cartList updated: " + cartList);
+			}
+		}
+
+		if (cartList.isEmpty()) { // if cart is empty, no need to query anything!
+			out.write(new JsonArray().toString());
+			response.setStatus(200);
+			out.close();
+			return;
+		}
 
 		try {
 			Connection dbcon = dataSource.getConnection(); // Get a connection from dataSource
@@ -64,9 +104,11 @@ public class CartServlet extends HttpServlet {
 					"where ratings.movieId=movies.id and movies.id in (";
 
 			// append each movie id in cart to query
-			for (int i = 0; i < cartList.size(); ++i) {
-				query += "'" + cartList.get(i) + "'";
-				if (i != cartList.size() - 1)
+			int entryCounter = 0;
+			for (Map.Entry<String, Integer> movieEntry : cartList.entrySet()) {
+				entryCounter++;
+				query += "'" + movieEntry.getKey() + "'";
+				if (entryCounter != cartList.size())
 					query += ",";
 			}
 			query += ") "; // closing bracket for movieId group
@@ -74,6 +116,7 @@ public class CartServlet extends HttpServlet {
 			query += "and movies.id=genres_in_movies.movieId and genres_in_movies.genreId=genres.id " +
 					"and movies.id=stars_in_movies.movieId and stars.id=stars_in_movies.starId " +
 					"group by movies.id"; // finish the query
+			System.out.println("query: " + query);
 
 			ResultSet rs = statement.executeQuery(query);
 			JsonArray jsonArray = new JsonArray();
@@ -96,6 +139,8 @@ public class CartServlet extends HttpServlet {
 				jsonObject.addProperty("movie_genres", movie_genres);
 				jsonObject.addProperty("movie_stars", movie_stars);
 				jsonObject.addProperty("movie_rating", movie_rating);
+				jsonObject.addProperty("movie_price", generateMoviePrice(movie_id));
+				jsonObject.addProperty("movie_quantity", cartList.get(movie_id));
 				jsonArray.add(jsonObject);
 			}
 			System.out.println("cartList jsonArray: " + jsonArray);
@@ -104,7 +149,6 @@ public class CartServlet extends HttpServlet {
 			out.write(jsonArray.toString());
 			// set response status to 200 (OK)
 			response.setStatus(200);
-			System.out.println("cart jsonArray sent to frontend");
 
 			rs.close();
 			statement.close();
@@ -112,11 +156,16 @@ public class CartServlet extends HttpServlet {
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
+			System.out.println(e.getMessage());
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("errorMessage", e.getMessage());
 			out.write(jsonObject.toString());
 			response.setStatus(500);
 		}
 		out.close();
+	}
+
+	private double generateMoviePrice(String movie_id) {
+		return 15.00;
 	}
 }
