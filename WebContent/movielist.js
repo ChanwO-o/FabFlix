@@ -11,21 +11,20 @@ function handleMovieResult(resultData) {
     {
 
         // Concatenate the html tags with resultData jsonObject
-        let rowHTML = "";
-        rowHTML += "<tr>";
+        let rowHTML = "<tr>";
         rowHTML +=
-            "<th>" +
+            "<td>" +
             // Add a link to single-movie.html with id passed with GET url parameter
             '<a href="single-movie.html?id=' + resultData[i]['movie_id']  +'&check_counter=1' + '">'
             + resultData[i]["movie_title"] +     // display movie_title for the link text
             '</a>' +
-            "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_year"] + "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_director"] + "</th>";
+            "</td>";
+        rowHTML += "<td>" + resultData[i]["movie_year"] + "</td>";
+        rowHTML += "<td>" + resultData[i]["movie_director"] + "</td>";
 
-        rowHTML += "<th>" + resultData[i]["movie_genres"] + "</th>";
+        rowHTML += "<td>" + resultData[i]["movie_genres"] + "</td>";
         // stars hyperlinks
-        rowHTML += "<th>";
+        rowHTML += "<td>";
         var stars_array = resultData[i]["movie_stars"].split(',');
         var stars_id_array=resultData[i]["star_id"].split(',');
 
@@ -43,10 +42,10 @@ function handleMovieResult(resultData) {
                     '</a>';
             }
         }
-        rowHTML += "</th>";
-        // rowHTML += "<th>" + resultData[i]["movie_stars"] + "</th>";
+        rowHTML += "</td>";
+        // rowHTML += "<td>" + resultData[i]["movie_stars"] + "</td>";
 
-        rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
+        rowHTML += "<td>" + resultData[i]["movie_rating"] + "</td>";
 
         // $.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + resultData[i]["movie_title"],function(json)
         // {
@@ -74,11 +73,27 @@ function handleMovieResult(resultData) {
         //     movieTableBodyElement.append(rowHTML);
         // });
 
+        rowHTML += "<td><input name=\"addToCart\" type=\"submit\" value=\"Add to Cart\" onclick=\"addToCart('" + resultData[i]['movie_id'] + "')\"></td>";
+        rowHTML += "</tr>"; // close row tag
+
         // Append the row created to the table body, which will refresh the page
-        rowHTML += "</tr>";
-         movieTableBodyElement.append(rowHTML);
+        movieTableBodyElement.append(rowHTML);
     }
 }
+
+function addToCart(movie_id) {
+    jQuery.ajax({
+        dataType: "json",  // Setting return data type
+        method: "GET",// Setting request method
+        cache: true,
+        url: "api/cart?id=" + movie_id,
+        success: (resultData) => {
+            console.log("addToCart() success, resultData: ", resultData);
+            alert("Movie added to cart!");
+        }
+    });
+}
+
 function getParameterByName(target) {
     // Get request URL
     let url = window.location.href;
