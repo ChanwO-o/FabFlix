@@ -88,8 +88,10 @@ function addToCart(movie_id) {
         cache: true,
         url: "api/cart?id=" + movie_id,
         success: (resultData) => {
-            console.log("addToCart() success, resultData: ", resultData);
             alert("Movie added to cart!");
+        },
+        error: (resultData) => {
+            alert("Failed to add movie to cart!");
         }
     });
 }
