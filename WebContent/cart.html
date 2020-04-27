@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Cart</title>
+</head>
+<body>
+
+<div id="header">
+    <span class="gradtext">FabFlix</span>
+<!--    <p>Access session with http://localhost:8080/cs122b-spring20-project2-session-example/session?myname=Michael</p>-->
+<!--    <p>Access items with http://localhost:8080/cs122b-spring20-project2-session-example/items?newItem=DVD</p>-->
+</div>
+
+<div id="logout">
+    <ul class="menu_list">
+        <li class="home">
+            <button type="button" class="btn_home" onclick="location.href='mainpage.html'" >Home</button>
+        </li>
+        <li class="logout">
+            <button type="button" class="btn_logout"  onclick="location.href='login.html'" >Logout</button>
+        </li>
+    </ul>
+</div>
+
+<div id="content" class="clearfix">
+    <div class="section_main">
+        <div class="cart_section">
+            <h2>Cart</h2>
+            <table id=cart_table class="table table-striped">
+                <thead>
+                    <tr id=cart_table_columns>
+                        <th>Poster</th>
+                        <th>Title</th>
+                        <th>Year</th>
+                        <th>Director</th>
+                        <th>Genres</th>
+                        <th>Stars</th>
+                        <th>Rating</th>
+                    </tr>
+                </thead>
+                <tbody id=cart_table_body>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script src="cart.js"></script>
+</body>
+
+</html>

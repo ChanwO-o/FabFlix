@@ -22,7 +22,7 @@
         </li>
 
         <li class="Cart">
-            <button type="button" class="btn_cart"  onclick="location.href='movielist.html'" >Cart</button>
+            <button type="button" class="btn_cart"  onclick="location.href='cart.html'" >Cart</button>
         </li>
         <li class="logout">
             <button type="button" class="btn_logout"  onclick="location.href='login.html'" >Logout</button>
@@ -39,13 +39,14 @@
                 <br>
                 <h3 id="movie_info"></h3>
 
-
+                <form id="addtocart_form" class="example" method="GET" action="cart.html">
+                    <button type="submit" class="btn_cart" onclick="addToCart(movie_id)"><i class="fa fa-plus"> Add to Cart</i></button>
+                </form>
             </div>
-            <!-- End Advanced Search -->
 
         </div>
     </div>
-    <button type="button" class="goback_button" style="float:right" button onclick="goBack()" >Back to Search results</button>
+    <button type="button" class="goback_button" style="float:right" onclick="goBack()" >Back to Search results</button>
 </div>
 
 
