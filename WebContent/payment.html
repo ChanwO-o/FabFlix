@@ -28,7 +28,22 @@
     <div class="section_main">
         <div class="payment_section">
             <h1>Order Details</h1>
+
+            <!-- Total price -->
             <div id="grand_total"></div>
+
+            <!-- Place Order -->
+            <div class="placeorder_section">
+                <form id="placeorder_form" class="example" method="POST" action="payment.html">
+                    <input type="text" placeholder="First name" name="title">
+                    <input type="text" placeholder="Last name" name="year">
+                    <input type="text" placeholder="Credit Card Number" name="director">
+                    <input type="text" placeholder="Expire date" name="star">
+                    <button type="submit"><i class="fa fa-shopping-cart">Place order</i></button>
+                </form>
+
+            </div>
+            <!-- End Place Order -->
         </div>
     </div>
 </div>
