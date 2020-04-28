@@ -6,8 +6,8 @@ function handleMovieResult(resultData) {
     let movieTableBodyElement = jQuery("#movie_table_body");
     if(pg == null || pg=="")
     {
-        pg = resultData[0]['pg_temp'];
-        pn= resultData[0]['pn_temp'];
+        pg = "1";
+        pn= "10";
         location.replace(window.location.search + "&pn=10&pg=1");
     }
     for (let i = (pg-1)*pn ; i < (pg*pn); i++)
@@ -17,10 +17,10 @@ function handleMovieResult(resultData) {
         if(i>resultData.length-1)
         {
             // rowHTML += "<tr>";
-           rowHTML += "</tr>";
-           rowHTML += "<td style = "+'"' + "color: red" + '"' +">"+ "NO MORE SEARCH RESULT </td>";
 
-           movieTableBodyElement.append(rowHTML);
+            rowHTML += "</tr>";
+            rowHTML = "<br><br><p style ="+ '"' + "color:red;" +'"' + ">NO MORE SEARCH RESULT </p>" + rowHTML;
+            movieTableBodyElement.append(rowHTML);
             break;
         }
         // Concatenate the html tags with resultData jsonObject
