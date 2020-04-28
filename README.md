@@ -1,4 +1,4 @@
-# Fabflix
+# FabFlix
 
 ### CS122b Spring 2020, Team 131
 
@@ -18,18 +18,41 @@ Watch the demo here: https://www.youtube.com/watch?v=ZovyHm_lWuY
 
 ## Installation
 
-Clone the git repository
+1 ) Clone the git repository
 ```
 git clone https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131.git
 cd cs122b-spring20-team-131
 ```
 
-Install dependencies
+2 ) Install dependencies
 ```
 mvn package
 ```
 
-View app on browser: visit localhost:8080 to view running app in your browser.
+3 ) Export .war file & deploy to Tomcat
+```
+mv cs122b-spring20-team131.war ~/path-to-your-tomcat-installation/webapps
+```
+
+4 ) View app on browser: visit localhost:8080 to view running app in your browser.
+
+
+## Substring matching design
+
+When searching for movies, users have the following options for performing advanced search queries
+(Database queries are called in **MovieListServlet.java**):
+* title starts with character
+```
+ ..and movies.title like 'A%';
+```
+* title includes string
+```
+ ..and movies.title like '%A%';
+```
+* director/star includes string
+```
+ ..and movies.director like '%cam%';
+```
 
 
 ## Authors
