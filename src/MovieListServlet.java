@@ -405,6 +405,10 @@ public class MovieListServlet extends HttpServlet
                     else
                         query += " and movies.title like '" + title_start + "%' ";
                 }
+                if(genres != null && !genres.isEmpty())
+                {
+                    query += " and genres.name ='" + genres + "'";
+                }
                 query += " group by movies.title ";
                 if (first_sort.equals("title_asc")) {
                     if (second_sort.equals("title_asc")) {
@@ -470,36 +474,19 @@ public class MovieListServlet extends HttpServlet
                     String movie_rating = rs.getString("rating");
                     String movie_genres = rs.getString("genres");
                     String movie_stars = rs.getString("stars");
-                    if (genres == null || genres == "") //check browse by genres
-                    {
-                        // Create a JsonObject based on the data we retrieve from rs
-                        JsonObject jsonObject = new JsonObject();
-                        jsonObject.addProperty("movie_id", movie_id);
-                        jsonObject.addProperty("star_id", star_id);
-                        jsonObject.addProperty("movie_title", movie_title);
-                        jsonObject.addProperty("movie_year", movie_year);
-                        jsonObject.addProperty("movie_director", movie_director);
-                        jsonObject.addProperty("movie_rating", movie_rating);
-                        jsonObject.addProperty("movie_genres", movie_genres);
-                        jsonObject.addProperty("movie_stars", movie_stars);
-                        jsonArray.add(jsonObject);
-                    }
-                    else {//genre sorting here
 
-                        if (movie_genres.contains(genres)) {
-                            //System.out.println(movie_genres);
-                            JsonObject jsonObject = new JsonObject();
-                            jsonObject.addProperty("movie_id", movie_id);
-                            jsonObject.addProperty("star_id", star_id);
-                            jsonObject.addProperty("movie_title", movie_title);
-                            jsonObject.addProperty("movie_year", movie_year);
-                            jsonObject.addProperty("movie_director", movie_director);
-                            jsonObject.addProperty("movie_rating", movie_rating);
-                            jsonObject.addProperty("movie_genres", movie_genres);
-                            jsonObject.addProperty("movie_stars", movie_stars);
-                            jsonArray.add(jsonObject);
-                        }
-                    }
+                    // Create a JsonObject based on the data we retrieve from rs
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("movie_id", movie_id);
+                    jsonObject.addProperty("star_id", star_id);
+                    jsonObject.addProperty("movie_title", movie_title);
+                    jsonObject.addProperty("movie_year", movie_year);
+                    jsonObject.addProperty("movie_director", movie_director);
+                    jsonObject.addProperty("movie_rating", movie_rating);
+                    jsonObject.addProperty("movie_genres", movie_genres);
+                    jsonObject.addProperty("movie_stars", movie_stars);
+                    jsonArray.add(jsonObject);
+
                 }
 
                 // write JSON string to output
