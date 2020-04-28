@@ -20,7 +20,7 @@ function handleResult(resultData) {
     for (let i = 0; i < resultData.length; i++)
     {
         console.log(resultData[i]['genre_name']);
-        rowHTML += '<a href="movielist.html?genres=' + resultData[i]['genre_name']  + '">' + resultData[i]['genre_name']+ " | "
+        rowHTML += '<a href="movielist.html?pn=10&pg=1&genres=' + resultData[i]['genre_name']  + '">' + resultData[i]['genre_name']+ " | "
 
             +'</a>';
         if(i%4==0 && i!=0)
