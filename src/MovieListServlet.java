@@ -1,6 +1,5 @@
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.sun.deploy.security.SelectableSecurityManager;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -8,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,31 +31,40 @@ public class MovieListServlet extends HttpServlet
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-
         response.setContentType("application/json"); // Response mime type
 
-        // Retrieve parameters from url request
+        // Get a instance of current session on the request
+        HttpSession session = request.getSession();
 
+        // Retrieve parameters from url request
         String title = request.getParameter("title");
         String year = request.getParameter("year");
         String director = request.getParameter("director");
         String star = request.getParameter("star");
-        System.out.println("received params: " + title + " " + year + " " + director + " " + star + " ");
         String genres = request.getParameter("genres");
         String title_start=request.getParameter("title_start");
-        System.out.println("received title_start: " + title_start);
-        System.out.println("received genres: " + genres);
-
         String first_sort= request.getParameter("first_sortby");
-        System.out.println("received sortby: " + first_sort);
         String second_sort= request.getParameter("second_sortby");
-        System.out.println("received second sortby: " + second_sort);
+        System.out.println("received params: " + "title: " + title + " year: " + year + " director: " + director + " star: " + star + " genres: " + genres +
+                " title_start: " + title_start + " first_sortby: " + first_sort + " second_sortby: " + second_sort);
+
+        String parameterLog = "title=" + title +
+                "&year=" + year +
+                "&director=" + director +
+                "&star=" + star +
+                "&genres=" + genres +
+                "&title_start=" + title_start +
+                "&first_sortby=" + first_sort +
+                "&second_sortby=" + second_sort;
+        session.setAttribute("parameterLog", parameterLog);
+        System.out.println("parameterLog: " + parameterLog);
+
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
-        if(first_sort==null || first_sort == "")
+        if(first_sort==null || first_sort.isEmpty())
         {
-            if (genres == null || genres == "") //check browse by genres
+            if (genres == null || genres.isEmpty()) //check browse by genres
             {
                 if ((title == null || title.equals("")) && (year == null || year.equals("")) &&
                         (director == null || director.equals("")) && (star == null || star.equals("")))
