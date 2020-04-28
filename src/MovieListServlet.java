@@ -1,6 +1,5 @@
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.sun.deploy.security.SelectableSecurityManager;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
