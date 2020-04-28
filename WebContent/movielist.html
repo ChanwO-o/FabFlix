@@ -51,18 +51,8 @@
         <div class="search_section">
 
 
-            <div class = "button_group">
-                <ul class = "btn_group" style="float: right; display: inline;">
-                    <li>
-                        <button type="Next" onclick="Next()"> Next</button>
-                    </li>
-                    <li>
-                        <button type="Prev" onclick="Prev()"> Prev</button>
-                    </li>
-                </ul>
-            </div>
-            <br>
-            <br>
+
+
             <div class="advancedsearch">
                 <h2>Search Results</h2>
                 <table id=movie_table class="table table-striped">
@@ -87,7 +77,8 @@
             </div>
             <!-- End Advanced Search -->
             <div class = "button_group">
-                <ul class = "btn_group" style="float: right; display: inline;">
+                <p style = "text-align:right; margin-right:30px">Results Per Page:</p>
+                <ul class = "btn_group" style="float: right; margin-right:30px; margin-bottom: 30px; display: inline;">
                     <li>
                         <button type="page_10" onclick="page_10()"> 10 </button>
                     </li>
@@ -100,6 +91,17 @@
                     <li>
                         <button type="page_100" onclick="page_100()"> 100 </button>
                     </li>
+                </ul>
+            </div>
+            <div class = "button_group">
+                <ul class = "btn_group" style="float: left; margin-left: 30px; margin-bottom: 30px; display: inline;">
+                    <li>
+                        <button type="button" onclick="Prev()"> Prev</button>
+                    </li>
+                    <li>
+                        <button type="button" onclick="Next()"> Next</button>
+                    </li>
+
                 </ul>
             </div>
         </div>
@@ -305,33 +307,6 @@
     }
     function page_10()
     {
-        // let k=  window.location.href;
-        // let first_sortby = getParameterByName('first_sortby');
-        // let pn = getParameterByName('pn');
-        // let pg = getParameterByName('pg');
-        // if(first_sortby != null && first_sortby.length >1)
-        // {
-        //     let second_sortby= getParameterByName('second_sortby');
-        //     if(second_sortby != null && second_sortby.length>1)
-        //     {
-        //         let u = new URL(window.location.href);
-        //         u.searchParams.set("pn","10");
-        //         location.replace(u);
-        //     }
-        //     else
-        //     {
-        //         let u = new URL(window.location.href);
-        //         u.searchParams.set("pn","10");
-        //         location.replace(u);
-        //
-        //     }
-        // }
-        // else
-        // {
-        //     let u = new URL(window.location.href);
-        //     u.searchParams.set("pn","10");
-        //     location.replace(u);
-        // }
         let u = new URL(window.location.href);
         u.searchParams.set("pn","10");
         location.replace(u);

@@ -5,10 +5,7 @@ body {
     background-position: center;
 }
 
-#login_form
-{
-    border: 1px solid black;
-}
+
 /* layout */
 #header{
     height: 100px;
