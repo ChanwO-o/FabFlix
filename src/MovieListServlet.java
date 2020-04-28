@@ -34,11 +34,19 @@ public class MovieListServlet extends HttpServlet
         response.setContentType("application/json"); // Response mime type
 
         // Retrieve parameters from url request
-
+        System.out.println("FAFAf");
         String title = request.getParameter("title");
+        System.out.println(title);
+        if(title!=null)
+            title= title.replace('+',' ');
         String year = request.getParameter("year");
+
         String director = request.getParameter("director");
+        if(director!=null)
+            director= director.replace('+',' ');
         String star = request.getParameter("star");
+        if(star!=null)
+            star= star.replace('+',' ');
         String genres = request.getParameter("genres");
         String title_start=request.getParameter("title_start");
 
@@ -298,15 +306,17 @@ public class MovieListServlet extends HttpServlet
                     Statement statement = dbcon.createStatement();
 
                     String query = "select movies.id,movies.title,movies.year,movies.director,ratings.rating,group_concat(stars.id) as star_id" +
-                            ", substring_index(group_concat(distinct genres.name separator ','), ',', 3) as genres, " +
+                            ", substring_index(group_concat(distinct genres.name separator ','), ',', 3) as g, " +
                             "group_concat(stars.name) as stars from movies inner join genres_in_movies on movies.id=genres_in_movies.movieId" +
                             " left join ratings on ratings.movieId=movies.id inner join genres on " +
                             "genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
-                            "inner join stars on stars_in_movies.starId=stars.id group by movies.id";
+                            "inner join stars on stars_in_movies.starId=stars.id ";
                     // Perform the query
-                    ResultSet rs = statement.executeQuery(query);
-                    JsonArray jsonArray = new JsonArray();
 
+                    JsonArray jsonArray = new JsonArray();
+                    query+=" group by movies.id";
+                    System.out.println("query=" + query);
+                    ResultSet rs = statement.executeQuery(query);
                     // Iterate through each row of rs
 
                     while (rs.next()) {
@@ -316,14 +326,14 @@ public class MovieListServlet extends HttpServlet
                         String movie_year = rs.getString("year");
                         String movie_director = rs.getString("director");
                         String movie_rating = rs.getString("rating");
-                        String movie_genres = rs.getString("genres");
+                        String movie_genres = rs.getString("g");
                         String movie_stars = rs.getString("stars");
 
                         // Create a JsonObject based on the data we retrieve from rs
                        // System.out.println("movie_genres:" + movie_genres);
                         //System.out.println("Genres that query gives:" +genres);
-                        if (movie_genres.contains(genres)) {
-                            //System.out.println(movie_genres);
+
+                        if(movie_genres.contains(genres)) {
                             JsonObject jsonObject = new JsonObject();
                             jsonObject.addProperty("movie_id", movie_id);
                             jsonObject.addProperty("star_id", star_id);

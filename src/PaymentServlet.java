@@ -23,11 +23,18 @@ public class PaymentServlet extends HttpServlet {
 	@Resource(name = "jdbc/moviedb")
 	private DataSource dataSource;
 
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("PaymentServlet doGet()");
+
+	}
+
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
+		System.out.println("PaymentServlet doPost()");
 		HttpSession session = request.getSession();
 		PrintWriter out = response.getWriter();
 		// Retrieve data named "cartList" from session

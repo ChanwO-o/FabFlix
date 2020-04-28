@@ -34,25 +34,43 @@ function handleMovieResult(resultData) {
             "</td>";
         rowHTML += "<td>" + resultData[i]["movie_year"] + "</td>";
         rowHTML += "<td>" + resultData[i]["movie_director"] + "</td>";
+        let genres_array = resultData[i]["movie_genres"].split(',');
+        rowHTML += "<td>";
+        for (let j = 0; j < 3; ++j) {
+            if(genres_array[j] != undefined)
+            {
+                if (j == 2 || (genres_array[j+1] ==undefined && (j+1)<3) ) {
+                    rowHTML +=
+                        '<a href="movielist.html?pn=10&pg=1&genres=' + genres_array[j] + '">' + genres_array[j]
+                        + '</a>';
+                } else {
+                    rowHTML +=
+                        '<a href="movielist.html?pn=10&pg=1&genres=' + genres_array[j] + '">' + genres_array[j]
+                        + ',' +   // display star_name for the link text
+                        '</a>';
+                }
+            }
+        }
 
-        rowHTML += "<td>" + resultData[i]["movie_genres"] + "</td>";
+        rowHTML+= "</td>";
         // stars hyperlinks
         rowHTML += "<td>";
         var stars_array = resultData[i]["movie_stars"].split(',');
         var stars_id_array=resultData[i]["star_id"].split(',');
 
         for (let j = 0; j < 3; ++j) {
-            if(j==2)
+            if(stars_array[j] != undefined)
             {
-                rowHTML +=
-                    '<a href="single-star.html?id=' + stars_id_array[j] + '&check_counter=1' + '">'  + stars_array[j]
-                    + '</a>';
-            }
-            else {
-                rowHTML +=
-                    '<a href="single-star.html?id=' + stars_id_array[j] + '&check_counter=1' + '">'
-                    + stars_array[j] + ',' +   // display star_name for the link text
-                    '</a>';
+                if (j == 2 || (stars_array[j+1] ==undefined && (j+1)<3) ) {
+                    rowHTML +=
+                        '<a href="single-star.html?id=' + stars_id_array[j] + '&check_counter=1' + '">' + stars_array[j]
+                        + '</a>';
+                } else {
+                    rowHTML +=
+                        '<a href="single-star.html?id=' + stars_id_array[j] + '&check_counter=1' + '">'
+                        + stars_array[j] + ',' +   // display star_name for the link text
+                        '</a>';
+                }
             }
         }
         rowHTML += "</td>";
@@ -185,7 +203,7 @@ else
             data: {
                 first_sortby: first_sortby,
                 second_sortby:second_sortby,
-                genres: getParameterByName('genres')
+                genres: test
             },
             success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
         });
