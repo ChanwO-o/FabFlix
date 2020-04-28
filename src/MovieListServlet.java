@@ -37,9 +37,13 @@ public class MovieListServlet extends HttpServlet
         // Retrieve parameters from url request
 
         String title = request.getParameter("title");
+        title.replace("+","");
         String year = request.getParameter("year");
         String director = request.getParameter("director");
+        director.replace('+',' ');
+        System.out.println("FASFASFSADFSAD " + director);
         String star = request.getParameter("star");
+        star.replace("+"," ");
         System.out.println("received params: " + title + " " + year + " " + director + " " + star + " ");
         String genres = request.getParameter("genres");
         String title_start=request.getParameter("title_start");
@@ -62,7 +66,8 @@ public class MovieListServlet extends HttpServlet
                 if ((title == null || title.equals("")) && (year == null || year.equals("")) &&
                         (director == null || director.equals("")) && (star == null || star.equals("")))
                 {
-                    if ((title_start == null) || title_start == "") {
+                    if ((title_start == null) || title_start == "")
+                    {
                         try {
                             // Get a connection from dataSource
                             Connection dbcon = dataSource.getConnection();
@@ -231,8 +236,11 @@ public class MovieListServlet extends HttpServlet
                             query += " and movies.title like '%" + title + "%' ";
                         if (!year.isEmpty())
                             query += " and movies.year = " + year;
-                        if (!director.isEmpty())
+                        if (!director.isEmpty()) {
+
                             query += " and movies.director like '%" + director + "%' ";
+                            System.out.println("DIRECTOR : "+ director);
+                        }
                         if (!star.isEmpty())
                             query += " and stars.name like '%" + star + "%' ";
 

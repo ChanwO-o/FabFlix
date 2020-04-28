@@ -73,7 +73,18 @@ body {
     color:white;
     background-color: skyblue;
 }
-
+.ul_horizontal_buttons button
+{
+    border: 1px solid black;
+    background-color: rgba(0,0,0,0);
+    color: black;
+    padding: 12px;
+}
+.ul_horizontal_buttons button:hover
+{
+    color:white;
+    background-color: skyblue;
+}
 .btn_group button
 {
     border: 1px solid black;
