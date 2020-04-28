@@ -37,23 +37,14 @@ public class MovieListServlet extends HttpServlet
         // Retrieve parameters from url request
 
         String title = request.getParameter("title");
-        title.replace("+","");
         String year = request.getParameter("year");
         String director = request.getParameter("director");
-        director.replace('+',' ');
-        System.out.println("FASFASFSADFSAD " + director);
         String star = request.getParameter("star");
-        star.replace("+"," ");
-        System.out.println("received params: " + title + " " + year + " " + director + " " + star + " ");
         String genres = request.getParameter("genres");
         String title_start=request.getParameter("title_start");
-        System.out.println("received title_start: " + title_start);
-        System.out.println("received genres: " + genres);
 
         String first_sort= request.getParameter("first_sortby");
-        System.out.println("received sortby: " + first_sort);
         String second_sort= request.getParameter("second_sortby");
-        System.out.println("received second sortby: " + second_sort);
         // Output stream to STDOUT
         String pn = request.getParameter("pn");
         String pg = request.getParameter("pg");
@@ -237,9 +228,7 @@ public class MovieListServlet extends HttpServlet
                         if (!year.isEmpty())
                             query += " and movies.year = " + year;
                         if (!director.isEmpty()) {
-
                             query += " and movies.director like '%" + director + "%' ";
-                            System.out.println("DIRECTOR : "+ director);
                         }
                         if (!star.isEmpty())
                             query += " and stars.name like '%" + star + "%' ";
