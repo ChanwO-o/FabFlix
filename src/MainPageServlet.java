@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 
-@WebServlet(name = "SingleStarServlet", urlPatterns = "/api/single-star")
-public class SingleStarServlet extends HttpServlet {
+@WebServlet(name = "MainPageServlet", urlPatterns = "/api/mainpage")
+public class MainPageServlet extends HttpServlet {
     private static final long serialVersionUID = 2L;
 
     // Create a dataSource which registered in web.xml
@@ -30,8 +30,6 @@ public class SingleStarServlet extends HttpServlet {
         response.setContentType("application/json"); // Response mime type
 
         // Retrieve parameter id from url request.
-        String id = request.getParameter("id");
-        System.out.println("id: " + id);
 
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
@@ -43,9 +41,7 @@ public class SingleStarServlet extends HttpServlet {
             Statement statement = dbcon.createStatement();
 
             // Construct a query with parameter represented by "?"
-            String query = "SELECT stars.name, stars.birthYear, group_concat(movies.id) as id,group_concat(movies.title) as movie_lists FROM movies, stars_in_movies, stars " +
-                    "where stars.id='" + id + "' " +
-                    "and movies.id=stars_in_movies.movieId and stars.id=stars_in_movies.starId group by stars.id";
+            String query = "select distinct genres.name as name from genres";
 
             ResultSet rs = statement.executeQuery(query);
 
@@ -54,31 +50,22 @@ public class SingleStarServlet extends HttpServlet {
             // Iterate through each row of rs
             while (rs.next())
             {
-                String star_name = rs.getString("name");
-                String star_dob = rs.getString("birthYear");
-                String star_movies = rs.getString("movie_lists");
-                String movie_id=rs.getString("id");
+                String genre_name = rs.getString("name");
 
                 // Create a JsonObject based on the data we retrieve from rs
 
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("star_name", star_name);
-                jsonObject.addProperty("star_dob", star_dob);
-                jsonObject.addProperty("star_movies", star_movies);
-                jsonObject.addProperty("movie_id",movie_id);
+                jsonObject.addProperty("genre_name", genre_name);
                 jsonArray.add(jsonObject);
-
             }
 
-            // write JSON string to output
             out.write(jsonArray.toString());
-            // set response status to 200 (OK)
             response.setStatus(200);
-
             rs.close();
             statement.close();
             dbcon.close();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             // write error message JSON object to output
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
@@ -88,7 +75,5 @@ public class SingleStarServlet extends HttpServlet {
             response.setStatus(500);
         }
         out.close();
-
     }
-
 }

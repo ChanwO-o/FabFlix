@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Single Star Page</title>
+    <title>Single Movie Page</title>
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="common.css" />
-    <link rel="stylesheet" href="single-star.css" />
+    <link rel="stylesheet" href="single-movie.css" />
     <link rel="stylesheet" href="search.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -30,34 +30,29 @@
     <div class="section_main">
         <div class="search_section">
             <div class="advancedsearch">
-                <h1>Single Star Page</h1>
+                <h1>Result Page</h1>
                 <br>
-                <h3 id="star_info"></h3>
-
-
+                <h3 id="result"></h3>
+                <p> PURCHASE SUCCESS!</p>
+                <br>
             </div>
-            <!-- End Advanced Search -->
+
         </div>
     </div>
-    <button type="button" class="goback_button" style="float:right" button onclick="goBack()" >Back to Search results</button>
+    <button type="button" class="goback_button" style="float:right" onclick="goBack()" >Back to Search results</button>
 </div>
 
+
+<!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script src="single-star.js"></script>
-<script>
-   // let check_counter = getParameterByName('check_counter');
-    console.log("couter = " + check_counter);
-    let C= parseInt(check_counter);
-    console.log("FAFAFA = " + C);
-    function goBack()
-    {
-        let b = parseInt(check_counter);
-        console.log("b= " + b);
-        b= b*-1;
-        window.history.go(b);
-    }
-</script>
+
+<!-- Load our own JS file -->
+<!-- The path is relative to single-movie.html, since these two files are in the same directory -->
+<!-- Note the url does not contain a "/" in the beginning, which means the url is relative to current path
+     otherwise the url is relative to the root path-->
+
+<script src="result.js"></script>
 </body>
 </html>

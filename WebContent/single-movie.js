@@ -28,55 +28,93 @@ function handleResult(resultData) {
     let movieInfoElement = jQuery("#movie_info");
 
     // append two html <p> created to the h3 body, which will refresh the page
-    movieInfoElement.append("<p>Movie Title: " + resultData[0]["movie_title"] + "</p>" +
-        "<p>Year: " + resultData[0]["movie_year"] + "</p>");
-
-    console.log("handleResult: populating movie table from resultData");
-
-    // Populate the movie table
-    // Find the empty table body by id "movie_table_body"
-    let movieTableBodyElement = jQuery("#movie_table_body");
-
-    // Concatenate the html tags with resultData jsonObject to create table rows
-
-    let rowHTML = "";
-    rowHTML += "<tr>";
-    rowHTML += "<th>" + resultData[0]["movie_title"] + "</th>";
-    rowHTML += "<th>" + resultData[0]["movie_year"] + "</th>";
-    rowHTML += "<th>" + resultData[0]["movie_director"] + "</th>";
-    rowHTML += "<th>" + resultData[0]["movie_genres"] + "</th>";
-
-    // stars hyperlinks
-    rowHTML += "<th>";
-
-    var stars_array = resultData[0]["movie_stars"].split(',');
-    var stars_id_array=resultData[0]["stars_id"].split(',');
-    for (let i = 0; i < stars_array.length; ++i)
+    $.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + resultData[0]["movie_title"],function(json)
     {
-        if(i==stars_array.length-1)
+        //console.log(json.results[0].poster_path);
+        let count =0;
+        let k="";
+        let p=0;
+        for(p=0; p< json.results.length ; p++)
         {
-            rowHTML +=
-                '<a href="single-star.html?id=' + stars_id_array[i] + '">'  + stars_array[i]
-                + '</a>';
+            console.log(json.results[count]);
+            if(json.results[p].poster_path !=null)
+            {
+                count=1;
+                k += json.results[p].poster_path;
+                break;
+            }
+            //  count++;
         }
+        rowHTML="";
+        if(count ==1)
+            rowHTML="<img src="+ '"'+"http://image.tmdb.org/t/p/w500/" + k +'" '+ "width=" + "300 " +"height="+"300/>";
         else {
-            rowHTML +=
-                '<a href="single-star.html?id=' + stars_id_array[i] + '">'
-                + stars_array[i] + ',' +   // display star_name for the link text
-                '</a>';
+            rowHTML =   "<img src=" + '"' + "no_image.png" + '"' + " width=" + "100 " + "height=" + "100/>"  ;
         }
-    }
-    rowHTML += "</th>";
+        console.log("FAFAFA");
+        var genres_array=resultData[0]["movie_genres"].split(',');
+        let temp_1="<p> Genres: ";
+        for (let i = 0; i < genres_array.length; ++i) {
+            if(i==genres_array.length-1)
+            {
+                temp_1 +=
+                    '<a href="movielist.html?genres=' + genres_array[i] + '">' + genres_array[i]
+                    + '</a>';
+            }
+            else {
+                temp_1 +=
+                    '<a href="movielist.html?genres=' + genres_array[i] + '">'
+                    + genres_array[i] + ',' +   // display star_name for the link text
+                    '</a>';
+            }
+        }
+        temp_1 += "</p><p> Stars in Movies: ";
+        var stars_array = resultData[0]["movie_stars"].split(',');
+        console.log("FAFAFAFA",stars_array);
+        var stars_id_array=resultData[0]["stars_id"].split(',');
+        for (let i = 0; i < stars_array.length; ++i)
+        {
+            let x= parseInt(check_counter) +1;
+            console.log("X = " + x);
+            var counter= x.toString();
+            console.log(counter);
+            if(i==stars_array.length-1)
+            {
 
-    rowHTML += "<th>" + resultData[0]["movie_rating"] + "</th>";
-    // rowHTML += "</tr>";
-    console.log(resultData[0]["movie_director"]);
-    console.log(resultData[0]["movie_genres"]);
-    console.log(resultData[0]["movie_stars"]);
+                //console.log("CHECK COUNTER IN SINGLE MOVIE PAGE" + check_counter);
+               // check_counter = check_counter +;
+                temp_1 +=
+                    '<a href="single-star.html?id=' + stars_id_array[i] + '&check_counter=' + counter + '">'  + stars_array[i]
+                    + '</a>';
+            }
+            else {
+                temp_1 +=
+                    '<a href="single-star.html?id=' + stars_id_array[i] + '&check_counter=' + counter + '">'
+                    + stars_array[i] + ',' +   // display star_name for the link text
+                    '</a>';
+            }
+        }
+        temp_1 += "</p>";
+        temp_1 += "<p> RATING : " + resultData[0]["movie_rating"] + "</p>";
+        movieInfoElement.append(rowHTML+"<p>Movie Title: " + resultData[0]["movie_title"] + "</p>" +
+            "<p>Year: " + resultData[0]["movie_year"] + "</p>"+"<p>Movie Director: " + resultData[0]["movie_director"] + "</p>" + temp_1 +"<br><br>");
+    });
+    // movieInfoElement.append("<p>Movie Title: " + resultData[0]["movie_title"] + "</p>" +
+    //     "<p>Year: " + resultData[0]["movie_year"] + "</p>");
+}
 
-    // Append the row created to the table body, which will refresh the page
-    movieTableBodyElement.append(rowHTML);
+function handleCartResult(resultData) {
+    console.log("handleCartResult()");
+}
 
+function addToCart(movie_id) {
+    jQuery.ajax({
+        dataType: "json",  // Setting return data type
+        method: "GET",// Setting request method
+        cache: true,
+        url: "api/cart?id=" + movie_id,
+        success: (resultData) => handleCartResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+    });
 }
 
 /**
@@ -85,11 +123,13 @@ function handleResult(resultData) {
 
 // Get id from URL
 let movie_id = getParameterByName('id');
-
+let check_counter= getParameterByName('check_counter');
+console.log("CHECK COUNTER IN SINGLE MOVIE PAGE" + check_counter);
 // Makes the HTTP GET request and registers on success callback function handleResult
 jQuery.ajax({
     dataType: "json",  // Setting return data type
     method: "GET",// Setting request method
-    url: "api/single-movie?id=" + movie_id,
+    cache: true,
+    url: "api/single-movie?id=" + movie_id +"&check_counter="+check_counter,
     success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
 });

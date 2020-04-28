@@ -1,0 +1,44 @@
+<!-- This page will be redirected from any url if you are not logged in -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="login.css" />
+    <title>Login to FabFlix</title>
+</head>
+<body>
+
+<div id="header">
+    <span class="gradtext">FabFlix</span>
+</div>
+
+<div id="logintext_form">
+    <span class="logintext">Login to FabFlix</span>
+</div>
+<!-- Set the method to POST to avoid showing the username/password in the URL
+     The default action is disabled to allow your own implementation. -->
+<form id="login_form" method="post" action="#" style="margin-left:50px; margin-right:50px; text-align:center">
+    <label style="color:white"><b>Email</b></label>
+    <label>
+        <input name="email" placeholder="Enter Email Address" type="text">
+    </label>
+    <br>
+    <label style="color:white"><b>Password</b></label>
+    <label>
+        <input name="password" placeholder="Enter Password" type="password">
+    </label>
+    <br>
+    <input type="submit" value="Login">
+</form>
+
+<div id="login_error_message"></div>
+
+<!-- include jQuery-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!-- include our own JS file -->
+<script src="./login.js"></script>
+
+</body>
+</html>
