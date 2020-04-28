@@ -1,17 +1,30 @@
 
 function handleMovieResult(resultData) {
     console.log("handleMovieResult: populating movies from resultData");
-
+    console.log(pn);
     // Find the empty table body by id "movie_table_body"
     let movieTableBodyElement = jQuery("#movie_table_body");
-
-    // Iterate through resultData, no more than 20 entries
-    console.log(resultData);
-    for (let i = 0; i < resultData.length; i++)
+    if(pg == null || pg=="")
     {
-
-        // Concatenate the html tags with resultData jsonObject
+        pg = resultData[0]['pg_temp'];
+        pn= resultData[0]['pn_temp'];
+        location.replace(window.location.search + "&pn=10&pg=1");
+    }
+    for (let i = (pg-1)*pn ; i < (pg*pn); i++)
+    {
         let rowHTML = "<tr>";
+        // let rowHTML = "";
+        if(i>resultData.length-1)
+        {
+            // rowHTML += "<tr>";
+           rowHTML += "</tr>";
+           rowHTML += "<td style = "+'"' + "color: red" + '"' +">"+ "NO MORE SEARCH RESULT </td>";
+
+           movieTableBodyElement.append(rowHTML);
+            break;
+        }
+        // Concatenate the html tags with resultData jsonObject
+       // let rowHTML = "<tr>";
         rowHTML +=
             "<td>" +
             // Add a link to single-movie.html with id passed with GET url parameter
@@ -33,7 +46,7 @@ function handleMovieResult(resultData) {
             {
                 rowHTML +=
                     '<a href="single-star.html?id=' + stars_id_array[j] + '&check_counter=1' + '">'  + stars_array[j]
-                + '</a>';
+                    + '</a>';
             }
             else {
                 rowHTML +=
@@ -43,7 +56,6 @@ function handleMovieResult(resultData) {
             }
         }
         rowHTML += "</td>";
-        // rowHTML += "<td>" + resultData[i]["movie_stars"] + "</td>";
 
         rowHTML += "<td>" + resultData[i]["movie_rating"] + "</td>";
 
@@ -77,7 +89,7 @@ function handleMovieResult(resultData) {
         rowHTML += "</tr>"; // close row tag
 
         // Append the row created to the table body, which will refresh the page
-        movieTableBodyElement.append(rowHTML);
+       movieTableBodyElement.append(rowHTML);
     }
 }
 
@@ -131,6 +143,9 @@ function getParameterByName(target) {
 
 let title_start=getParameterByName('title_start');
 let first_sortby=getParameterByName('first_sortby');
+let pn = getParameterByName('pn');
+let pg = getParameterByName('pg');
+console.log(pn);
 let second_sortby=getParameterByName('second_sortby');
 console.log(first_sortby);
 console.log(second_sortby);
@@ -144,6 +159,8 @@ if(title_start!=null && title_start.length >0)
         data: {
             first_sortby: first_sortby,
             second_sortby:second_sortby,
+            pg:pg,
+            pn:pn,
             title_start: title_start
         },
         success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
@@ -198,7 +215,9 @@ else
                         title: title,
                         year: year,
                         director: director,
-                        star: star
+                        star: star,
+                        pn: "10",
+                        pg: "1"
                     },
                     success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
                 });

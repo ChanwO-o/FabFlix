@@ -51,6 +51,8 @@ public class MovieListServlet extends HttpServlet
         String second_sort= request.getParameter("second_sortby");
         System.out.println("received second sortby: " + second_sort);
         // Output stream to STDOUT
+        String pn = request.getParameter("pn");
+        String pg = request.getParameter("pg");
         PrintWriter out = response.getWriter();
 
         if(first_sort==null || first_sort == "")
@@ -210,7 +212,7 @@ public class MovieListServlet extends HttpServlet
                 }
                 else
                     {
-                        System.out.println("FAFAFA");
+                      // System.out.println("FAFAFA");
                     try {
                         // Get a connection from dataSource
                         Connection dbcon = dataSource.getConnection();
@@ -263,6 +265,8 @@ public class MovieListServlet extends HttpServlet
                             jsonObject.addProperty("movie_rating", movie_rating);
                             jsonObject.addProperty("movie_genres", movie_genres);
                             jsonObject.addProperty("movie_stars", movie_stars);
+                            jsonObject.addProperty("pn_temp","10");
+                            jsonObject.addProperty("pg_temp","1");
                             jsonArray.add(jsonObject);
 
                         }
@@ -481,7 +485,7 @@ public class MovieListServlet extends HttpServlet
                         jsonArray.add(jsonObject);
                     }
                     else {//genre sorting here
-                        System.out.println("HERERERERER");
+
                         if (movie_genres.contains(genres)) {
                             //System.out.println(movie_genres);
                             JsonObject jsonObject = new JsonObject();
@@ -506,7 +510,7 @@ public class MovieListServlet extends HttpServlet
                 rs.close();
                 statement.close();
                 dbcon.close();
-                System.out.println(query);
+               // System.out.println(query);
                 // Perform the query
                 //ResultSet rs = statement.executeQuery(query);
             } catch (Exception e) {
