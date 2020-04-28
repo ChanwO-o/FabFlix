@@ -152,14 +152,12 @@ if(title_start!=null && title_start.length >0)
 }
 else
 {
-    let test = getParameterByName('genres');
-    console.log("DADADADAD");
+    let genres = getParameterByName('genres');
     let first_sortby = getParameterByName('first_sortby');
     let second_sortby = getParameterByName('second_sortby');
-    if(test!=null && test.length >1 )
+    if(genres!=null && genres.length >1 ) // genres
     {
-
-        console.log(test);
+        console.log(genres);
         jQuery.ajax({
             dataType: "json",  // Setting return data type
             method: "GET",// Setting request method
@@ -173,36 +171,57 @@ else
             success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
         });
     }
-    else {
-        let queryString = window.location.href.split('?');
+    else { // not genres
+        let queryString = window.location.href.split('?'); // url + query
         console.log(queryString);
 
-        if (queryString.length > 1) {
+        if (getParameterByName('goback') === 'true') {
+            console.log('goback=true');
+        }
 
+        if (queryString.length > 1) {
             let params = queryString[1].split('&');
-            if (params.length > 0) {
-                let first_sortby = getParameterByName('first_sortby');
-                let second_sortby = getParameterByName('second_sortby');
-                let title = params[0].substr(6);
-                let year = params[1].substr(5);
-                let director = params[2].substr(9);
-                let star = params[3].substr(5);
-                jQuery.ajax({
-                    dataType: "json", // Setting return data type
-                    method: "GET", // Setting request method
-                    cache: true,
-                    url: "api/movies",
-                    data: {
-                        first_sortby: first_sortby,
-                        second_sortby:second_sortby,
-                        title: title,
-                        year: year,
-                        director: director,
-                        star: star
-                    },
-                    success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
-                });
-            } else {
+            console.log('params:', params);
+
+            if (params.length > 0) { // has some params
+                if (params.length === 1 && params[0] === 'goback=true') { // goback triggered; use saved session's params
+                    console.log('sending request to api/movies with goback=true');
+                    jQuery.ajax({
+                        dataType: "json",
+                        method: "GET",
+                        cache: true,
+                        url: "api/movies?goback=true",
+                        success: (resultData) =>  {
+                            console.log("success with goback=true");
+                            handleMovieResult(resultData);
+                        }
+                    });
+                }
+                else {
+                    let first_sortby = getParameterByName('first_sortby');
+                    let second_sortby = getParameterByName('second_sortby');
+                    let title = params[0].substr(6);
+                    let year = params[1].substr(5);
+                    let director = params[2].substr(9);
+                    let star = params[3].substr(5);
+                    jQuery.ajax({
+                        dataType: "json", // Setting return data type
+                        method: "GET", // Setting request method
+                        cache: true,
+                        url: "api/movies",
+                        data: {
+                            first_sortby: first_sortby,
+                            second_sortby: second_sortby,
+                            title: title,
+                            year: year,
+                            director: director,
+                            star: star
+                        },
+                        success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
+                    });
+                }
+            }
+            else { // no params
                 jQuery.ajax({
                     dataType: "json", // Setting return data type
                     method: "GET", // Setting request method
@@ -211,7 +230,8 @@ else
                     success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
                 });
             }
-        } else {
+        }
+        else { // no query (unused)
             jQuery.ajax({
                 dataType: "json", // Setting return data type
                 method: "GET", // Setting request method

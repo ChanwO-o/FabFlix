@@ -37,6 +37,7 @@ public class MovieListServlet extends HttpServlet
         HttpSession session = request.getSession();
 
         // Retrieve parameters from url request
+        String goback = request.getParameter("goback");
         String title = request.getParameter("title");
         String year = request.getParameter("year");
         String director = request.getParameter("director");
@@ -45,19 +46,42 @@ public class MovieListServlet extends HttpServlet
         String title_start=request.getParameter("title_start");
         String first_sort= request.getParameter("first_sortby");
         String second_sort= request.getParameter("second_sortby");
-        System.out.println("received params: " + "title: " + title + " year: " + year + " director: " + director + " star: " + star + " genres: " + genres +
+        System.out.println("received params: " + " goback: " + goback + " title: " + title + " year: " + year + " director: " + director + " star: " + star + " genres: " + genres +
                 " title_start: " + title_start + " first_sortby: " + first_sort + " second_sortby: " + second_sort);
 
-        String parameterLog = "title=" + title +
-                "&year=" + year +
-                "&director=" + director +
-                "&star=" + star +
-                "&genres=" + genres +
-                "&title_start=" + title_start +
-                "&first_sortby=" + first_sort +
-                "&second_sortby=" + second_sort;
-        session.setAttribute("parameterLog", parameterLog);
-        System.out.println("parameterLog: " + parameterLog);
+        if (goback != null && goback.equals("true")) {
+            System.out.println("goback = true! retaining saved parameters...");
+            title = (String) session.getAttribute("title");
+            year = (String) session.getAttribute("year");
+            director = (String) session.getAttribute("director");
+            star = (String) session.getAttribute("star");
+            genres = (String) session.getAttribute("genres");
+            title_start = (String) session.getAttribute("title_start");
+            first_sort = (String) session.getAttribute("first_sortby");
+            second_sort = (String) session.getAttribute("second_sortby");
+
+            if (title != null && title.equals("null")) title = null;
+            if (year != null && year.equals("null")) year = null;
+            if (director != null && director.equals("null")) director = null;
+            if (star != null && star.equals("null")) star = null;
+            if (genres != null && genres.equals("null")) genres = null;
+            if (title_start != null && title_start.equals("null")) title_start = null;
+            if (first_sort != null && first_sort.equals("null")) first_sort = null;
+            if (second_sort != null && second_sort.equals("null")) second_sort = null;
+        }
+        else {
+            System.out.println("goback = null, saving current parameters to session");
+            session.setAttribute("title", title);
+            session.setAttribute("year", year);
+            session.setAttribute("director", director);
+            session.setAttribute("star", star);
+            session.setAttribute("genres", genres);
+            session.setAttribute("title_start", title_start);
+            session.setAttribute("first_sortby", first_sort);
+            session.setAttribute("second_sortby", second_sort);
+        }
+        System.out.println("now processing request with: " + " goback: " + goback + " title: " + title + " year: " + year + " director: " + director + " star: " + star + " genres: " + genres +
+                " title_start: " + title_start + " first_sortby: " + first_sort + " second_sortby: " + second_sort);
 
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
@@ -197,6 +221,7 @@ public class MovieListServlet extends HttpServlet
                             out.write(jsonArray.toString());
                             // set response status to 200 (OK)
                             response.setStatus(200);
+                            System.out.println("done, ja: " + jsonArray);
 
                             rs.close();
                             statement.close();

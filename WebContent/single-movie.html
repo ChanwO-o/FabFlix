@@ -42,7 +42,7 @@
 
         </div>
     </div>
-    <button type="button" class="goback_button" style="float:right" onclick="goBack()" >Back to Search results</button>
+    <button type="button" class="goback_button" style="float:right" onclick="location.href='movielist.html?goback=true'" >Back to Search results</button>
 </div>
 
 
@@ -57,20 +57,6 @@
      otherwise the url is relative to the root path-->
 
 <script src="single-movie.js"></script>
-<script>
-    //let check_counter = getParameterByName('check_counter');
-    console.log("couter = " + check_counter);
-    let C= parseInt(check_counter);
-    console.log("FAFAFA = " + C);
-    function goBack()
-    {
-        let b = parseInt(check_counter);
-        console.log("b= " + b);
-        b= b*-1;
-        window.history.go(b);
-    }
-</script>
 </body>
-
 
 </html>
