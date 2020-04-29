@@ -33,7 +33,7 @@ public class SingleMovieServlet extends HttpServlet {
 
 		// Retrieve parameter id from url request.
 		String id = request.getParameter("id");
-		System.out.println("id: " + id);
+//		System.out.println("id: " + id);
 
 		// Output stream to STDOUT
 		PrintWriter out = response.getWriter();
@@ -90,18 +90,13 @@ public class SingleMovieServlet extends HttpServlet {
 				jsonObject.addProperty("movie_rating", movie_rating);
 				//jsonObject.addProperty("stars_id",stars_id);
 				jsonArray.add(jsonObject);
-				System.out.println("HERE!!!!!");
 
 			}
-			System.out.println("jsonArray = " + (jsonArray));
-			System.out.println((temp2));
-			System.out.println(temp.size());
 			int i= 0;
 			ArrayList<String> value = new ArrayList<String>();
 
 			for(i=0; i<temp.size(); i++)
 			{
-				System.out.println(temp.get(i));
 				String query2 = "SELECT starID, COUNT(*) as sample " +
 						"FROM stars_in_movies, movies " +
 						"where stars_in_movies.movieId= movies.id " +
@@ -109,22 +104,15 @@ public class SingleMovieServlet extends HttpServlet {
 						"GROUP BY starID";
 				ResultSet rs2= statement2.executeQuery(query2);
 				rs2.next();
-
-				System.out.println("sample value =" +rs2.getString("sample"));
-
 				value.add(rs2.getString("sample"));
 
-				//value.add(rs2.getString("sample"));
-				if( i == temp.size()-1)
+				if(i == temp.size()-1)
 				{
 					rs2.close();
 				}
 			}
-			System.out.println(value);
 			statement2.close();
-			//System.out.println((temp));
 
-			//String value;
 			for (int n = 0; n < temp.size(); n++)
 			{
 				for (int m = 0; m < temp.size() - n -1 ; m++)
@@ -160,11 +148,11 @@ public class SingleMovieServlet extends HttpServlet {
 			}
 			String k2="";
 			String k="";
-			System.out.println("stars_id list =" + temp);
-			System.out.println("stars list =" + temp2);
-			System.out.println("number list =" + value);
+//			System.out.println("stars_id list =" + temp);
+//			System.out.println("stars list =" + temp2);
+//			System.out.println("number list =" + value);
 			for (i =0 ; i<temp.size() ; i++) {
-				System.out.println("stars_id that we get : " + temp.get(i));
+//				System.out.println("stars_id that we get : " + temp.get(i));
 				//jsonArray.get(i).addProperty("stars_id", temp.get(i));
 
 				 if( i == temp.size()-1) {
@@ -183,7 +171,6 @@ public class SingleMovieServlet extends HttpServlet {
 			jsonObject.addProperty("movie_stars",k);
 			jsonObject.addProperty("stars_id",k2);
 			jsonArray.add(jsonObject);
-			System.out.println("NEW JASON ARRAY = " + jsonArray);
 			rs.close();
             // write JSON string to output
             out.write(jsonArray.toString());

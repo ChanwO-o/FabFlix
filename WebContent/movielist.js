@@ -19,7 +19,7 @@ function handleMovieResult(resultData) {
             // rowHTML += "<tr>";
 
             rowHTML += "</tr>";
-            rowHTML = "<br><br><p style ="+ '"' + "color:red;" +'"' + ">NO MORE SEARCH RESULT </p>" + rowHTML;
+            rowHTML = "<br><br><p id='no_more_search_results' style ="+ '"' + "color:red;" +'"' + ">NO MORE SEARCH RESULT </p>" + rowHTML;
             movieTableBodyElement.append(rowHTML);
             break;
         }
@@ -188,7 +188,6 @@ if(title_start!=null && title_start.length >0)
 else
 {
     let test = getParameterByName('genres');
-    console.log("DADADADAD");
     let first_sortby = getParameterByName('first_sortby');
     let second_sortby = getParameterByName('second_sortby');
     if(test!=null && test.length >1 )

@@ -23,31 +23,49 @@ public class PaymentServlet extends HttpServlet {
 	@Resource(name = "jdbc/moviedb")
 	private DataSource dataSource;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("PaymentServlet doGet()");
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// Get a instance of current session on the request
+		HttpSession session = request.getSession();
 
+		PrintWriter out = response.getWriter();
+		// Retrieve data named "cartList" from session
+		Map<String, Integer> cartList = (HashMap<String, Integer>) session.getAttribute("cartList");
+
+		// If "cartList" is not found on session, means this is a new user, thus we create a new cartList for the user
+		if (cartList == null) {
+//			System.out.println("no cartList found; creating new cartList for user");
+			// Add the newly created cartList to session, so that it could be retrieved next time
+			session.setAttribute("cartList", new HashMap<String, Integer>());
+			cartList = (HashMap<String, Integer>) session.getAttribute("cartList"); // reassign cartList variable to newly created list
+		}
+
+		double total = 0.00;
+		for (Map.Entry<String, Integer> entry : cartList.entrySet()) {
+			total += generateMoviePrice(entry.getKey()) * entry.getValue();
+		}
+//		System.out.println("total: " + total);
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("grand_total", total);
+		out.write(jsonObject.toString());
+		out.close();
 	}
 
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
-	{
-		System.out.println("PaymentServlet doPost()");
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
-		PrintWriter out = response.getWriter();
 		// Retrieve data named "cartList" from session
 		Map<String, Integer> cartList = (HashMap<String, Integer>) session.getAttribute("cartList");
+		if (cartList == null)
+			return;
 
 		String fname = request.getParameter("fname");
 		String lname = request.getParameter("lname");
 		String card = request.getParameter("card");
 		String exp = request.getParameter("exp");
-		System.out.println("fname = " + fname);
-		System.out.println("lname = " + lname);
-		System.out.println("card = " + card);
-		System.out.println("exp = " + exp);
+		System.out.println("fname: " + fname + " lname: " + lname + " card: " + card + " exp: " + exp);
 
 		try
 		{
@@ -58,15 +76,10 @@ public class PaymentServlet extends HttpServlet {
 			String query = "select * from creditcards " +
 					"where id= '"+card+"'"+ " and firstName='" + fname + "'" +  "and lastName='" + lname + "'" + " and expiration='"+ exp + "'";
 			ResultSet rs = statement.executeQuery(query);
-			boolean cardsuccess = false;
-			boolean fnamesuccess=false;
-			boolean lnamesuccess=false;
-			boolean expsuccess=false;
-
 			JsonObject responseJsonObject = new JsonObject();
 
-			if (!rs.isBeforeFirst() ) {
-				System.out.println("No data");
+			if (!rs.isBeforeFirst() ) { // wrong card information given
+//				System.out.println("No data");
 				responseJsonObject.addProperty("message",  " Wrong Information");
 			}
 			else { // payment success: add sale entries
@@ -77,22 +90,15 @@ public class PaymentServlet extends HttpServlet {
 				User user = (User) session.getAttribute("email");
 				int customerId = user.getId();
 //				System.out.println("Sale customerId: " + customerId);
-				System.out.println("Sale cartList: " + cartList);
-
-				if (cartList == null)
-					return;
-
-//				Statement statement = dbcon.createStatement();
 
 				synchronized (cartList) { // add a record to sales table for each entry in cartList
-
 					// construct sales query
 					String salesQuery = "INSERT INTO sales VALUES ";
 					int count = 0;
 					for (Map.Entry<String, Integer> entry : cartList.entrySet()) {
 						String movieEntryQuery = "";
 						for (int i = 0; i < entry.getValue(); ++i) { // iterate through movie quantity
-							System.out.println("i: " + i + " getValue: " + entry.getValue());
+//							System.out.println("i: " + i + " getValue: " + entry.getValue());
 							movieEntryQuery += "(NULL," + customerId + ", '" + entry.getKey() + "', CURDATE())";
 							if (i < entry.getValue() - 1)
 								movieEntryQuery += ","; // inner comma
@@ -103,12 +109,10 @@ public class PaymentServlet extends HttpServlet {
 						}
 						salesQuery += movieEntryQuery;
 					}
-					System.out.println("PaymentServlet query: " + salesQuery);
+//					System.out.println("PaymentServlet query: " + salesQuery);
 					statement2.executeUpdate(salesQuery); // perform insert to sales table
-
 					cartList.clear(); // clear cart once purchase is complete
 				}
-
 			}
 			response.getWriter().write(responseJsonObject.toString());
 			rs.close();
@@ -119,5 +123,9 @@ public class PaymentServlet extends HttpServlet {
 		catch (IOException | SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private double generateMoviePrice(String movie_id) {
+		return 15.00;
 	}
 }
