@@ -4,7 +4,9 @@
 
 Fabflix is a full stack web application that displays information on movies and stars.
 
-Watch the demo here: https://www.youtube.com/watch?v=ZovyHm_lWuY
+Watch the demos here:
+* Project1: https://www.youtube.com/watch?v=ZovyHm_lWuY
+* Project2: https://www.youtube.com/watch?v=_Wm3XJblF2s
 
 
 ## Built With
@@ -41,6 +43,15 @@ mv cs122b-spring20-team131.war ~/path-to-your-tomcat-installation/webapps
 
 When searching for movies, users have the following options for performing advanced search queries
 (Database queries are called in **MovieListServlet.java**):
+
+Substrings are passed through url parameters. One default behavior of url parameters is that it treats spaces as '+' characters.
+So first we must replace these back to spaces:
+```
+if(title!=null)
+    title= title.replace('+',' ');
+```
+Then we can query for substrings using the **'LIKE'** keyword in SQL.
+
 * title starts with character
 ```
  ..and movies.title like 'A%';
