@@ -16,6 +16,7 @@ function handlePaymentResult(resultDataString) {
         console.log("show error message");
         console.log(resultDataJson["message"]);
         $("#payment_error").text(resultDataJson["message"]);
+        alert("Wrong information!");
     }
 }
 

@@ -34,13 +34,10 @@ public class MovieListServlet extends HttpServlet
         response.setContentType("application/json"); // Response mime type
 
         // Retrieve parameters from url request
-        System.out.println("FAFAf");
         String title = request.getParameter("title");
-        System.out.println(title);
         if(title!=null)
             title= title.replace('+',' ');
         String year = request.getParameter("year");
-
         String director = request.getParameter("director");
         if(director!=null)
             director= director.replace('+',' ');
@@ -215,7 +212,6 @@ public class MovieListServlet extends HttpServlet
                 }
                 else
                     {
-                      // System.out.println("FAFAFA");
                     try {
                         // Get a connection from dataSource
                         Connection dbcon = dataSource.getConnection();
@@ -315,7 +311,6 @@ public class MovieListServlet extends HttpServlet
 
                     JsonArray jsonArray = new JsonArray();
                     query+=" group by movies.id";
-                    System.out.println("query=" + query);
                     ResultSet rs = statement.executeQuery(query);
                     // Iterate through each row of rs
 
@@ -374,11 +369,9 @@ public class MovieListServlet extends HttpServlet
         }
         else // sorting here
         {
-            System.out.println("E!#!#!");
             try {
                 // Get a connection from dataSource
                 Connection dbcon = dataSource.getConnection();
-                System.out.println("#!#!#!#");
                                 // Declare our statement
                 Statement statement = dbcon.createStatement();
                 String query = "select movies.id,movies.title,movies.year,movies.director,ratings.rating,group_concat(stars.id) as star_id" +
@@ -387,22 +380,16 @@ public class MovieListServlet extends HttpServlet
                         " left join ratings on ratings.movieId=movies.id inner join genres on " +
                         "genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
                         "inner join stars on stars_in_movies.starId=stars.id ";
-                System.out.println("#!#!#!#");
-                System.out.println(title);
 
                 if (title != null && !title.isEmpty()) {
                     query += " and movies.title like '%" + title + "%' ";
                 }
-                System.out.println("1");
                 if (year != null && !year.isEmpty())
                     query += " and movies.year = " + year;
-                System.out.println("2");
                 if (director != null && !director.isEmpty())
                     query += " and movies.director like '%" + director + "%' ";
-                System.out.println("3");
                 if (star != null && !star.isEmpty())
                     query += " and stars.name like '%" + star + "%' ";
-                System.out.println("4");
                 if (title_start !=null && !title_start.isEmpty())
                 {
                     if (title_start.contains("*")) {
@@ -426,7 +413,6 @@ public class MovieListServlet extends HttpServlet
                     } else if (second_sort.equals("rating_dsc")) {
                         query += "order by movies.title, rating DESC";
                     } else {
-                        System.out.println("OPTIONSFAFA");
                         query += "order by movies.title";
                     }
                 } else if (first_sort.equals("title_dsc")) {
@@ -463,7 +449,6 @@ public class MovieListServlet extends HttpServlet
                     } else if (second_sort.equals("rating_dsc")) {
                         query += "order by rating desc";
                     } else {
-                        System.out.println("FAFAFAFASF@#$#");
                         query += "order by rating desc";
                     }
                 }
@@ -503,7 +488,6 @@ public class MovieListServlet extends HttpServlet
                 rs.close();
                 statement.close();
                 dbcon.close();
-               // System.out.println(query);
                 // Perform the query
                 //ResultSet rs = statement.executeQuery(query);
             } catch (Exception e) {

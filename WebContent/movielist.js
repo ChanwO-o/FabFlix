@@ -188,7 +188,6 @@ if(title_start!=null && title_start.length >0)
 else
 {
     let test = getParameterByName('genres');
-    console.log("DADADADAD");
     let first_sortby = getParameterByName('first_sortby');
     let second_sortby = getParameterByName('second_sortby');
     if(test!=null && test.length >1 )

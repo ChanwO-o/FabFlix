@@ -78,7 +78,7 @@ public class PaymentServlet extends HttpServlet {
 			ResultSet rs = statement.executeQuery(query);
 			JsonObject responseJsonObject = new JsonObject();
 
-			if (!rs.isBeforeFirst() ) {
+			if (!rs.isBeforeFirst() ) { // wrong card information given
 //				System.out.println("No data");
 				responseJsonObject.addProperty("message",  " Wrong Information");
 			}

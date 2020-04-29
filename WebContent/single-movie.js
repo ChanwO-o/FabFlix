@@ -51,7 +51,6 @@ function handleResult(resultData) {
         else {
             rowHTML =   "<img src=" + '"' + "no_image.png" + '"' + " width=" + "100 " + "height=" + "100/>"  ;
         }
-        console.log("FAFAFA");
         var genres_array=resultData[0]["movie_genres"].split(',');
         let temp_1="<p> Genres: ";
         for (let i = 0; i < genres_array.length; ++i) {
@@ -70,7 +69,6 @@ function handleResult(resultData) {
         }
         temp_1 += "</p><p> Stars in Movies: ";
         var stars_array = resultData[0]["movie_stars"].split(',');
-        console.log("FAFAFAFA",stars_array);
         var stars_id_array=resultData[0]["stars_id"].split(',');
         for (let i = 0; i < stars_array.length; ++i)
         {
