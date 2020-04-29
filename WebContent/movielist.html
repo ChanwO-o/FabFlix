@@ -222,10 +222,16 @@
     function Next()
     {
         let k=  window.location.href;
-        console.log("ADADADADA");
         let first_sortby = getParameterByName('first_sortby');
         let pn = getParameterByName('pn');
         let pg = getParameterByName('pg');
+
+        var no_more_search_results = document.getElementById("no_more_search_results");
+        if (no_more_search_results != null) {
+            alert('end of search results!'); // prevent user from going off page
+            return;
+        }
+
         if(first_sortby != null && first_sortby.length >1)
         {
             let second_sortby= getParameterByName('second_sortby');
@@ -235,7 +241,6 @@
                 u.searchParams.set("pn",pn);
                 let temp = parseInt(pg)+1;
                 var new_page= temp.toString();
-                //  u.searchParams.set("pg",pg+1);
                 u.searchParams.set("pg",new_page);
                 location.replace(u);
             }
@@ -247,7 +252,6 @@
                 var new_page= temp.toString();
                 u.searchParams.set("pg",new_page);
                 location.replace(u);
-
             }
         }
         else
@@ -263,11 +267,14 @@
     }
     function Prev()
     {
-        let k=  window.location.href;
-        console.log("ADADADADA");
         let first_sortby = getParameterByName('first_sortby');
         let pn = getParameterByName('pn');
         let pg = getParameterByName('pg');
+        if (pg <= 1) {
+            alert('already at first page!');
+            return; // don't allow user to go below page 1
+        }
+
         if(first_sortby != null && first_sortby.length >1)
         {
             let second_sortby= getParameterByName('second_sortby');
@@ -277,7 +284,6 @@
                 u.searchParams.set("pn",pn);
                 let temp = parseInt(pg)-1;
                 var new_page= temp.toString();
-                //  u.searchParams.set("pg",pg+1);
                 u.searchParams.set("pg",new_page);
                 location.replace(u);
             }
@@ -289,7 +295,6 @@
                 var new_page= temp.toString();
                 u.searchParams.set("pg",new_page);
                 location.replace(u);
-
             }
         }
         else

@@ -19,7 +19,7 @@ function handleMovieResult(resultData) {
             // rowHTML += "<tr>";
 
             rowHTML += "</tr>";
-            rowHTML = "<br><br><p style ="+ '"' + "color:red;" +'"' + ">NO MORE SEARCH RESULT </p>" + rowHTML;
+            rowHTML = "<br><br><p id='no_more_search_results' style ="+ '"' + "color:red;" +'"' + ">NO MORE SEARCH RESULT </p>" + rowHTML;
             movieTableBodyElement.append(rowHTML);
             break;
         }
