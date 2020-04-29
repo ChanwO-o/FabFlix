@@ -74,7 +74,8 @@ public class PaymentServlet extends HttpServlet {
 			Statement statement2 = dbcon.createStatement();
 
 			String query = "select * from creditcards " +
-					"where id= '"+card+"'"+ " and firstName='" + fname + "'" +  "and lastName='" + lname + "'" + " and expiration='"+ exp + "'";
+					"where binary id= '"+card+"'"+ " and binary firstName='" + fname + "'" +  "and binary lastName='" + lname + "'" + " and binary expiration='"+ exp + "'";
+			System.out.println("payment query: " + query);
 			ResultSet rs = statement.executeQuery(query);
 			JsonObject responseJsonObject = new JsonObject();
 
