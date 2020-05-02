@@ -17,7 +17,6 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-// Declaring a WebServlet called ItemsServlet, which maps to url "/items"
 @WebServlet(name = "ItemServlet", urlPatterns = "/api/cart")
 public class CartServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -27,7 +26,6 @@ public class CartServlet extends HttpServlet {
 	private DataSource dataSource;
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
 		// Get a instance of current session on the request
 		HttpSession session = request.getSession();
 
@@ -56,8 +54,7 @@ public class CartServlet extends HttpServlet {
 				if (cartList.containsKey(movieId)) {
 					System.out.println("add to cartList: movie existing, incrementing by 1");
 					cartList.put(movieId, cartList.get(movieId) + 1); // increment quantity by 1
-				}
-				else {
+				} else {
 					System.out.println("add to cartList: new movie, qty set to 1");
 					cartList.put(movieId, 1); // new movie added to cart
 				}
@@ -153,8 +150,7 @@ public class CartServlet extends HttpServlet {
 			rs.close();
 			statement.close();
 			dbcon.close();
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 			JsonObject jsonObject = new JsonObject();
