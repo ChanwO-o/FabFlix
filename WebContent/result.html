@@ -1,47 +1,45 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Single Movie Page</title>
-    <link rel="stylesheet" href="reset.css" />
-    <link rel="stylesheet" href="common.css" />
-    <link rel="stylesheet" href="single-movie.css" />
-    <link rel="stylesheet" href="search.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<title>Single Movie Page</title>
+	<link rel="stylesheet" href="reset.css"/>
+	<link rel="stylesheet" href="common.css"/>
+	<link rel="stylesheet" href="single-movie.css"/>
+	<link rel="stylesheet" href="search.css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <div id="header">
-    <span class="gradtext">FabFlix</span>
+	<span class="gradtext">FabFlix</span>
 </div>
 <div id="logout">
-    <ul class="menu_list">
-        <li class="home">
-            <button type="button" class="btn_home" onclick="location.href='mainpage.html'" >Home</button>
-        </li>
-        <li class="cart">
-            <button type="button" class="btn_cart"  onclick="location.href='cart.html'" >Checkout</button>
-        </li>
-        <li class="logout">
-            <button type="button" class="btn_logout"  onclick="location.href='login.html'" >Logout</button>
-        </li>
-    </ul>
+	<ul class="menu_list">
+		<li class="home">
+			<button type="button" class="btn_home" onclick="location.href='mainpage.html'">Home</button>
+		</li>
+		<li class="cart">
+			<button type="button" class="btn_cart" onclick="location.href='cart.html'">Checkout</button>
+		</li>
+		<li class="logout">
+			<button type="button" class="btn_logout" onclick="location.href='login.html'">Logout</button>
+		</li>
+	</ul>
 </div>
 
 <div id="content" class="clearfix">
-    <div class="section_main">
-        <div class="search_section">
-            <div class="advancedsearch">
-                <h1>Result Page</h1>
-                <br>
-                <h3 id="result"></h3>
-                <p> PURCHASE SUCCESS!</p>
-                <br>
-            </div>
-
-        </div>
-    </div>
-    <button type="button" class="goback_button" style="float:right" onclick="goBack()" >Back to Search results</button>
+	<div class="section_main">
+		<div class="search_section">
+			<div class="advancedsearch">
+				<h1>Result Page</h1>
+				<br>
+				<h3 id="result"></h3>
+				<p> PURCHASE SUCCESS!</p>
+				<br>
+			</div>
+		</div>
+	</div>
+	<button type="button" class="goback_button" style="float:right" onclick="goBack()">Back to Search results</button>
 </div>
-
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

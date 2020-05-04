@@ -67,23 +67,21 @@ public class PaymentServlet extends HttpServlet {
 		String exp = request.getParameter("exp");
 		System.out.println("fname: " + fname + " lname: " + lname + " card: " + card + " exp: " + exp);
 
-		try
-		{
+		try {
 			Connection dbcon = dataSource.getConnection();
 			Statement statement = dbcon.createStatement();
 			Statement statement2 = dbcon.createStatement();
 
 			String query = "select * from creditcards " +
-					"where binary id= '"+card+"'"+ " and binary firstName='" + fname + "'" +  "and binary lastName='" + lname + "'" + " and binary expiration='"+ exp + "'";
+					"where binary id= '" + card + "'" + " and binary firstName='" + fname + "'" + "and binary lastName='" + lname + "'" + " and binary expiration='" + exp + "'";
 			System.out.println("payment query: " + query);
 			ResultSet rs = statement.executeQuery(query);
 			JsonObject responseJsonObject = new JsonObject();
 
-			if (!rs.isBeforeFirst() ) { // wrong card information given
+			if (!rs.isBeforeFirst()) { // wrong card information given
 //				System.out.println("No data");
-				responseJsonObject.addProperty("message",  " Wrong Information");
-			}
-			else { // payment success: add sale entries
+				responseJsonObject.addProperty("message", " Wrong Information");
+			} else { // payment success: add sale entries
 				responseJsonObject.addProperty("status", "success");
 				responseJsonObject.addProperty("message", "success");
 
@@ -120,8 +118,7 @@ public class PaymentServlet extends HttpServlet {
 			statement.close();
 			statement2.close();
 			dbcon.close();
-		}
-		catch (IOException | SQLException e) {
+		} catch (IOException | SQLException e) {
 			e.printStackTrace();
 		}
 	}
