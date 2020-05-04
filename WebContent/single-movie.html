@@ -1,48 +1,48 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Single Movie Page</title>
-    <link rel="stylesheet" href="reset.css" />
-    <link rel="stylesheet" href="common.css" />
-    <link rel="stylesheet" href="single-movie.css" />
+	<title>Single Movie Page</title>
+	<link rel="stylesheet" href="reset.css"/>
+	<link rel="stylesheet" href="common.css"/>
+	<link rel="stylesheet" href="single-movie.css"/>
 
-    <link rel="stylesheet" href="search.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="search.css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <div id="header">
-    <span class="gradtext">FabFlix</span>
+	<span class="gradtext">FabFlix</span>
 </div>
 <div id="logout">
-    <ul class="menu_list">
-        <li class="home">
-            <button type="button" class="btn_home" onclick="location.href='mainpage.html'" >Home</button>
-        </li>
-        <li class="cart">
-            <button type="button" class="btn_cart"  onclick="location.href='cart.html'" >Checkout</button>
-        </li>
-        <li class="logout">
-            <button type="button" class="btn_logout"  onclick="location.href='login.html'" >Logout</button>
-        </li>
-    </ul>
+	<ul class="menu_list">
+		<li class="home">
+			<button type="button" class="btn_home" onclick="location.href='mainpage.html'">Home</button>
+		</li>
+		<li class="cart">
+			<button type="button" class="btn_cart" onclick="location.href='cart.html'">Checkout</button>
+		</li>
+		<li class="logout">
+			<button type="button" class="btn_logout" onclick="location.href='login.html'">Logout</button>
+		</li>
+	</ul>
 </div>
 
 <div id="content" class="clearfix">
-    <div class="section_main">
-        <div class="search_section">
-            <div class="advancedsearch">
-                <h1>Single Movie Page</h1>
-                <br>
-                <h3 id="movie_info"></h3>
+	<div class="section_main">
+		<div class="search_section">
+			<div class="advancedsearch">
+				<h1>Single Movie Page</h1>
+				<br>
+				<h3 id="movie_info"></h3>
 
-                <form id="addtocart_form" class="example" method="GET" action="cart.html">
-                    <button type="submit" class="btn_cart" onclick="addToCart(movie_id)"><i class="fa fa-plus"> Add to Cart</i></button>
-                </form>
-            </div>
-
-        </div>
-    </div>
-    <button type="button" class="goback_button" style="float:right" onclick="goBack()" >Back to Search results</button>
+				<form id="addtocart_form" class="example" method="GET" action="cart.html">
+					<button type="submit" class="btn_cart" onclick="addToCart(movie_id)"><i class="fa fa-plus"> Add to
+						Cart</i></button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<button type="button" class="goback_button" style="float:right" onclick="goBack()">Back to Search results</button>
 </div>
 
 
@@ -55,21 +55,18 @@
 <!-- The path is relative to single-movie.html, since these two files are in the same directory -->
 <!-- Note the url does not contain a "/" in the beginning, which means the url is relative to current path
      otherwise the url is relative to the root path-->
-
 <script src="single-movie.js"></script>
 <script>
-    //let check_counter = getParameterByName('check_counter');
-    console.log("couter = " + check_counter);
-    let C= parseInt(check_counter);
-    function goBack()
-    {
-        let b = parseInt(check_counter);
-        console.log("b= " + b);
-        b= b*-1;
-        window.history.go(b);
-    }
+	//let check_counter = getParameterByName('check_counter');
+	console.log("couter = " + check_counter);
+	let C = parseInt(check_counter);
+
+	function goBack() {
+		let b = parseInt(check_counter);
+		console.log("b= " + b);
+		b = b * -1;
+		window.history.go(b);
+	}
 </script>
 </body>
-
-
 </html>
