@@ -5,11 +5,9 @@ let login_form = $("#login_form");
  * @param resultDataString jsonObject
  */
 function handleLoginResult(resultDataString) {
+	console.log("handle login response; resultDataString: ", resultDataString);
 	let resultDataJson = JSON.parse(resultDataString);
-
-	console.log("handle login response");
 	console.log(resultDataJson);
-	console.log(resultDataJson["status"]);
 
 	// If login succeeds, it will redirect the user to mainpage.html
 	if (resultDataJson["status"] === "success") {
@@ -20,6 +18,7 @@ function handleLoginResult(resultDataString) {
 		console.log("show error message");
 		console.log(resultDataJson["message"]);
 		$("#login_error_message").text(resultDataJson["message"]);
+		alert(resultDataJson["message"]);
 	}
 }
 
