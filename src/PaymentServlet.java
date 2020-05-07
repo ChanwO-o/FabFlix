@@ -86,7 +86,7 @@ public class PaymentServlet extends HttpServlet {
 				responseJsonObject.addProperty("message", "success");
 
 				// get customer id
-				User user = (User) session.getAttribute("email");
+				User user = (User) session.getAttribute("user");
 				int customerId = user.getId();
 //				System.out.println("Sale customerId: " + customerId);
 
