@@ -8,11 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +36,7 @@ public class LoginServlet extends HttpServlet {
 
 		String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
 		String email = request.getParameter("email");
-		int id = -1; // get id from query below
+		int idResult = -1; // get id from query below
 		String password = request.getParameter("password");
 
 		try { // first, check if captcha success
@@ -57,38 +53,34 @@ public class LoginServlet extends HttpServlet {
 
 		try {
 			Connection dbcon = dataSource.getConnection();
-			Statement statement = dbcon.createStatement();
+			dbcon.setAutoCommit(false);
 
-			String query = "SELECT id, email, password from customers";
-			ResultSet rs = statement.executeQuery(query);
-			boolean emailSuccess = false;
-			boolean pwSuccess = false;
-			while (rs.next()) {
-				id = rs.getInt("id"); // assign user id
-				String email_list = rs.getString("email");
-				String pw_list = rs.getString("password");
-				if (emailSuccess)
-					break;
-				if (email.equals(email_list)) {
-					emailSuccess = true;
-					pwSuccess = password.equals(pw_list);
-				}
-			}
+			String query = "SELECT id, email, password from customers where email = ? and password = ?";
+			PreparedStatement statement = dbcon.prepareStatement(query);
 
-			if (emailSuccess && pwSuccess) {
-				// Login success: set this user into the session
-				request.getSession().setAttribute("email", new User(email, id));
+			statement.setString(1, email);
+			statement.setString(2, password);
+
+			ResultSet rs = statement.executeQuery();
+			dbcon.commit();
+
+			if (rs.next()) { // result set has at least one entry: login success
+				idResult = rs.getInt("id"); // assign user id
+				String emailResult = rs.getString("email");
+				String pwResult = rs.getString("password");
+				System.out.println("idResult: " + idResult + " emailResult: " + emailResult + " pwResult: " + pwResult);
+
+				// login success: set this user into the session
+				request.getSession().setAttribute("email", new User(email, idResult));
 				responseJsonObject.addProperty("status", "success");
 				responseJsonObject.addProperty("message", "success");
-			} else {
-				// Login fail
-				responseJsonObject.addProperty("status", "fail");
-				if (!emailSuccess) {
-					responseJsonObject.addProperty("message", "user " + email + " doesn't exist");
-				} else {
-					responseJsonObject.addProperty("message", "incorrect password");
-				}
 			}
+			else { // login fail
+				System.out.println("ResultSet returned no results. Login failed.");
+				responseJsonObject.addProperty("status", "fail");
+				responseJsonObject.addProperty("message", "Invalid email or password");
+			}
+
 			response.getWriter().write(responseJsonObject.toString());
 			rs.close();
 			statement.close();
