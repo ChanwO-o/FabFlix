@@ -26,7 +26,7 @@ public class LoginServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
 		// Retrieve data named "cartList" from session
 		Map<String, Integer> cartList = (HashMap<String, Integer>) session.getAttribute("cartList");
@@ -36,9 +36,24 @@ public class LoginServlet extends HttpServlet {
 			}
 		}
 
+		JsonObject responseJsonObject = new JsonObject();
+
+		String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
 		String email = request.getParameter("email");
 		int id = -1; // get id from query below
 		String password = request.getParameter("password");
+
+		try { // first, check if captcha success
+			RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Invalid Recaptcha response; login failed");
+			responseJsonObject.addProperty("status", "fail");
+			responseJsonObject.addProperty("message", "captcha failed");
+			response.getWriter().write(responseJsonObject.toString());
+			return;
+		}
 
 		try {
 			Connection dbcon = dataSource.getConnection();
@@ -59,7 +74,6 @@ public class LoginServlet extends HttpServlet {
 					pwSuccess = password.equals(pw_list);
 				}
 			}
-			JsonObject responseJsonObject = new JsonObject();
 
 			if (emailSuccess && pwSuccess) {
 				// Login success: set this user into the session
@@ -79,7 +93,8 @@ public class LoginServlet extends HttpServlet {
 			rs.close();
 			statement.close();
 			dbcon.close();
-		} catch (IOException | SQLException e) {
+		}
+		catch (IOException | SQLException e) {
 			e.printStackTrace();
 		}
 	}
