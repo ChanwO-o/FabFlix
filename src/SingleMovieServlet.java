@@ -41,9 +41,8 @@ public class SingleMovieServlet extends HttpServlet {
 		try {
 			// Get a connection from dataSource
 			Connection dbcon = dataSource.getConnection();
+			dbcon.setAutoCommit(false);
 
-			Statement statement = dbcon.createStatement();
-			Statement statement2 = dbcon.createStatement();
 			String query = "select movies.title, movies.year, movies.director, group_concat(distinct stars.id order by stars.id) as stars_id, " +
 					"group_concat(distinct genres.name order by genres.name) as genres, group_concat(distinct stars.name order by stars.id) as stars,ratings.rating " +
 					"from movies, genres, stars,stars_in_movies,genres_in_movies,ratings " +
@@ -52,8 +51,10 @@ public class SingleMovieServlet extends HttpServlet {
 					"and stars_in_movies.movieId=movies.id " +
 					"and stars_in_movies.starId=stars.id " +
 					"and ratings.movieId=movies.id " +
-					"and movies.id='" + id + "'";
-			ResultSet rs = statement.executeQuery(query);
+					"and movies.id=?";
+			PreparedStatement statement = dbcon.prepareStatement(query);
+			statement.setString(1, id);
+			ResultSet rs = statement.executeQuery();
 
 			JsonArray jsonArray = new JsonArray();
 			ArrayList<String> temp = new ArrayList<String>();
@@ -82,14 +83,18 @@ public class SingleMovieServlet extends HttpServlet {
 				jsonArray.add(jsonObject);
 			}
 
+			PreparedStatement statement2 = null;
 			ArrayList<String> value = new ArrayList<String>();
 			for (int i = 0; i < temp.size(); i++) {
 				String query2 = "SELECT starID, COUNT(*) as sample " +
 						"FROM stars_in_movies, movies " +
-						"where stars_in_movies.movieId= movies.id " +
-						"and starID = " + "'" + temp.get(i) + "' " +
+						"where stars_in_movies.movieId = movies.id " +
+						"and starID = ? " +
 						"GROUP BY starID";
-				ResultSet rs2 = statement2.executeQuery(query2);
+				System.out.println(query2);
+				statement2 = dbcon.prepareStatement(query2);
+				statement2.setString(1, temp.get(i));
+				ResultSet rs2 = statement2.executeQuery();
 				rs2.next();
 				value.add(rs2.getString("sample"));
 
@@ -97,7 +102,8 @@ public class SingleMovieServlet extends HttpServlet {
 					rs2.close();
 				}
 			}
-			statement2.close();
+			if (statement2 != null)
+				statement2.close();
 
 			for (int n = 0; n < temp.size(); n++) {
 				for (int m = 0; m < temp.size() - n - 1; m++) {

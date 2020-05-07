@@ -38,13 +38,17 @@ public class SingleStarServlet extends HttpServlet {
 		try {
 			// Get a connection from dataSource
 			Connection dbcon = dataSource.getConnection();
-			Statement statement = dbcon.createStatement();
+			dbcon.setAutoCommit(false);
 
 			String query = "SELECT stars.name, stars.birthYear, group_concat(movies.id) as id,group_concat(movies.title) as movie_lists FROM movies, stars_in_movies, stars " +
-					"where stars.id='" + id + "' " +
+					"where stars.id = ? " +
 					"and movies.id=stars_in_movies.movieId and stars.id=stars_in_movies.starId group by stars.id";
+			PreparedStatement statement = dbcon.prepareStatement(query);
+			statement.setString(1, id);
 
-			ResultSet rs = statement.executeQuery(query);
+			ResultSet rs = statement.executeQuery();
+			dbcon.commit();
+
 			JsonArray jsonArray = new JsonArray();
 
 			// Iterate through each row of rs
