@@ -11,8 +11,11 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 
 // Declaring a WebServlet called MovieListServlet, which maps to url "/api/movies"
@@ -117,8 +120,7 @@ public class MovieListServlet extends HttpServlet {
 						try {
 							// Get a connection from dataSource
 							Connection dbcon = dataSource.getConnection();
-							// Declare our statement
-							Statement statement = dbcon.createStatement();
+							dbcon.setAutoCommit(false);
 
 							String query = "select movies.id,movies.title,movies.year,movies.director,ratings.rating,group_concat(stars.id) as star_id" +
 									", substring_index(group_concat(distinct genres.name separator ','), ',', 3) as genres, " +
@@ -130,12 +132,19 @@ public class MovieListServlet extends HttpServlet {
 								if (title_start.contains("*")) {
 									query += " and movies.title not REGEXP '^[0-9a-z]'";
 								} else
-									query += " and movies.title like '" + title_start + "%' ";
+									query += " and movies.title like ?";
 							}
 							query += " group by movies.id ";
 
+							// Declare our PreparedStatement
+							PreparedStatement statement = dbcon.prepareStatement(query);
+							if (statement.getParameterMetaData().getParameterCount() > 0) // set param only if at least one ? exists
+								statement.setString(1, title_start + "%");
+
 							// Perform the query
-							ResultSet rs = statement.executeQuery(query);
+							ResultSet rs = statement.executeQuery();
+							dbcon.commit();
+
 							JsonArray jsonArray = new JsonArray();
 
 							// Iterate through each row of rs
@@ -185,8 +194,7 @@ public class MovieListServlet extends HttpServlet {
 					try {
 						// Get a connection from dataSource
 						Connection dbcon = dataSource.getConnection();
-						// Declare our statement
-						Statement statement = dbcon.createStatement();
+						dbcon.setAutoCommit(false);
 
 						String query = "select movies.id,movies.title,movies.year,movies.director,ratings.rating,group_concat(stars.id) as star_id" +
 								", substring_index(group_concat(distinct genres.name separator ','), ',', 3) as genres, " +
@@ -195,20 +203,37 @@ public class MovieListServlet extends HttpServlet {
 								"genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
 								"inner join stars on stars_in_movies.starId=stars.id ";
 
-						if (!title.isEmpty())
-							query += " and movies.title like '%" + title + "%' ";
-						if (!year.isEmpty())
-							query += " and movies.year = " + year;
-						if (!director.isEmpty())
-							query += " and movies.director like '%" + director + "%' ";
-						if (!star.isEmpty())
-							query += " and stars.name like '%" + star + "%' ";
-
+						Map<Integer, String> paramMap = new HashMap<>();
+						if (!title.isEmpty()) {
+							paramMap.put(paramMap.size() + 1, "%" + title + "%");
+							query += " and movies.title like ?";
+						}
+						if (!year.isEmpty()) {
+							paramMap.put(paramMap.size() + 1, year);
+							query += " and movies.year = ?";
+						}
+						if (!director.isEmpty()) {
+							paramMap.put(paramMap.size() + 1, "%" + director + "%");
+							query += " and movies.director like ?";
+						}
+						if (!star.isEmpty()) {
+							paramMap.put(paramMap.size() + 1, "%" + star + "%");
+							query += " and stars.name like ?";
+						}
 						query += " group by movies.id order by rating desc";
 						System.out.println(query);
 
+						// Declare our PreparedStatement
+						PreparedStatement statement = dbcon.prepareStatement(query);
+						// apply params
+						for (Map.Entry<Integer, String> entry : paramMap.entrySet()) {
+							statement.setString(entry.getKey(), entry.getValue());
+						}
+
 						// Perform the query
-						ResultSet rs = statement.executeQuery(query);
+						ResultSet rs = statement.executeQuery();
+						dbcon.commit();
+
 						JsonArray jsonArray = new JsonArray();
 
 						// Iterate through each row of rs
@@ -268,8 +293,7 @@ public class MovieListServlet extends HttpServlet {
 							"group_concat(stars.name) as stars from movies inner join genres_in_movies on movies.id=genres_in_movies.movieId" +
 							" left join ratings on ratings.movieId=movies.id inner join genres on " +
 							"genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
-							"inner join stars on stars_in_movies.starId=stars.id ";
-                    query += " group by movies.id";
+							"inner join stars on stars_in_movies.starId=stars.id group by movies.id";
 
 					JsonArray jsonArray = new JsonArray();
 
@@ -328,8 +352,8 @@ public class MovieListServlet extends HttpServlet {
 			try {
 				// Get a connection from dataSource
 				Connection dbcon = dataSource.getConnection();
-				// Declare our statement
-				Statement statement = dbcon.createStatement();
+				dbcon.setAutoCommit(false);
+
 				String query = "select movies.id,movies.title,movies.year,movies.director,ratings.rating,group_concat(stars.id) as star_id" +
 						", substring_index(group_concat(distinct genres.name separator ','), ',', 3) as genres, " +
 						"group_concat(stars.name) as stars from movies inner join genres_in_movies on movies.id=genres_in_movies.movieId" +
@@ -337,22 +361,35 @@ public class MovieListServlet extends HttpServlet {
 						"genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId " +
 						"inner join stars on stars_in_movies.starId=stars.id ";
 
-				if (title != null && !title.isEmpty())
-					query += " and movies.title like '%" + title + "%' ";
-				if (year != null && !year.isEmpty())
-					query += " and movies.year = " + year;
-				if (director != null && !director.isEmpty())
-					query += " and movies.director like '%" + director + "%' ";
-				if (star != null && !star.isEmpty())
-					query += " and stars.name like '%" + star + "%' ";
+				Map<Integer, String> paramMap = new HashMap<>();
+				if (title != null && !title.isEmpty()) {
+					paramMap.put(paramMap.size() + 1, "%" + title + "%");
+					query += " and movies.title like ?";
+				}
+				if (year != null && !year.isEmpty()) {
+					paramMap.put(paramMap.size() + 1, year);
+					query += " and movies.year = ?";
+				}
+				if (director != null && !director.isEmpty()) {
+					paramMap.put(paramMap.size() + 1, "%" + director + "%");
+					query += " and movies.director like ?";
+				}
+				if (star != null && !star.isEmpty()) {
+					paramMap.put(paramMap.size() + 1, "%" + star + "%");
+					query += " and stars.name like ?";
+				}
 				if (title_start != null && !title_start.isEmpty()) {
 					if (title_start.contains("*"))
 						query += " and movies.title not REGEXP '^[0-9a-z]'";
-					else
-						query += " and movies.title like '" + title_start + "%' ";
+					else {
+						paramMap.put(paramMap.size() + 1, title_start + "%");
+						query += " and movies.title like ?";
+					}
 				}
-				if (genres != null && !genres.isEmpty())
-					query += " and genres.name ='" + genres + "'";
+				if (genres != null && !genres.isEmpty()) {
+					paramMap.put(paramMap.size() + 1, genres);
+					query += " and genres.name = ?";
+				}
 				query += " group by movies.title ";
 				if (first_sort.equals("title_asc")) {
 					if (second_sort.equals("title_asc")) {
@@ -403,7 +440,17 @@ public class MovieListServlet extends HttpServlet {
 						query += "order by rating desc";
 					}
 				}
-				ResultSet rs = statement.executeQuery(query);
+
+				// Declare our PreparedStatement
+				PreparedStatement statement = dbcon.prepareStatement(query);
+				// apply params
+				for (Map.Entry<Integer, String> entry : paramMap.entrySet()) {
+					statement.setString(entry.getKey(), entry.getValue());
+				}
+
+				ResultSet rs = statement.executeQuery();
+				dbcon.commit();
+
 				JsonArray jsonArray = new JsonArray();
 
 				// Iterate through each row of rs
