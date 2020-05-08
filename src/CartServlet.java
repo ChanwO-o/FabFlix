@@ -91,6 +91,7 @@ public class CartServlet extends HttpServlet {
 
 		try {
 			Connection dbcon = dataSource.getConnection(); // Get a connection from dataSource
+			dbcon.setAutoCommit(false);
 			String query = "select movies.id,movies.title,movies.year,movies.director," +
 					"group_concat(distinct genres.name separator ',') as genres,group_concat(distinct stars.name separator ',') as stars,ratings.rating " +
 					"from movies, ratings, genres, genres_in_movies, stars, stars_in_movies " +

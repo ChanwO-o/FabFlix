@@ -9,10 +9,8 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,13 +67,19 @@ public class PaymentServlet extends HttpServlet {
 
 		try {
 			Connection dbcon = dataSource.getConnection();
-			Statement statement = dbcon.createStatement();
-			Statement statement2 = dbcon.createStatement();
+			dbcon.setAutoCommit(false);
 
 			String query = "select * from creditcards " +
-					"where binary id= '" + card + "'" + " and binary firstName='" + fname + "'" + "and binary lastName='" + lname + "'" + " and binary expiration='" + exp + "'";
+					"where binary id = ? and binary firstName = ? and binary lastName = ? and binary expiration = ?";
 			System.out.println("payment query: " + query);
-			ResultSet rs = statement.executeQuery(query);
+
+			PreparedStatement statement = dbcon.prepareStatement(query);
+			statement.setString(1, card);
+			statement.setString(2, fname);
+			statement.setString(3, lname);
+			statement.setString(4, exp);
+			ResultSet rs = statement.executeQuery();
+
 			JsonObject responseJsonObject = new JsonObject();
 
 			if (!rs.isBeforeFirst()) { // wrong card information given
@@ -93,30 +97,59 @@ public class PaymentServlet extends HttpServlet {
 				synchronized (cartList) { // add a record to sales table for each entry in cartList
 					// construct sales query
 					String salesQuery = "INSERT INTO sales VALUES ";
-					int count = 0;
+
+					// keep track of sql param pairs (customerId & movieId) with two ArrayLists, each pair will be stored in same index
+					ArrayList<Integer> customerIdsParamList = new ArrayList<>();
+					ArrayList<String> movieIdsParamList = new ArrayList<>();
+
+					int index = 0;
 					for (Map.Entry<String, Integer> entry : cartList.entrySet()) {
 						String movieEntryQuery = "";
 						for (int i = 0; i < entry.getValue(); ++i) { // iterate through movie quantity
-//							System.out.println("i: " + i + " getValue: " + entry.getValue());
-							movieEntryQuery += "(NULL," + customerId + ", '" + entry.getKey() + "', CURDATE())";
+//							movieEntryQuery += "(NULL," + customerId + ", '" + entry.getKey() + "', CURDATE())";
+							movieEntryQuery += "(NULL, ?, ?, CURDATE())";
+
+							// add params to ArrayLists that will replace the ?s
+							customerIdsParamList.add(customerId);
+							movieIdsParamList.add(entry.getKey());
+
 							if (i < entry.getValue() - 1)
 								movieEntryQuery += ","; // inner comma
 						}
-						if (count < cartList.entrySet().size() - 1) {
+						if (index < cartList.entrySet().size() - 1) {
 							movieEntryQuery += ","; // outer comma
-							count++;
+							index++;
 						}
+						System.out.println("PaymentServlet movieEntryQuery: " + movieEntryQuery);
 						salesQuery += movieEntryQuery;
 					}
-//					System.out.println("PaymentServlet query: " + salesQuery);
-					statement2.executeUpdate(salesQuery); // perform insert to sales table
+
+					// finished salesQuery
+					System.out.println("PaymentServlet salesQuery: " + salesQuery);
+					PreparedStatement statementInsertSales = dbcon.prepareStatement(salesQuery);
+
+					// apply parameter pairs to salesQuery PreparedStatement
+					System.out.println("customerIdsParamList: " + customerIdsParamList);
+					System.out.println("movieIdsParamList: " + movieIdsParamList);
+					for (int i = 0; i < customerIdsParamList.size(); ++i) {
+						int customerIdParamIndex = 2 * i + 1;
+						int movieIdParamIndex = customerIdParamIndex + 1;
+						System.out.println("customerIdParamIndex: " + customerIdParamIndex);
+						System.out.println("movieIdParamIndex: " + movieIdParamIndex);
+						statementInsertSales.setInt(customerIdParamIndex, customerIdsParamList.get(i));
+						statementInsertSales.setString(movieIdParamIndex, movieIdsParamList.get(i));
+					}
+
+					System.out.println("statementInsertSales: " + statementInsertSales);
+					statementInsertSales.executeQuery(); // perform insert to sales table
+//					statementInsertSales.executeUpdate(); // perform insert to sales table
+					statementInsertSales.close();
 					cartList.clear(); // clear cart once purchase is complete
 				}
 			}
 			response.getWriter().write(responseJsonObject.toString());
 			rs.close();
 			statement.close();
-			statement2.close();
 			dbcon.close();
 		} catch (IOException | SQLException e) {
 			e.printStackTrace();
