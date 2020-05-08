@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,43 +50,27 @@ public class LoginServlet extends HttpServlet {
 			return;
 		}
 
+		// now try verifying credentials
 		try {
-			Connection dbcon = dataSource.getConnection();
-			dbcon.setAutoCommit(false);
-
-			String query = "SELECT id, email, password from customers where email = ? and password = ?";
-			PreparedStatement statement = dbcon.prepareStatement(query);
-
-			statement.setString(1, email);
-			statement.setString(2, password);
-
-			ResultSet rs = statement.executeQuery();
-			dbcon.commit();
-
-			if (rs.next()) { // result set has at least one entry: login success
-				idResult = rs.getInt("id"); // assign user id
-				String emailResult = rs.getString("email");
-				String pwResult = rs.getString("password");
-				System.out.println("idResult: " + idResult + " emailResult: " + emailResult + " pwResult: " + pwResult);
-
-				// login success: set this user into the session
+			if (VerifyPassword.verifyCredentials(email, password)) { // login success: set this user into the session
+				System.out.println("credentials verified");
 				request.getSession().setAttribute("user", new User(email, idResult));
 				responseJsonObject.addProperty("status", "success");
 				responseJsonObject.addProperty("message", "success");
 			}
-			else { // login fail
-				System.out.println("ResultSet returned no results. Login failed.");
+			else {
+				System.out.println("invalid credentials");
 				responseJsonObject.addProperty("status", "fail");
 				responseJsonObject.addProperty("message", "Invalid email or password");
 			}
-
-			response.getWriter().write(responseJsonObject.toString());
-			rs.close();
-			statement.close();
-			dbcon.close();
 		}
-		catch (IOException | SQLException e) {
+		catch (Exception e) {
 			e.printStackTrace();
+			responseJsonObject.addProperty("status", "fail");
+			responseJsonObject.addProperty("message", "Invalid email or password");
+		}
+		finally {
+			response.getWriter().write(responseJsonObject.toString());
 		}
 	}
 }
