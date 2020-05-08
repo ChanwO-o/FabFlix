@@ -40,9 +40,11 @@ public class VerifyPassword {
 		if (rs.next()) {
 		    // get the encrypted password from the database
 			String encryptedPassword = rs.getString("password");
+			System.out.println("VerifyPassword encryptedPassword: " + encryptedPassword);
 
 			// use the same encryptor to compare the user input password with encrypted password stored in DB
 			success = new StrongPasswordEncryptor().checkPassword(password, encryptedPassword);
+			System.out.println("VerifyPassword success: " + success);
 		}
 
 		rs.close();
