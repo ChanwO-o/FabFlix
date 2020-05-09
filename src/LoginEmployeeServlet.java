@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "LoginEmployeeServlet", urlPatterns = "/_dashboard")
+public class LoginEmployeeServlet extends HttpServlet {
 	private static final long serialVersionUID = 2L;
 
 	@Resource(name = "jdbc/moviedb")
@@ -23,9 +23,15 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
-		// Retrieve data named "cartList" from session
+
+		// clear user from session
+		if (session.getAttribute("user") != null) {
+			session.removeAttribute("user");
+		}
+
+		// clear cart from session
 		Map<String, Integer> cartList = (HashMap<String, Integer>) session.getAttribute("cartList");
-		if (cartList != null) { // clear cart on logout
+		if (cartList != null) {
 			synchronized (cartList) {
 				cartList.clear();
 			}
@@ -35,7 +41,7 @@ public class LoginServlet extends HttpServlet {
 
 		String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
 		String email = request.getParameter("email");
-		int idResult = -1; // get id from query below
+		String fullname = ""; //
 		String password = request.getParameter("password");
 
 		try { // first, check if captcha success
@@ -52,9 +58,9 @@ public class LoginServlet extends HttpServlet {
 
 		// now try verifying credentials
 		try {
-			if (VerifyPassword.verifyCredentialsUser(email, password)) { // login success: set this user into the session
+			if (VerifyPassword.verifyCredentialsEmployee(email, password)) { // login success: set this employee into the session
 				System.out.println("credentials verified");
-				request.getSession().setAttribute("user", new User(email, idResult));
+				request.getSession().setAttribute("employee", new Employee(email));
 				responseJsonObject.addProperty("status", "success");
 				responseJsonObject.addProperty("message", "success");
 			}
