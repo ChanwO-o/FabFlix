@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +57,16 @@ public class LoginServlet extends HttpServlet {
 		try {
 			if (VerifyPassword.verifyCredentials(email, password)) { // login success: set this user into the session
 				System.out.println("credentials verified");
+
+				// get user's id
+				Connection dbcon = dataSource.getConnection();
+				Statement statement = dbcon.createStatement();
+				String getUserIdQuery = String.format("SELECT id from customers where email='%s'", email);
+				ResultSet rs = statement.executeQuery(getUserIdQuery);
+				rs.next();
+				idResult = rs.getInt("id");
+				System.out.println("assigning user id: " + idResult);
+
 				request.getSession().setAttribute("user", new User(email, idResult));
 				responseJsonObject.addProperty("status", "success");
 				responseJsonObject.addProperty("message", "success");
