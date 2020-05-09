@@ -13,8 +13,10 @@ import javax.sql.DataSource;
 public class MetadataServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     Connection dbcon;
+
     @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
+
     /**
      * @throws ClassNotFoundException
      * @throws IllegalAccessException
