@@ -48,7 +48,6 @@ public class RecaptchaVerifyUtils {
 		// Get the InputStream from Connection to read data sent from the server.
 		InputStream inputStream = conn.getInputStream();
 		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-
 		JsonObject jsonObject = new Gson().fromJson(inputStreamReader, JsonObject.class);
 
 		inputStreamReader.close();
