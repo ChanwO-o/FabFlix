@@ -47,84 +47,82 @@
 <!--			</div>-->
 			<!-- End General Search -->
 
-			<!-- Advanced Search -->
+			<!-- Add Star -->
 			<div class="advancedsearch">
-				<h2>Search Movies with Advanced Search Options</h2>
+				<h2>Add a new Star</h2>
 				<br>
-				<form id="advancedsearch_form" class="example" method="GET" action="movielist.html">
-					<input type="text" placeholder="Title" name="title">
-					<input type="text" placeholder="Year" name="year">
-					<input type="text" placeholder="Director" name="director">
-					<input type="text" placeholder="Star" name="star">
-					<button type="submit"><i class="fa fa-search"> Advanced Search</i></button>
+				<form id="advancedsearch_form" class="example" method="GET" action="api/dashboard">
+					<input type="text" placeholder="Name" name="name">
+					<input type="text" placeholder="Birth year (optional)" name="birthyear">
+					<button type="submit"><i class="fa fa-search"> Add Star</i></button>
 				</form>
-
 			</div>
-			<!-- End Advanced Search -->
+			<!-- End Add Star -->
 
 		</div>
 	</div>
 
 </div>
-<div id="content2" class="clearfix">
-	<h2 style="margin:40px 0px 0px 40px">Browser</h2>
-	<br>
-	<div class="genres">
-		<h2 style="text-align: center"> Browse by Genres </h2>
-		<br>
-		<h3 id="movie_info"></h3>
-		<ul id="genre_list" style="font-size: 15px; text-align:center">
-		</ul>
-	</div>
-	<div class="movie_title">
-		<h2 style="text-align: center"> Browse by Movie Title </h2>
-		<br>
-		<table class="movie_title_list">
-			<td valign="top" style="text-align:center">
-				<a href="movielist.html?pn=10&pg=1&title_start=0"> 0 </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=1"> 1 </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=2"> 2 </a> |
-				<a href="movielist.html?pn=10&pg=1&title_start=3"> 3 </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=4"> 4 </a> |
-				<a href="movielist.html?pn=10&pg=1&title_start=5"> 5 </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=6"> 6 </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=7"> 7 </a> |
-				<a href="movielist.html?pn=10&pg=1&title_start=8"> 8 </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=9"> 9 </a> |
-				<br>
-				<a href="movielist.html?pn=10&pg=1&title_start=A"> A </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=B"> B </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=C"> C </a> |
-				<a href="movielist.html?pn=10&pg=1&title_start=D"> D </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=E"> E </a> |
-				<a href="movielist.html?pn=10&pg=1&title_start=F"> F </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=G"> G </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=H"> H </a> |
-				<a href="movielist.html?pn=10&pg=1&title_start=I"> I </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=J"> J </a> |
-				<br>
-				<a href="movielist.html?pn=10&pg=1&title_start=K"> K </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=L"> L </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=M"> M </a> |
-				<a href="movielist.html?pn=10&pg=1&title_start=N"> N </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=O"> O </a> |
-				<a href="movielist.html?pn=10&pg=1&title_start=P"> P </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=Q"> Q </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=R"> R </a> |
-				<a href="movielist.html?pn=10&pg=1&title_start=S"> S </a> |
-				<br>
-				<a href="movielist.html?pn=10&pg=1&title_start=T"> T </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=U"> U </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=V"> V </a> |
-				<a href="movielist.html?pn=10&pg=1&title_start=W"> W </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=X"> X </a> |
-				<a href="movielist.html?pn=10&pg=1&title_start=Y"> Y </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=Z"> Z </a> | <a
-					href="movielist.html?pn=10&pg=1&title_start=*"> * </a> |
-			</td>
-		</table>
-	</div>
-</div>
+
+<!--<div id="content2" class="clearfix">-->
+<!--	<h2 style="margin:40px 0px 0px 40px">Browser</h2>-->
+<!--	<br>-->
+<!--	<div class="genres">-->
+<!--		<h2 style="text-align: center"> Browse by Genres </h2>-->
+<!--		<br>-->
+<!--		<h3 id="movie_info"></h3>-->
+<!--		<ul id="genre_list" style="font-size: 15px; text-align:center">-->
+<!--		</ul>-->
+<!--	</div>-->
+<!--	<div class="movie_title">-->
+<!--		<h2 style="text-align: center"> Browse by Movie Title </h2>-->
+<!--		<br>-->
+<!--		<table class="movie_title_list">-->
+<!--			<td valign="top" style="text-align:center">-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=0"> 0 </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=1"> 1 </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=2"> 2 </a> |-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=3"> 3 </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=4"> 4 </a> |-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=5"> 5 </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=6"> 6 </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=7"> 7 </a> |-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=8"> 8 </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=9"> 9 </a> |-->
+<!--				<br>-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=A"> A </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=B"> B </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=C"> C </a> |-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=D"> D </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=E"> E </a> |-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=F"> F </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=G"> G </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=H"> H </a> |-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=I"> I </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=J"> J </a> |-->
+<!--				<br>-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=K"> K </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=L"> L </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=M"> M </a> |-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=N"> N </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=O"> O </a> |-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=P"> P </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=Q"> Q </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=R"> R </a> |-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=S"> S </a> |-->
+<!--				<br>-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=T"> T </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=U"> U </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=V"> V </a> |-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=W"> W </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=X"> X </a> |-->
+<!--				<a href="movielist.html?pn=10&pg=1&title_start=Y"> Y </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=Z"> Z </a> | <a-->
+<!--					href="movielist.html?pn=10&pg=1&title_start=*"> * </a> |-->
+<!--			</td>-->
+<!--		</table>-->
+<!--	</div>-->
+<!--</div>-->
 
 <!-- contents end -->
 
