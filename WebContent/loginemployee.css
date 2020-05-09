@@ -1,0 +1,59 @@
+@charset "UTF-8";
+
+body {
+	background-image: url('background2.jpg');
+	background-position: center;
+}
+
+#login_form {
+	border: 1px solid white;
+}
+
+/* layout */
+#header {
+	height: 120px;
+	margin-top: 20px;
+	font-size: 100px;
+	color: black;
+	text-align: center;
+	background-color: #ffffff;
+	background-color: rgba(0, 0, 0, 0.5);
+
+}
+
+.gradtext {
+	background: #55ffaa;
+	background: -webkit-linear-gradient(left, #55ff55, #55ffff);
+	background: -moz-linear-gradient(right, #55ff55, #55ffff);
+	background: -o-linear-gradient(right, #55ff55, #55ffff);
+	background: linear-gradient(to right, #55ff55, #55ffff);
+	-webkit-background-clip: text;
+	color: transparent;
+	font-size: 100px;
+	font-weight: bold;
+}
+
+#logintext_form {
+	margin-top: 20px;
+	font-size: 20px;
+	color: black;
+	text-align: center;
+	background-color: #ffffff;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.logintext {
+	background: #ff8b4f;
+	background: -webkit-linear-gradient(left, #ff8b4f, #ffea57);
+	background: -moz-linear-gradient(right, #ff8b4f, #ffea57);
+	background: -o-linear-gradient(right, #ff8b4f, #ffea57);
+	background: linear-gradient(to right, #ff8b4f, #ffea57);
+	-webkit-background-clip: text;
+	color: transparent;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+#login_form {
+
+}
