@@ -54,7 +54,8 @@ public class DashboardServlet extends HttpServlet {
 			PreparedStatement statement = dbcon2.prepareStatement(insertStarQuery);
 			statement.setString(1, newId);
 			statement.setString(2, name);
-			if (birthyear == null || birthyear.isEmpty())
+
+			if (birthyear == null || birthyear.isEmpty() || !birthyear.matches("-?\\d+")) // birthyear is null/empty/not an int
 				statement.setInt(3, 0);
 			else
 				statement.setInt(3, Integer.parseInt(birthyear));
