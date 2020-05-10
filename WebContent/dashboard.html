@@ -22,6 +22,9 @@
 		<li class="home">
 			<button type="button" class="btn_home" onclick="location.href='dashboard.html'">Home</button>
 		</li>
+		<li class="GO TO MAINPAGE">
+			<button type="button" class="btn_logout" onclick="location.href='mainpage.html'">CHECK OUT MAINPAGE</button>
+		</li>
 		<li class="logout">
 			<button type="button" class="btn_logout" onclick="location.href='login.html'">Logout</button>
 		</li>
@@ -41,6 +44,18 @@
 					<input type="text" placeholder="Name" name="name">
 					<input type="text" placeholder="Birth year (optional)" name="birthyear">
 					<button type="submit"><i class="fa fa-search"> Add Star</i></button>
+				</form>
+				<br>
+				<h2>Add a new Movie</h2>
+				<br>
+				<form id="advancedsearch_form2" class="example" method="GET" action="api/dashboard">
+					<input type="text" placeholder="Movie ID" name="id">
+					<input type="text" placeholder="Movie Title" name="title">
+					<input type="text" placeholder="Movie Year" name="year">
+					<input type="text" placeholder="Movie Director" name="director">
+					<input type="text" placeholder="Star Name" name="star_name">
+					<input type="text" placeholder="Single Genre" name="genre">
+					<button type="submit"><i class="fa fa-search"> Add Movie</i></button>
 				</form>
 				<form action="metadata" method="get">
 					<h2>Show Database Metadata</h2>
