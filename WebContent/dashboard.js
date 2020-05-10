@@ -13,6 +13,7 @@ function onAddStarSubmit(formSubmitEvent) {
 
 	if (starName === "") {
 		alert("Star name field is required!");
+		addStarForm.trigger('reset');
 	}
 	else {
 		$.ajax(
@@ -20,13 +21,33 @@ function onAddStarSubmit(formSubmitEvent) {
 				method: "GET",
 				data: addStarForm.serialize(),
 				success: (resultData) => {
-					alert("Added new star with Id " + resultData.substring(12, 20));
+					console.log(resultData);
+					resultData=resultData.substring(1,resultData.length-1);
+					resultData=JSON.parse(resultData);
+					alert("Added new star with Id " + resultData['starId']);
+					addStarForm.trigger('reset');
 				}
 			}
 		);
 	}
 }
-
+function handleResultData(resultData)
+{
+	console.log(typeof(resultData));
+	console.log(resultData);
+	resultData=resultData.substring(1,resultData.length-1);
+	console.log(resultData);
+	resultData=JSON.parse(resultData);
+	console.log(resultData['addedMovieId']);
+	if (resultData['message'] === "movie exists") {
+		alert("Movie exists! No changes to database made.");
+		addMovieForm.trigger('reset');
+	}
+	else {
+		alert("Added new movies with Movie id:"+  resultData['addedMovieId']+ ", Star Id: "+ resultData['addedStarId']+ ", Genre Id: "+ resultData['addedGenreId']);
+		addMovieForm.trigger('reset');
+	}
+}
 function onAddMovieSubmit(formSubmitEvent) {
 	console.log("submit addMovie form");
 	formSubmitEvent.preventDefault();
@@ -61,18 +82,13 @@ function onAddMovieSubmit(formSubmitEvent) {
 	else if (movieGenre === "")
 		alert("Movie Genre field is required!");
 	else {
+		console.log("FAFAFAFAF");
 		$.ajax(
 			"api/dashboard", {
 				method: "GET",
-				data: addMovieForm.serialize(),
-				success: (resultData) => {
-					console.log(resultData);
-					if (resultData.substring(13, 25) === "movie exists")
-						alert("Movie exists! No changes to database made.");
-					else {
-						// alert("Added new movies, id:",  starId: genreId:");
-					}
-				}
+				data: addMovieForm.serializeArray(),
+				success: (resultData) => handleResultData(resultData)
+
 			}
 		);
 	}

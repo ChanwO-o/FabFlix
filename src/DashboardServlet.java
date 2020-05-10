@@ -35,6 +35,7 @@ public class DashboardServlet extends HttpServlet {
 		String genre = request.getParameter("genre");
 		String star_name = request.getParameter("star_name");
 
+		PrintWriter out = response.getWriter();
 		System.out.println("DashboardServlet doGet() params name: " + name + " birthyear: " + birthyear + "title: " + title + " director: " + director +
 				" year: " + year + " genre: " + genre + " star_name: " + star_name);
 
@@ -46,10 +47,11 @@ public class DashboardServlet extends HttpServlet {
 
 				// check if movie exists
 				String movieExistsQuery = String.format("SELECT * FROM movies WHERE title='%s' AND year=%d AND director='%s'", title, Integer.parseInt(year), director);
+				System.out.println(movieExistsQuery);
 				Statement movieExistsStatement = dbcon.createStatement();
 				ResultSet movieExistsRs = movieExistsStatement.executeQuery(movieExistsQuery);
-				movieExistsRs.next();
-				if (movieExistsRs.getFetchSize() != 0) { // movie already exists
+				System.out.println(movieExistsRs.getFetchSize());
+				if (movieExistsRs.next()) { // movie already exists
 					JsonArray jsonArray = new JsonArray();
 					JsonObject jsonObject = new JsonObject();
 					jsonObject.addProperty("message", "movie exists");
@@ -71,7 +73,7 @@ public class DashboardServlet extends HttpServlet {
 				System.out.println("last movie id: " + lastMovieId);
 
 				String newMovieId = "tt0" + (Integer.parseInt(lastMovieId.substring(2)) + 1);
-
+				System.out.println("new movie id: " + newMovieId);
 				// now get star id (existing/new)
 				String getLastStarQuery = "SELECT id FROM stars ORDER BY id DESC LIMIT 1;"; // get last id number from stars
 				Statement getLastStarStatement = dbcon2.createStatement();
@@ -98,30 +100,32 @@ public class DashboardServlet extends HttpServlet {
 				rs3.close();
 				dbcon2.close();
 
-//				Connection dbcon2 = dataSource.getConnection();
-//				dbcon2.setAutoCommit(false);
-//
-//				String getAddedIdsQuery = String.format("select movies.id,movies.title , genres.id, stars.id from movies,genres,stars,genres_in_movies,stars_in_movies " +
-//						"where movies.id = '%s' and genres_in_movies.movieId = movies.id and genres_in_movies.genreId = genres.id " +
-//						"and stars.id = stars_in_movies.starId and stars_in_movies.movieId = movies.id", newMovieId);
-//				Statement getAddedIdsStatement = dbcon2.createStatement();
-//				ResultSet getAddedIdsResultSet = getAddedIdsStatement.executeQuery(getAddedIdsQuery);
-//				getAddedIdsResultSet.next();
-//				String addedMovieId = getAddedIdsResultSet.getString("movies.id");
-//				String addedGenreId = getAddedIdsResultSet.getString("genre.id");
-//				String addedStarId = getAddedIdsResultSet.getString("star.id");
-//				JsonArray jsonArray = new JsonArray();
-//				JsonObject jsonObject = new JsonObject();
-//				jsonObject.addProperty("addedMovieId", addedMovieId);
-//				jsonObject.addProperty("addedGenreId", addedGenreId);
-//				jsonObject.addProperty("addedStarId", addedStarId);
-//				jsonArray.add(jsonObject);
-//				response.getWriter().println(jsonArray);
-//				dbcon2.close();
+				Connection dbcon3 = dataSource.getConnection();
+
+
+				String getAddedIdsQuery = String.format("select movies.id,movies.title , genres.id, stars.id from movies,genres,stars,genres_in_movies,stars_in_movies " +
+						"where movies.id = '%s' and genres_in_movies.movieId = movies.id and genres_in_movies.genreId = genres.id " +
+						"and stars.id = stars_in_movies.starId and stars_in_movies.movieId = movies.id", newMovieId);
+				Statement getAddedIdsStatement = dbcon3.createStatement();
+				ResultSet getAddedIdsResultSet = getAddedIdsStatement.executeQuery(getAddedIdsQuery);
+				getAddedIdsResultSet.next();
+				String addedMovieId = getAddedIdsResultSet.getString("movies.id");
+				String addedGenreId = getAddedIdsResultSet.getString("genres.id");
+				String addedStarId = getAddedIdsResultSet.getString("stars.id");
+				JsonArray jsonArray = new JsonArray();
+				JsonObject jsonObject = new JsonObject();
+				jsonObject.addProperty("addedMovieId", addedMovieId);
+				jsonObject.addProperty("addedGenreId", addedGenreId);
+				jsonObject.addProperty("addedStarId", addedStarId);
+				jsonObject.addProperty("message", "movie not exist");
+				jsonArray.add(jsonObject);
+				out.write(jsonArray.toString());
+				dbcon3.close();
 			}
 			catch (SQLException e) {
 				e.printStackTrace();
 			}
+			out.close();
 		}
 		else { // add star
 			try {
@@ -169,7 +173,7 @@ public class DashboardServlet extends HttpServlet {
 				jsonObject.addProperty("starId", newId);
 				jsonArray.add(jsonObject);
 //				response.getWriter().write(jsonArray.toString());
-				response.getWriter().println(jsonArray);
+				response.getWriter().write(jsonArray.toString());
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
