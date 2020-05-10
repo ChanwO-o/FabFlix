@@ -120,7 +120,7 @@ public class SingleMovieServlet extends HttpServlet {
 						String swapString3 = temp2.get(m);
 						temp2.set(m, temp2.get(m + 1));
 						temp2.set(m + 1, swapString3);
-					} else if ((value.get(m).compareTo(value.get(m + 1))) == 0) {
+					} else if (Integer.parseInt(value.get(m))== Integer.parseInt(value.get(m+1))) {
 						if (temp2.get(m).compareTo(temp2.get(m + 1)) > 0) {
 							String swapString = value.get(m);
 							value.set(m, value.get(m + 1));

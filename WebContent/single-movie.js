@@ -50,11 +50,11 @@ function handleResult(resultData) {
 		for (let i = 0; i < genres_array.length; ++i) {
 			if (i === genres_array.length - 1) {
 				temp_1 +=
-					'<a href="movielist.html?genres=' + genres_array[i] + '">' + genres_array[i]
+					'<a href="movielist.html?genres=' + genres_array[i] +'&pn=10&pg=1' + '">' + genres_array[i]
 					+ '</a>';
 			} else {
 				temp_1 +=
-					'<a href="movielist.html?genres=' + genres_array[i] + '">'
+					'<a href="movielist.html?genres=' + genres_array[i] +'&pn=10&pg=1' + '">'
 					+ genres_array[i] + ',' +   // display star_name for the link text
 					'</a>';
 			}
