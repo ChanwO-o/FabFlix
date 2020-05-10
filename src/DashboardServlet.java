@@ -22,18 +22,15 @@ public class DashboardServlet extends HttpServlet {
 	private DataSource dataSource;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		System.out.println(request.getRequestURI());
+//		System.out.println(request.getRequestURI());
 
 		String name = request.getParameter("name");
 		String birthyear = request.getParameter("birthyear");
-
 		System.out.println("DashboardServlet doGet() params name: " + name + " birthyear: " + birthyear);
 
 		if (name == null)
 			return;
 
-		PrintWriter out = response.getWriter();
 		try {
 			Connection dbcon = dataSource.getConnection();
 			dbcon.setAutoCommit(false);
@@ -75,7 +72,6 @@ public class DashboardServlet extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		out.close();
 	}
 
 
