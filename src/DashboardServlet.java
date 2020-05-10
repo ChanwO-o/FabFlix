@@ -26,52 +26,82 @@ public class DashboardServlet extends HttpServlet {
 
 		String name = request.getParameter("name");
 		String birthyear = request.getParameter("birthyear");
+		String title = request.getParameter("title");
+		String director = request.getParameter("director");
+		String year = request.getParameter("year");
+		String genre = request.getParameter("genre");
+		String star_name = request.getParameter("star_name");
+
 		System.out.println("DashboardServlet doGet() params name: " + name + " birthyear: " + birthyear);
 
-		if (name == null)
-			return;
+		if (name == null) {
+			if(title ==null || director==null || year==null || genre==null || star_name==null)
+				return;
+			else {
+				try{
+					Connection dbcon = dataSource.getConnection();
+					dbcon.setAutoCommit(false);
+					String query = "SELECT id FROM movies ORDER BY id DESC LIMIT 1;";
+					Statement statement = dbcon.createStatement();
+					ResultSet rs = statement.executeQuery(query);
+					dbcon.commit();
+					rs.next();
+					String lastMovieId = rs.getString("id");
+					System.out.println("last movie id: " + lastMovieId);
 
-		try {
-			Connection dbcon = dataSource.getConnection();
-			dbcon.setAutoCommit(false);
+					String newMovieId = "tt" + Integer.parseInt(lastMovieId.substring(2)) + 1;
 
-			String getLastStarQuery = "SELECT id FROM stars ORDER BY id DESC LIMIT 1;"; // get last id number from stars
-			Statement getLastStarStatement = dbcon.createStatement();
-			ResultSet rs = getLastStarStatement.executeQuery(getLastStarQuery);
-			dbcon.commit();
 
-			rs.next();
-			String lastStarId = rs.getString("id");
-			System.out.println("last star id: " + lastStarId);
 
-			String newId = "nm" + (Integer.parseInt(lastStarId.substring(2)) + 1); // get integer portion of id + 1
-			System.out.println("new star id: " + newId);
-			dbcon.close();
-			Connection dbcon2 = dataSource.getConnection();
-			dbcon2.setAutoCommit(false);
-			String insertStarQuery = "INSERT INTO stars VALUES (?, ?, ?)";
-//
-			PreparedStatement statement = dbcon2.prepareStatement(insertStarQuery);
-			statement.setString(1, newId);
-			statement.setString(2, name);
+				}
+				catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		else {
+			try {
+				Connection dbcon = dataSource.getConnection();
+				dbcon.setAutoCommit(false);
 
-			if (birthyear == null || birthyear.isEmpty() || !birthyear.matches("-?\\d+")) // birthyear is null/empty/not an int
-				statement.setInt(3, 0);
-			else
-				statement.setInt(3, Integer.parseInt(birthyear));
-//
-			System.out.println("insertStarQuery query: " + insertStarQuery);
-			statement.executeUpdate();
-			dbcon2.commit();
+				String getLastStarQuery = "SELECT id FROM stars ORDER BY id DESC LIMIT 1;"; // get last id number from stars
+				Statement getLastStarStatement = dbcon.createStatement();
+				ResultSet rs = getLastStarStatement.executeQuery(getLastStarQuery);
+				dbcon.commit();
 
-		//	JsonObject responseJsonObject = new JsonObject();
-//			response.getWriter().write(responseJsonObject.toString());
-			rs.close();
-			getLastStarStatement.close();
-//			statement.close();
-			dbcon2.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+				rs.next();
+				String lastStarId = rs.getString("id");
+				System.out.println("last star id: " + lastStarId);
+
+				String newId = "nm" + (Integer.parseInt(lastStarId.substring(2)) + 1); // get integer portion of id + 1
+				System.out.println("new star id: " + newId);
+				dbcon.close();
+				Connection dbcon2 = dataSource.getConnection();
+				dbcon2.setAutoCommit(false);
+				String insertStarQuery = "INSERT INTO stars VALUES (?, ?, ?)";
+				//
+				PreparedStatement statement = dbcon2.prepareStatement(insertStarQuery);
+				statement.setString(1, newId);
+				statement.setString(2, name);
+
+				if (birthyear == null || birthyear.isEmpty() || !birthyear.matches("-?\\d+")) // birthyear is null/empty/not an int
+					statement.setInt(3, 0);
+				else
+					statement.setInt(3, Integer.parseInt(birthyear));
+				//
+				System.out.println("insertStarQuery query: " + insertStarQuery);
+				statement.executeUpdate();
+				dbcon2.commit();
+
+				//	JsonObject responseJsonObject = new JsonObject();
+				//			response.getWriter().write(responseJsonObject.toString());
+				rs.close();
+				getLastStarStatement.close();
+				//			statement.close();
+				dbcon2.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
