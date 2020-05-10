@@ -20,7 +20,7 @@ function onAddStarSubmit(formSubmitEvent) {
 				method: "GET",
 				data: addStarForm.serialize(),
 				success: (resultData) => {
-					alert("Added new star!");
+					alert("Added new star with Id " + resultData.substring(12, 20));
 				}
 			}
 		);
@@ -66,7 +66,12 @@ function onAddMovieSubmit(formSubmitEvent) {
 				method: "GET",
 				data: addMovieForm.serialize(),
 				success: (resultData) => {
-					alert("Added new movie!");
+					console.log(resultData);
+					if (resultData.substring(13, 25) === "movie exists")
+						alert("Movie exists! No changes to database made.");
+					else {
+						// alert("Added new movies, id:",  starId: genreId:");
+					}
 				}
 			}
 		);

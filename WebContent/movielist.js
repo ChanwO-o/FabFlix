@@ -19,6 +19,11 @@ function handleMovieResult(resultData) {
 			movieTableBodyElement.append(rowHTML);
 			break;
 		}
+		console.log(typeof(resultData));
+		console.log(resultData);
+		console.log(resultData[0]);
+		console.log(resultData[0]["movie_id"]);
+
 		// Concatenate the html tags with resultData jsonObject
 		// let rowHTML = "<tr>";
 		rowHTML +=
