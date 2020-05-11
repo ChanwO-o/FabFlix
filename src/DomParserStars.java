@@ -7,9 +7,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static java.sql.Types.NULL;
 
 public class DomParserStars {
 	List<Star> myStars;
@@ -31,6 +34,8 @@ public class DomParserStars {
 		//Iterate through the list and print the data
         printData();
 
+        //Insert parsed data into our database
+        insertData();
 	}
 
 	private void parseXmlFile() {
@@ -43,7 +48,7 @@ public class DomParserStars {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
 			//parse using builder to get DOM representation of the XML file
-			dom = db.parse("actors-short.xml");
+			dom = db.parse("actors63.xml");
 
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
@@ -134,6 +139,60 @@ public class DomParserStars {
 		Iterator<Star> it = myStars.iterator();
 		while (it.hasNext()) {
 			System.out.println(it.next().toString());
+		}
+	}
+
+	/**
+	 * Insert parsed data into database
+	 */
+	private void insertData() {
+		String sqlId = "mytestuser";
+		String sqlPw = "mypassword";
+		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+
+		try {
+			Connection dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
+
+			String existingStarQuery = "SELECT id from stars where name = ? and birthYear = ?;";
+
+			for (Star star : myStars) {
+				PreparedStatement statement = dbcon.prepareStatement(existingStarQuery);
+				statement.setString(1, star.getName());
+				statement.setInt(2, star.getBirthYear());
+				ResultSet rs= statement.executeQuery();
+				if(rs.next())
+				{
+					System.out.println("star already exists; skip");
+				}
+				else
+				{
+					String newstarQuery = "Select max(id) as id from stars";
+					Statement statement1 = dbcon.createStatement();
+					ResultSet rs2 = statement1.executeQuery(newstarQuery);
+					rs2.next();
+					int newId = Integer.parseInt(rs2.getString("id").substring(2)) +1 ;
+					String setId= "nm" + newId;
+					rs2.close();
+					statement1.close();
+
+					String addStarQuery = "INSERT into stars VALUES(?,?,?)";
+					PreparedStatement in = dbcon.prepareStatement(addStarQuery);
+					in.setString(1, setId);
+					in.setString(2, star.getName());
+					if (star.getBirthYear() == 0)
+						in.setNull(3, Types.INTEGER);
+					else
+						in.setInt(3, star.getBirthYear());
+					in.executeUpdate();
+					in.close();
+
+				}
+				statement.close();
+			}
+			dbcon.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
