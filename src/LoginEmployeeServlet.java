@@ -45,7 +45,7 @@ public class LoginEmployeeServlet extends HttpServlet {
 		String password = request.getParameter("password");
 
 		try { // first, check if captcha success
-			RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+//			RecaptchaVerifyUtils.verify(gRecaptchaResponse); // TODO: UNCOMMENT THIS LINE BEFORE SUBMISSION
 		}
 		catch (Exception e) {
 			e.printStackTrace();
