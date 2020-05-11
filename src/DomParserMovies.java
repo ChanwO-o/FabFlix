@@ -197,10 +197,10 @@ public class DomParserMovies {
 //		while (it.hasNext()) {
 //			System.out.println(it.next().toString());
 //		}
-		Iterator<Genre> it2 = myGenres.iterator();
-		while (it2.hasNext()) {
-			System.out.println(it2.next().toString());
-		}
+//		Iterator<Genre> it2 = myGenres.iterator();
+//		while (it2.hasNext()) {
+//			System.out.println(it2.next().toString());
+//		}
 	}
 
 	public static void main(String[] args) {
