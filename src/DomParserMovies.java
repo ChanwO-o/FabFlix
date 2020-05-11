@@ -34,7 +34,8 @@ public class DomParserMovies {
         printData();
 
 		//Insert parsed data into our database
-		insertData();
+//		insertMovieData();
+		insertGenreData();
 	}
 
 	private void parseXmlFile() {
@@ -141,6 +142,10 @@ public class DomParserMovies {
 					NodeList catNodes = data.getChildNodes();
 					for (int k = 0; k < catNodes.getLength(); ++k) {
 						String genreName = catNodes.item(k).getTextContent();
+						if (genreName == null || genreName.trim().isEmpty()) { // exclude genres with empty names
+							System.out.println("genreName is empty for: " + title);
+							continue;
+						}
 //						System.out.println(catNodes.item(k).getNodeName() + " " + genreName);
 						Genre g = new Genre(genreName);
 						if (myGenres.contains(g)) {
@@ -207,7 +212,7 @@ public class DomParserMovies {
 //		}
 	}
 
-	private void insertData() {
+	private void insertMovieData() {
 		String sqlId = "mytestuser";
 		String sqlPw = "mypassword";
 		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
@@ -249,6 +254,47 @@ public class DomParserMovies {
 					in.setString(2, movie.getTitle());
 					in.setInt(3, movie.getYear());
 					in.setString(4, movie.getDirector());
+					in.executeUpdate();
+					in.close();
+				}
+				statement.close();
+			}
+			dbcon.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void insertGenreData() {
+		String sqlId = "mytestuser";
+		String sqlPw = "mypassword";
+		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+
+		try {
+			Connection dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
+
+			String existingGenreQuery = "SELECT id from genres where name = ?;";
+
+			int count = 0;
+			for (Genre genre : myGenres) {
+				PreparedStatement statement = dbcon.prepareStatement(existingGenreQuery);
+				statement.setString(1, genre.getName());
+				ResultSet rs= statement.executeQuery();
+
+				count++;
+				System.out.println("current genre = " + count);
+
+				if(rs.next())
+				{
+					System.out.println("genre already exists; skip" + count + " " + genre.getName());
+				}
+				else
+				{
+					String addGenreQuery = "INSERT into genres VALUES(?,?)";
+					PreparedStatement in = dbcon.prepareStatement(addGenreQuery);
+					in.setNull(1, Types.INTEGER);
+					in.setString(2, genre.getName());
 					in.executeUpdate();
 					in.close();
 				}

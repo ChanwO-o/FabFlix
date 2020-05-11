@@ -23,7 +23,7 @@ public class Genre {
 		if (!(o instanceof Genre))
 			return false;
 		Genre g = (Genre) o;
-		return g.getName().equals(getName());
+		return g.getName().toLowerCase().equals(getName().toLowerCase()); // treat same-spelled names as the same genre
 	}
 
 	@Override
@@ -36,8 +36,8 @@ public class Genre {
 
 	@Override
 	public int hashCode() {
-		return name.hashCode();
-	}
+		return name.toLowerCase().hashCode();
+	} // treat same-spelled names as the same genre
 
 	public static void main(String[] args) {
 		Genre g1 = new Genre("asdf");
