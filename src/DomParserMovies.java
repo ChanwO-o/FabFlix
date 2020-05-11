@@ -8,17 +8,17 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class DomParserMovies {
 	List<Movie> myMovies;
+	Set<Genre> myGenres;
 	Document dom;
 
 	public DomParserMovies() {
 		//create a list to hold the Movie objects
 		myMovies = new ArrayList<>();
+		myGenres = new HashSet<>();
 	}
 
 	public void run() {
@@ -89,7 +89,7 @@ public class DomParserMovies {
 			}
 
 			if (movies != null) {
-				System.out.println("director: " + director + "; parsed " + movies.size() + " movies");
+//				System.out.println("director: " + director + "; parsed " + movies.size() + " movies");
 				myMovies.addAll(movies);
 			}
 		}
@@ -133,8 +133,19 @@ public class DomParserMovies {
 						year = 0;
 					}
 				}
-//				else if (data.getNodeName().equals("cats"))
-//					System.out.println(data.getNodeName());
+				else if (data.getNodeName().equals("cats")) {
+					NodeList catNodes = data.getChildNodes();
+					for (int k = 0; k < catNodes.getLength(); ++k) {
+						String genreName = catNodes.item(k).getTextContent();
+//						System.out.println(catNodes.item(k).getNodeName() + " " + genreName);
+						Genre g = new Genre(genreName);
+						if (myGenres.contains(g)) {
+//							System.out.println("genre already exists");
+						}
+						else
+							myGenres.add(new Genre(genreName));
+					}
+				}
 			}
 			if (title == null || title.isEmpty() || year == 0) {
 //				System.out.println("Inconsistent data; passing movie");
@@ -180,10 +191,15 @@ public class DomParserMovies {
 	private void printData() {
 
 		System.out.println("No of movies '" + myMovies.size() + "'.");
+		System.out.println("No of genres '" + myGenres.size() + "'.");
 
-		Iterator<Movie> it = myMovies.iterator();
-		while (it.hasNext()) {
-			System.out.println(it.next().toString());
+//		Iterator<Movie> it = myMovies.iterator();
+//		while (it.hasNext()) {
+//			System.out.println(it.next().toString());
+//		}
+		Iterator<Genre> it2 = myGenres.iterator();
+		while (it2.hasNext()) {
+			System.out.println(it2.next().toString());
 		}
 	}
 
