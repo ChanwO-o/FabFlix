@@ -188,7 +188,8 @@ public class DomParserCast {
 
 			int count = 0;
 			for (Map<String, List<Star>> directorMap : myCast) { // title : {stars}
-
+				count++;
+				System.out.println(count);
 				for (Map.Entry<String, List<Star>> titleStars : directorMap.entrySet()) {
 					titleStars.getKey(); // title
 					titleStars.getValue(); // list of stars
