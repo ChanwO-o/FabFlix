@@ -282,7 +282,6 @@ public class MovieListServlet extends HttpServlet {
 			}
 			else { // browse by genres query on
 				try {
-					long timeStart = System.currentTimeMillis();
 
 					// Get a connection from dataSource
 					Connection dbcon = dataSource.getConnection();
@@ -308,12 +307,10 @@ public class MovieListServlet extends HttpServlet {
 						statement2.setString(1, genre_id);
 					ResultSet rs2 = statement2.executeQuery();
 
-					long timeEnd;
+
 					while(rs2.next())
 					{
-						timeEnd = System.currentTimeMillis();
-						System.out.println("Time taken: " + (timeEnd - timeStart) + " mills");
-						timeStart = System.currentTimeMillis();
+
 						ResultSet rs3,rs4,rs5;
 						PreparedStatement statement3,statement4,statement5;
 						String movie_id = rs2.getString("id");
