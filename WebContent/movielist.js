@@ -1,6 +1,4 @@
 function handleMovieResult(resultData) {
-	console.log("handleMovieResult: populating movies from resultData");
-	console.log(pn);
 	// Find the empty table body by id "movie_table_body"
 	let movieTableBodyElement = jQuery("#movie_table_body");
 	if (pg == null || pg === "") {
@@ -8,9 +6,11 @@ function handleMovieResult(resultData) {
 		pn = "10";
 		location.replace(window.location.search + "&pn=10&pg=1");
 	}
-	for (let i = (pg - 1) * pn; i < (pg * pn); i++) {
+	for (let i = (pg - 1) * pn; i < (pg * pn); i++)
+	{
 		let rowHTML = "<tr>";
 		// let rowHTML = "";
+		console.log("Result Data = " + resultData);
 		if (i > resultData.length - 1) {
 			// rowHTML += "<tr>";
 
@@ -19,10 +19,6 @@ function handleMovieResult(resultData) {
 			movieTableBodyElement.append(rowHTML);
 			break;
 		}
-		console.log(typeof(resultData));
-		console.log(resultData);
-		console.log(resultData[0]);
-		console.log(resultData[0]["movie_id"]);
 
 		// Concatenate the html tags with resultData jsonObject
 		// let rowHTML = "<tr>";
@@ -74,38 +70,12 @@ function handleMovieResult(resultData) {
 		}
 		rowHTML += "</td>";
 		rowHTML += "<td>" + resultData[i]["movie_rating"] + "</td>";
-
-		// $.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + resultData[i]["movie_title"],function(json)
-		// {
-		//     //console.log(json.results[0].poster_path);
-		//     let count =0;
-		//     let k="";
-		//     let p=0;
-		//     for(p=0; p< json.results.length ; p++)
-		//     {
-		//         console.log(json.results[count]);
-		//         if(json.results[p].poster_path !=null)
-		//         {
-		//             count=1;
-		//             k += json.results[p].poster_path;
-		//             break;
-		//         }
-		//       //  count++;
-		//     }
-		//     if(count ==1)
-		//         rowHTML="<th>"+"<img src="+ '"'+"http://image.tmdb.org/t/p/w500/" + k +'" '+ "width=" + "100 " +"height="+"100/>"+"</th>"+  rowHTML;
-		//     else {
-		//         rowHTML = "<th>" + "<img src=" + '"' + "no_image.png" + '"' + " width=" + "100 " + "height=" + "100/>" + "</th>" + rowHTML ;
-		//     }
-		//         rowHTML = "<tr>" + rowHTML + "</tr>"; // surround row with tr tags
-		//     movieTableBodyElement.append(rowHTML);
-		// });
-
 		rowHTML += "<td><input name=\"addToCart\" type=\"submit\" value=\"Add to Cart\" onclick=\"addToCart('" + resultData[i]['movie_id'] + "')\"></td>";
 		rowHTML += "</tr>"; // close row tag
 
 		// Append the row created to the table body, which will refresh the page
 		movieTableBodyElement.append(rowHTML);
+
 	}
 }
 
@@ -161,10 +131,9 @@ let title_start = getParameterByName('title_start');
 let first_sortby = getParameterByName('first_sortby');
 let pn = getParameterByName('pn');
 let pg = getParameterByName('pg');
-console.log(pn);
+
 let second_sortby = getParameterByName('second_sortby');
-console.log(first_sortby);
-console.log(second_sortby);
+
 if (title_start != null && title_start.length > 0) {
 	jQuery.ajax({
 		dataType: "json",  // Setting return data type
@@ -185,8 +154,9 @@ if (title_start != null && title_start.length > 0) {
 	let test = getParameterByName('genres');
 	let first_sortby = getParameterByName('first_sortby');
 	let second_sortby = getParameterByName('second_sortby');
+	var start_time= new Date().getTime();
 	if (test != null && test.length > 1) {
-		console.log(test);
+
 		jQuery.ajax({
 			dataType: "json",  // Setting return data type
 			method: "GET",// Setting request method
@@ -195,13 +165,13 @@ if (title_start != null && title_start.length > 0) {
 			data: {
 				first_sortby: first_sortby,
 				second_sortby: second_sortby,
-				genres: test
+				genres: test,
 			},
 			success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
 		});
 	} else {
 		let queryString = window.location.href.split('?');
-		console.log(queryString);
+
 
 		if (queryString.length > 1) {
 			let params = queryString[1].split('&');
