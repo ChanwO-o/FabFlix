@@ -8,6 +8,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.sql.*;
 import java.util.*;
 
 public class DomParserMovies {
@@ -31,6 +32,9 @@ public class DomParserMovies {
 
 		//Iterate through the list and print the data
         printData();
+
+		//Insert parsed data into our database
+		insertData();
 	}
 
 	private void parseXmlFile() {
@@ -201,6 +205,60 @@ public class DomParserMovies {
 //		while (it2.hasNext()) {
 //			System.out.println(it2.next().toString());
 //		}
+	}
+
+	private void insertData() {
+		String sqlId = "mytestuser";
+		String sqlPw = "mypassword";
+		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+
+		try {
+			Connection dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
+
+			String existingStarQuery = "SELECT id from movies where title = ? and year = ? and director = ?;";
+
+			int count = 0;
+			for (Movie movie : myMovies) {
+				PreparedStatement statement = dbcon.prepareStatement(existingStarQuery);
+				statement.setString(1, movie.getTitle());
+				statement.setInt(2, movie.getYear());
+				statement.setString(3, movie.getDirector());
+				ResultSet rs= statement.executeQuery();
+
+				count++;
+				System.out.println("current movie = " + count);
+
+				if(rs.next())
+				{
+					System.out.println("movie already exists; skip" + count + " " + movie.getTitle());
+				}
+				else
+				{
+					String newMovieQuery = "Select max(id) as id from movies";
+					Statement statement1 = dbcon.createStatement();
+					ResultSet rs2 = statement1.executeQuery(newMovieQuery);
+					rs2.next();
+					int newId = Integer.parseInt(rs2.getString("id").substring(2)) + 1 ;
+					String setId= "tt0" + newId;
+					rs2.close();
+					statement1.close();
+
+					String addMovieQuery = "INSERT into movies VALUES(?,?,?,?)";
+					PreparedStatement in = dbcon.prepareStatement(addMovieQuery);
+					in.setString(1, setId);
+					in.setString(2, movie.getTitle());
+					in.setInt(3, movie.getYear());
+					in.setString(4, movie.getDirector());
+					in.executeUpdate();
+					in.close();
+				}
+				statement.close();
+			}
+			dbcon.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {
