@@ -8,6 +8,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,20 +16,18 @@ import java.util.Map;
 
 public class DomParserCast {
 	List<Map<String, List<Star>>> myCast;
-//	List<Movie> myMovies;
-//	List<Star> myStars;
 	Document dom;
 
 	public DomParserCast() {
 		myCast = new ArrayList<>();
-//		myMovies = new ArrayList<>();
-//		myStars = new ArrayList<>();
 	}
 
 	public void run() {
 		parseXmlFile();
 		parseDocument();
         printData();
+		//Insert parsed data into our database
+		insertData();
 	}
 
 	private void parseXmlFile() {
@@ -175,6 +174,49 @@ public class DomParserCast {
 //		while (it2.hasNext()) {
 //			System.out.println(it2.next().toString());
 //		}
+	}
+
+	private void insertData() {
+		String sqlId = "mytestuser";
+		String sqlPw = "mypassword";
+		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+
+		try {
+			Connection dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
+
+			String existingMovieQuery = "SELECT movies.id as movieId, stars.id as starId from movies, stars where movies.title = ? and stars.name = ?;";
+
+			int count = 0;
+			for (Map<String, List<Star>> directorMap : myCast) { // title : {stars}
+
+				for (Map.Entry<String, List<Star>> titleStars : directorMap.entrySet()) {
+					titleStars.getKey(); // title
+					titleStars.getValue(); // list of stars
+
+					PreparedStatement statement = dbcon.prepareStatement(existingMovieQuery);
+					statement.setString(1, titleStars.getKey());
+
+					for (Star star : titleStars.getValue()) {
+						statement.setString(2, star.getName());
+						ResultSet rs = statement.executeQuery();
+
+						if (rs.next()) {
+							String query = "INSERT INTO stars_in_movies VALUES(?,?)";
+							PreparedStatement in = dbcon.prepareStatement(query);
+							in.setString(1, rs.getString("starId"));
+							in.setString(2, rs.getString("movieId"));
+							in.executeUpdate();
+							in.close();
+						}
+					}
+					statement.close();
+				}
+			}
+			dbcon.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {

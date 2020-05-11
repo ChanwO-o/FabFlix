@@ -35,7 +35,7 @@ public class DomParserStars {
         printData();
 
         //Insert parsed data into our database
-        insertData();
+		insertData();
 	}
 
 	private void parseXmlFile() {

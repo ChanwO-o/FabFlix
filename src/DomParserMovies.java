@@ -34,8 +34,8 @@ public class DomParserMovies {
         printData();
 
 		//Insert parsed data into our database
-//		insertMovieData();
-//		insertGenreData();
+		insertMovieData();
+		insertGenreData();
 		insertGenresInMoviesData();
 	}
 
