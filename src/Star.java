@@ -39,10 +39,8 @@ public class Star {
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Star Details - ");
-		sb.append("name:").append(getName());
-		sb.append(", ");
-		sb.append("birthYear:").append(getBirthYear());
+		sb.append("Star{name:").append(getName());
+		sb.append(", birthYear:").append(getBirthYear()).append("}");
 		return sb.toString();
 	}
 }

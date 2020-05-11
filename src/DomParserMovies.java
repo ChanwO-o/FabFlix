@@ -35,7 +35,8 @@ public class DomParserMovies {
 
 		//Insert parsed data into our database
 //		insertMovieData();
-		insertGenreData();
+//		insertGenreData();
+		insertGenresInMoviesData();
 	}
 
 	private void parseXmlFile() {
@@ -125,6 +126,7 @@ public class DomParserMovies {
 
 			String title = null;
 			int year = 0;
+			List<Genre> genresForThisMovie = new ArrayList<>();
 
 			for (int j = 0; j < filmData.getLength(); ++j) {
 				Node data = filmData.item(j);
@@ -148,6 +150,7 @@ public class DomParserMovies {
 						}
 //						System.out.println(catNodes.item(k).getNodeName() + " " + genreName);
 						Genre g = new Genre(genreName);
+						genresForThisMovie.add(g);
 						if (myGenres.contains(g)) {
 //							System.out.println("genre already exists");
 						}
@@ -160,7 +163,7 @@ public class DomParserMovies {
 //				System.out.println("Inconsistent data; passing movie");
 			}
 			else {
-				result.add(new Movie(title, year, director));
+				result.add(new Movie(title, year, director, genresForThisMovie));
 			}
 		}
 		return result;
@@ -200,6 +203,7 @@ public class DomParserMovies {
 	private void printData() {
 
 		System.out.println("No of movies '" + myMovies.size() + "'.");
+		System.out.println("Movies: " + myMovies);
 		System.out.println("No of genres '" + myGenres.size() + "'.");
 
 //		Iterator<Movie> it = myMovies.iterator();
@@ -297,6 +301,44 @@ public class DomParserMovies {
 					in.setString(2, genre.getName());
 					in.executeUpdate();
 					in.close();
+				}
+				statement.close();
+			}
+			dbcon.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void insertGenresInMoviesData() {
+		String sqlId = "mytestuser";
+		String sqlPw = "mypassword";
+		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+
+		try {
+			Connection dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
+
+			String existingMovieQuery = "SELECT movies.id as movieId, genres.id as genreId from movies, genres where movies.title = ? and genres.name = ?;";
+
+			int count = 0;
+			for (Movie movie : myMovies) {
+				PreparedStatement statement = dbcon.prepareStatement(existingMovieQuery);
+				statement.setString(1, movie.getTitle());
+
+				for (Genre genre : movie.getGenres()) {
+					statement.setString(2, genre.getName());
+					ResultSet rs = statement.executeQuery();
+
+					if(rs.next()) // movie and genre exist; can link the two into genres_in_movies
+					{
+						String addGenreQuery = "INSERT into genres_in_movies VALUES(?,?)";
+						PreparedStatement in = dbcon.prepareStatement(addGenreQuery);
+						in.setInt(1, rs.getInt("genreId"));
+						in.setString(2, rs.getString("movieId"));
+						in.executeUpdate();
+						in.close();
+					}
 				}
 				statement.close();
 			}

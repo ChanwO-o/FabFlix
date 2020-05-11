@@ -29,8 +29,7 @@ public class Genre {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Genre Details - ");
-		sb.append("name:").append(getName());
+		sb.append("Genre{name:").append(getName()).append("}");
 		return sb.toString();
 	}
 
