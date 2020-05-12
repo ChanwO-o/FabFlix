@@ -148,7 +148,7 @@ public class DomParserCast {
 				}
 			}
 		}
-		System.out.println(result);
+//		System.out.println(result);
 		return result;
 	}
 
@@ -185,17 +185,6 @@ public class DomParserCast {
 	 */
 	private void printData() {
 
-//		System.out.println("No of movies '" + myMovies.size() + "'.");
-//		System.out.println("No of genres '" + myGenres.size() + "'.");
-
-//		Iterator<Movie> it = myMovies.iterator();
-//		while (it.hasNext()) {
-//			System.out.println(it.next().toString());
-//		}
-//		Iterator<Genre> it2 = myGenres.iterator();
-//		while (it2.hasNext()) {
-//			System.out.println(it2.next().toString());
-//		}
 	}
 
 	private void insertData() {
@@ -211,7 +200,7 @@ public class DomParserCast {
 			int count = 0;
 			for (Map<String, List<Star>> directorMap : myCast) { // title : {stars}
 				count++;
-				System.out.println(count);
+//				System.out.println(count);
 				for (Map.Entry<String, List<Star>> titleStars : directorMap.entrySet()) {
 					PreparedStatement statement = dbcon.prepareStatement(existingMovieQuery);
 					statement.setString(1, titleStars.getKey());

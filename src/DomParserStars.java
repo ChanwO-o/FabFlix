@@ -155,9 +155,9 @@ public class DomParserStars {
 	private void printData() {
 		System.out.println("No of Stars '" + myStars.size() + "'.");
 		Iterator<Star> it = myStars.iterator();
-		while (it.hasNext()) {
-			System.out.println(it.next().toString());
-		}
+//		while (it.hasNext()) {
+//			System.out.println(it.next().toString());
+//		}
 	}
 
 	/**
