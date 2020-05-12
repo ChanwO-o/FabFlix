@@ -17,7 +17,7 @@ public class DomParserMovies {
 	List<Movie> myMovies;
 	Set<Genre> myGenres;
 	Document dom;
-	BufferedWriter writerMovies, writerGenres;
+	BufferedWriter writer;
 
 	public DomParserMovies() {
 		//create a list to hold the Movie objects
@@ -26,10 +26,8 @@ public class DomParserMovies {
 	}
 
 	public void run(String filename) throws IOException {
-		String movieInconsistenciesFilename = "inconsistencies-" + filename + "-movies.txt";
-		String genreInconsistenciesFilename = "inconsistencies-" + filename + "-genres.txt";
-		writerMovies = new BufferedWriter(new FileWriter(movieInconsistenciesFilename));
-		writerGenres = new BufferedWriter(new FileWriter(genreInconsistenciesFilename));
+		String inconsistenciesFilename = "inconsistencies-" + filename + ".txt";
+		writer = new BufferedWriter(new FileWriter(inconsistenciesFilename));
 
 		//parse the xml file and get the dom object
 		parseXmlFile(filename);
@@ -45,8 +43,7 @@ public class DomParserMovies {
 		insertGenreData();
 		insertGenresInMoviesData();
 
-		writerMovies.close();
-		writerGenres.close();
+		writer.close();
 	}
 
 	private void parseXmlFile(String filename) {
@@ -157,16 +154,16 @@ public class DomParserMovies {
 						Genre g = new Genre(genreName);
 						if (genreName == null || genreName.trim().isEmpty()) { // exclude genres with empty names
 							System.out.println("Bad Genre element: cat " + g);
-							writerGenres.write("Bad Genre element: cat " + g);
-							writerGenres.newLine();
+							writer.write("Bad Genre element: cat " + g);
+							writer.newLine();
 							continue;
 						}
 //						System.out.println(catNodes.item(k).getNodeName() + " " + genreName);
 						genresForThisMovie.add(g);
 						if (myGenres.contains(g)) {
 							System.out.println("Genre already exists: " + g);
-							writerGenres.write("Genre already exists: " + g);
-							writerGenres.newLine();
+							writer.write("Genre already exists: " + g);
+							writer.newLine();
 						}
 						else
 							myGenres.add(new Genre(genreName));
@@ -176,23 +173,23 @@ public class DomParserMovies {
 			Movie m = new Movie(title, year, director, genresForThisMovie);
 			if (title == null || title.isEmpty()) {
 				System.out.println("Bad Movie element: t " + m);
-				writerMovies.write("Bad Movie element: t " + m);
-				writerMovies.newLine();
+				writer.write("Bad Movie element: t " + m);
+				writer.newLine();
 			}
 			else if (year == 0) {
 				System.out.println("Bad Movie element: year " + m);
-				writerMovies.write("Bad Movie element: year " + m);
-				writerMovies.newLine();
+				writer.write("Bad Movie element: year " + m);
+				writer.newLine();
 			}
 			else if (director == null || director.isEmpty()) {
 				System.out.println("Bad Movie element: director " + m);
-				writerMovies.write("Bad Movie element: director " + m);
-				writerMovies.newLine();
+				writer.write("Bad Movie element: director " + m);
+				writer.newLine();
 			}
 			else if (genresForThisMovie.isEmpty()) {
 				System.out.println("Bad Movie element: cat " + m);
-				writerMovies.write("Bad Movie element: cat " + m);
-				writerMovies.newLine();
+				writer.write("Bad Movie element: cat " + m);
+				writer.newLine();
 			}
 			else {
 				result.add(m);
