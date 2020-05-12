@@ -7,6 +7,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
@@ -15,6 +17,7 @@ public class DomParserMovies {
 	List<Movie> myMovies;
 	Set<Genre> myGenres;
 	Document dom;
+	BufferedWriter writer;
 
 	public DomParserMovies() {
 		//create a list to hold the Movie objects
@@ -22,10 +25,12 @@ public class DomParserMovies {
 		myGenres = new HashSet<>();
 	}
 
-	public void run() {
+	public void run(String filename) throws IOException {
+		String inconsistenciesFilename = "inconsistencies-" + filename + ".txt";
+		writer = new BufferedWriter(new FileWriter(inconsistenciesFilename));
 
 		//parse the xml file and get the dom object
-		parseXmlFile();
+		parseXmlFile(filename);
 
 		//get each movie element and create a Movie object
 		parseDocument();
@@ -37,9 +42,11 @@ public class DomParserMovies {
 		insertMovieData();
 		insertGenreData();
 		insertGenresInMoviesData();
+
+		writer.close();
 	}
 
-	private void parseXmlFile() {
+	private void parseXmlFile(String filename) {
 		//get the factory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -49,7 +56,7 @@ public class DomParserMovies {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
 			//parse using builder to get DOM representation of the XML file
-			dom = db.parse("mains243.xml");
+			dom = db.parse(filename);
 
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
@@ -63,7 +70,7 @@ public class DomParserMovies {
 	/**
 	 * Parse through entire xml document and populate myMovies list with Movie objects
 	 */
-	private void parseDocument() {
+	private void parseDocument() throws IOException {
 		//get the root elememt
 		Element root = dom.getDocumentElement();
 
@@ -117,7 +124,7 @@ public class DomParserMovies {
 	/**
 	 * Get list of movies from a <films></films> node
 	 */
-	private ArrayList<Movie> getMovies(Node filmsNode, String director) {
+	private ArrayList<Movie> getMovies(Node filmsNode, String director) throws IOException {
 		ArrayList<Movie> result = new ArrayList<>();
 		NodeList filmNodes = filmsNode.getChildNodes();
 		for (int i = 0; i < filmNodes.getLength(); ++i) {
@@ -144,26 +151,48 @@ public class DomParserMovies {
 					NodeList catNodes = data.getChildNodes();
 					for (int k = 0; k < catNodes.getLength(); ++k) {
 						String genreName = catNodes.item(k).getTextContent();
+						Genre g = new Genre(genreName);
 						if (genreName == null || genreName.trim().isEmpty()) { // exclude genres with empty names
-							System.out.println("genreName is empty for: " + title);
+							System.out.println("Bad Genre element: cat " + g);
+							writer.write("Bad Genre element: cat " + g);
+							writer.newLine();
 							continue;
 						}
 //						System.out.println(catNodes.item(k).getNodeName() + " " + genreName);
-						Genre g = new Genre(genreName);
 						genresForThisMovie.add(g);
 						if (myGenres.contains(g)) {
-//							System.out.println("genre already exists");
+							System.out.println("Genre already exists: " + g);
+							writer.write("Genre already exists: " + g);
+							writer.newLine();
 						}
 						else
 							myGenres.add(new Genre(genreName));
 					}
 				}
 			}
-			if (title == null || title.isEmpty() || year == 0) {
-//				System.out.println("Inconsistent data; passing movie");
+			Movie m = new Movie(title, year, director, genresForThisMovie);
+			if (title == null || title.isEmpty()) {
+				System.out.println("Bad Movie element: t " + m);
+				writer.write("Bad Movie element: t " + m);
+				writer.newLine();
+			}
+			else if (year == 0) {
+				System.out.println("Bad Movie element: year " + m);
+				writer.write("Bad Movie element: year " + m);
+				writer.newLine();
+			}
+			else if (director == null || director.isEmpty()) {
+				System.out.println("Bad Movie element: director " + m);
+				writer.write("Bad Movie element: director " + m);
+				writer.newLine();
+			}
+			else if (genresForThisMovie.isEmpty()) {
+				System.out.println("Bad Movie element: cat " + m);
+				writer.write("Bad Movie element: cat " + m);
+				writer.newLine();
 			}
 			else {
-				result.add(new Movie(title, year, director, genresForThisMovie));
+				result.add(m);
 			}
 		}
 		return result;
@@ -201,9 +230,7 @@ public class DomParserMovies {
 	 * Iterate through the list and print the content to console
 	 */
 	private void printData() {
-
 		System.out.println("No of movies '" + myMovies.size() + "'.");
-		System.out.println("Movies: " + myMovies);
 		System.out.println("No of genres '" + myGenres.size() + "'.");
 
 //		Iterator<Movie> it = myMovies.iterator();
@@ -235,7 +262,7 @@ public class DomParserMovies {
 				ResultSet rs= statement.executeQuery();
 
 				count++;
-				System.out.println("current movie = " + count);
+//				System.out.println("current movie = " + count);
 
 				if(rs.next())
 				{
@@ -287,7 +314,7 @@ public class DomParserMovies {
 				ResultSet rs= statement.executeQuery();
 
 				count++;
-				System.out.println("current genre = " + count);
+//				System.out.println("current genre = " + count);
 
 				if(rs.next())
 				{
@@ -321,7 +348,6 @@ public class DomParserMovies {
 
 			String existingMovieQuery = "SELECT movies.id as movieId, genres.id as genreId from movies, genres where movies.title = ? and genres.name = ?;";
 
-			int count = 0;
 			for (Movie movie : myMovies) {
 				PreparedStatement statement = dbcon.prepareStatement(existingMovieQuery);
 				statement.setString(1, movie.getTitle());
@@ -354,7 +380,11 @@ public class DomParserMovies {
 		DomParserMovies dpe = new DomParserMovies();
 
 		//call run example
-		dpe.run();
+		try {
+			dpe.run("mains243.xml");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

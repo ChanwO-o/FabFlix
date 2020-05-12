@@ -7,6 +7,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,30 +19,35 @@ import java.util.Map;
 public class DomParserCast {
 	List<Map<String, List<Star>>> myCast;
 	Document dom;
+	BufferedWriter writer;
 
 	public DomParserCast() {
 		myCast = new ArrayList<>();
 	}
 
-	public void run() {
-		parseXmlFile();
+	public void run(String filename) throws IOException {
+		String inconsistenciesFilename = "inconsistencies-" + filename + ".txt";
+		writer = new BufferedWriter(new FileWriter(inconsistenciesFilename));
+
+		parseXmlFile(filename);
 		parseDocument();
         printData();
 		//Insert parsed data into our database
 		insertData();
+
+		writer.close();
 	}
 
-	private void parseXmlFile() {
+	private void parseXmlFile(String filename) {
 		//get the factory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
 		try {
-
 			//Using factory get an instance of document builder
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
 			//parse using builder to get DOM representation of the XML file
-			dom = db.parse("casts124.xml");
+			dom = db.parse(filename);
 
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
@@ -54,7 +61,7 @@ public class DomParserCast {
 	/**
 	 * Parse through entire xml document and populate lists
 	 */
-	private void parseDocument() {
+	private void parseDocument() throws IOException {
 		//get the root elememt
 		Element root = dom.getDocumentElement();
 
@@ -85,13 +92,13 @@ public class DomParserCast {
 //			System.out.println(directorMap);
 			myCast.add(directorMap);
 		}
-		System.out.println(myCast);
+//		System.out.println(myCast);
 	}
 
 	/**
 	 * Get movie title from a <filmc></filmc> node
 	 */
-	private String getMovieTitle(Node filmcNode) {
+	private String getMovieTitle(Node filmcNode) throws IOException {
 		NodeList mNodes = filmcNode.getChildNodes();
 		if (mNodes == null || mNodes.getLength() == 0)
 			return null;
@@ -102,8 +109,15 @@ public class DomParserCast {
 		NodeList mNodeAttributes = mNodes.item(1).getChildNodes();
 		for (int i = 0; i < mNodeAttributes.getLength(); ++i) {
 			if (mNodeAttributes.item(i).getNodeName().equals("t")) {
+				String title = mNodeAttributes.item(i).getTextContent();
+				if (title == null || title.isEmpty()) {
+					System.out.println("Bad Movie element: t ");
+					writer.write("Bad Movie element: t ");
+					writer.newLine();
+				}
 //				System.out.println("title found: " + mNodeAttributes.item(i).getTextContent());
-				return mNodeAttributes.item(i).getTextContent();
+				else
+					return title;
 			}
 		}
 		return null;
@@ -112,7 +126,7 @@ public class DomParserCast {
 	/**
 	 * Get list of stars from a <filmc></filmc> node
 	 */
-	private ArrayList<Star> getStars(Node filmcNode) {
+	private ArrayList<Star> getStars(Node filmcNode) throws IOException {
 		ArrayList<Star> result = new ArrayList<>();
 		NodeList mNodes = filmcNode.getChildNodes();
 
@@ -122,7 +136,15 @@ public class DomParserCast {
 				Node mDataTag = mNodeAttributes.item(i);
 
 				if (mDataTag.getNodeName().equals("a")) {
-					result.add(new Star(mDataTag.getTextContent()));
+					String starName = mDataTag.getTextContent();
+					Star s = new Star(starName);
+					if (starName == null || starName.isEmpty()) {
+						System.out.println("Bad Star element: a " + s);
+						writer.write("Bad Star element: a " + s);
+						writer.newLine();
+					}
+					else
+						result.add(s);
 				}
 			}
 		}
@@ -191,9 +213,6 @@ public class DomParserCast {
 				count++;
 				System.out.println(count);
 				for (Map.Entry<String, List<Star>> titleStars : directorMap.entrySet()) {
-					titleStars.getKey(); // title
-					titleStars.getValue(); // list of stars
-
 					PreparedStatement statement = dbcon.prepareStatement(existingMovieQuery);
 					statement.setString(1, titleStars.getKey());
 
@@ -225,7 +244,11 @@ public class DomParserCast {
 		DomParserCast dpe = new DomParserCast();
 
 		//call run example
-		dpe.run();
+		try {
+			dpe.run("casts124.xml");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
