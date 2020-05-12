@@ -6,27 +6,30 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static java.sql.Types.NULL;
-
 public class DomParserStars {
 	List<Star> myStars;
 	Document dom;
+	BufferedWriter writer;
 
 	public DomParserStars() {
 		//create a list to hold the star objects
 		myStars = new ArrayList<>();
 	}
 
-	public void run() {
+	public void run(String filename) throws IOException {
+		String inconsistenciesFilename = "inconsistencies-" + filename + ".txt";
+		writer = new BufferedWriter(new FileWriter(inconsistenciesFilename));
 
 		//parse the xml file and get the dom object
-		parseXmlFile();
+		parseXmlFile(filename);
 
 		//get each star element and create a star object
 		parseDocument();
@@ -36,9 +39,11 @@ public class DomParserStars {
 
         //Insert parsed data into our database
 		insertData();
+
+		writer.close();
 	}
 
-	private void parseXmlFile() {
+	private void parseXmlFile(String filename) {
 		//get the factory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -48,7 +53,7 @@ public class DomParserStars {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
 			//parse using builder to get DOM representation of the XML file
-			dom = db.parse("actors63.xml");
+			dom = db.parse(filename);
 
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
@@ -62,7 +67,7 @@ public class DomParserStars {
 	/**
 	 * Parse through entire xml document and populate myStars list with Star objects
 	 */
-	private void parseDocument() {
+	private void parseDocument() throws IOException {
 		//get the root elememt
 		Element root = dom.getDocumentElement();
 
@@ -80,7 +85,8 @@ public class DomParserStars {
 				Star s = getStar(el);
 
 				//add it to list
-				myStars.add(s);
+				if (s != null)
+					myStars.add(s);
 			}
 		}
 	}
@@ -88,17 +94,31 @@ public class DomParserStars {
 	/**
 	 * Create a Star object out of passed xml element
 	 */
-	private Star getStar(Element empEl) {
+	private Star getStar(Element empEl) throws IOException {
 
-		//for each <star> element get text or int values of
-		//stagename, dob
+		//for each <star> element get text or int values of stagename, dob
 		String name = getTextValue(empEl, "stagename");
 		int dob = getIntValue(empEl, "dob");
-
 //		System.out.println("name: " + name + " dob: " + dob);
 
 		//Create a new Star with the value read from the xml nodes
-		return new Star(name, dob);
+		Star s = new Star(name, dob);
+
+		// report inconsistency if no name
+		if (name == null || name.isEmpty()) {
+			System.out.println("Bad Star element: stagename " + s);
+			writer.write(s.toString());
+			writer.newLine();
+			return null;
+		}
+		return s;
+	}
+
+	/**
+	 * Write inconsistency star data
+	 */
+	private void writeInconsistency(Star s) {
+
 	}
 
 	/**
@@ -133,9 +153,7 @@ public class DomParserStars {
 	 * Iterate through the list and print the content to console
 	 */
 	private void printData() {
-
-		System.out.println("No of Employees '" + myStars.size() + "'.");
-
+		System.out.println("No of Stars '" + myStars.size() + "'.");
 		Iterator<Star> it = myStars.iterator();
 		while (it.hasNext()) {
 			System.out.println(it.next().toString());
@@ -201,7 +219,11 @@ public class DomParserStars {
 		DomParserStars dpe = new DomParserStars();
 
 		//call run example
-		dpe.run();
+		try {
+			dpe.run("actors-shortshort.xml");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
