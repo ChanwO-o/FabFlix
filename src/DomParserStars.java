@@ -74,7 +74,7 @@ public class DomParserStars {
 		//get a nodelist of <actor> elements
 		NodeList actorNodesList = root.getElementsByTagName("actor");
 		if (actorNodesList != null && actorNodesList.getLength() > 0) {
-			System.out.println("actorNodesList length: " + actorNodesList.getLength());
+//			System.out.println("actorNodesList length: " + actorNodesList.getLength());
 
 			for (int i = 0; i < actorNodesList.getLength(); i++) {
 
@@ -107,7 +107,7 @@ public class DomParserStars {
 		// report inconsistency if no name
 		if (name == null || name.isEmpty()) {
 			System.out.println("Bad Star element: stagename " + s);
-			writer.write(s.toString());
+			writer.write("Bad Star element: stagename " + s);
 			writer.newLine();
 			return null;
 		}
