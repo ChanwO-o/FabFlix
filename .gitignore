@@ -1,4 +1,16 @@
+# IDE files
 .idea/
+
+# token for Google ReCaptcha
+/src/RecaptchaConstants.java
+
+# hide data files
+*.xml
+
+# certs/keys
+*.pem
+*.ppk
+
 
 # Created by https://www.gitignore.io/api/java,maven,eclipse,java-web,intellij
 
@@ -169,5 +181,3 @@ buildNumber.properties
 
 
 # End of https://www.gitignore.io/api/java,maven,eclipse,java-web,intellij
-
-/src/RecaptchaConstants.java
