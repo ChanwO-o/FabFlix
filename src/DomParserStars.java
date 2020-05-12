@@ -106,7 +106,7 @@ public class DomParserStars {
 
 		// report inconsistency if no name
 		if (name == null || name.isEmpty()) {
-			System.out.println("Bad Star element: stagename " + s);
+//			System.out.println("Bad Star element: stagename " + s);
 			writer.write("Bad Star element: stagename " + s);
 			writer.newLine();
 			return null;
@@ -180,7 +180,7 @@ public class DomParserStars {
 				ResultSet rs= statement.executeQuery();
 				if(rs.next())
 				{
-					System.out.println("star already exists; skip");
+//					System.out.println("star already exists; skip");
 				}
 				else
 				{

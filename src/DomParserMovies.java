@@ -153,7 +153,7 @@ public class DomParserMovies {
 						String genreName = catNodes.item(k).getTextContent();
 						Genre g = new Genre(genreName);
 						if (genreName == null || genreName.trim().isEmpty()) { // exclude genres with empty names
-							System.out.println("Bad Genre element: cat " + g);
+//							System.out.println("Bad Genre element: cat " + g);
 							writer.write("Bad Genre element: cat " + g);
 							writer.newLine();
 							continue;
@@ -161,7 +161,7 @@ public class DomParserMovies {
 //						System.out.println(catNodes.item(k).getNodeName() + " " + genreName);
 						genresForThisMovie.add(g);
 						if (myGenres.contains(g)) {
-							System.out.println("Genre already exists: " + g);
+//							System.out.println("Genre already exists: " + g);
 							writer.write("Genre already exists: " + g);
 							writer.newLine();
 						}
@@ -172,22 +172,22 @@ public class DomParserMovies {
 			}
 			Movie m = new Movie(title, year, director, genresForThisMovie);
 			if (title == null || title.isEmpty()) {
-				System.out.println("Bad Movie element: t " + m);
+//				System.out.println("Bad Movie element: t " + m);
 				writer.write("Bad Movie element: t " + m);
 				writer.newLine();
 			}
 			else if (year == 0) {
-				System.out.println("Bad Movie element: year " + m);
+//				System.out.println("Bad Movie element: year " + m);
 				writer.write("Bad Movie element: year " + m);
 				writer.newLine();
 			}
 			else if (director == null || director.isEmpty()) {
-				System.out.println("Bad Movie element: director " + m);
+//				System.out.println("Bad Movie element: director " + m);
 				writer.write("Bad Movie element: director " + m);
 				writer.newLine();
 			}
 			else if (genresForThisMovie.isEmpty()) {
-				System.out.println("Bad Movie element: cat " + m);
+//				System.out.println("Bad Movie element: cat " + m);
 				writer.write("Bad Movie element: cat " + m);
 				writer.newLine();
 			}
@@ -266,7 +266,7 @@ public class DomParserMovies {
 
 				if(rs.next())
 				{
-					System.out.println("movie already exists; skip" + count + " " + movie.getTitle());
+//					System.out.println("movie already exists; skip" + count + " " + movie.getTitle());
 				}
 				else
 				{
@@ -318,7 +318,7 @@ public class DomParserMovies {
 
 				if(rs.next())
 				{
-					System.out.println("genre already exists; skip" + count + " " + genre.getName());
+//					System.out.println("genre already exists; skip" + count + " " + genre.getName());
 				}
 				else
 				{

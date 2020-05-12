@@ -111,7 +111,7 @@ public class DomParserCast {
 			if (mNodeAttributes.item(i).getNodeName().equals("t")) {
 				String title = mNodeAttributes.item(i).getTextContent();
 				if (title == null || title.isEmpty()) {
-					System.out.println("Bad Movie element: t ");
+//					System.out.println("Bad Movie element: t ");
 					writer.write("Bad Movie element: t ");
 					writer.newLine();
 				}
@@ -139,7 +139,7 @@ public class DomParserCast {
 					String starName = mDataTag.getTextContent();
 					Star s = new Star(starName);
 					if (starName == null || starName.isEmpty()) {
-						System.out.println("Bad Star element: a " + s);
+//						System.out.println("Bad Star element: a " + s);
 						writer.write("Bad Star element: a " + s);
 						writer.newLine();
 					}
