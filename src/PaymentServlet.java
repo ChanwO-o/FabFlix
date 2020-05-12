@@ -9,10 +9,8 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,13 +67,20 @@ public class PaymentServlet extends HttpServlet {
 
 		try {
 			Connection dbcon = dataSource.getConnection();
-			Statement statement = dbcon.createStatement();
-			Statement statement2 = dbcon.createStatement();
+			dbcon.setAutoCommit(true);
+			Statement insertSalesStatement = dbcon.createStatement();
 
 			String query = "select * from creditcards " +
-					"where binary id= '" + card + "'" + " and binary firstName='" + fname + "'" + "and binary lastName='" + lname + "'" + " and binary expiration='" + exp + "'";
+					"where binary id = ? and binary firstName = ? and binary lastName = ? and binary expiration = ?";
 			System.out.println("payment query: " + query);
-			ResultSet rs = statement.executeQuery(query);
+
+			PreparedStatement cardStatement = dbcon.prepareStatement(query);
+			cardStatement.setString(1, card);
+			cardStatement.setString(2, fname);
+			cardStatement.setString(3, lname);
+			cardStatement.setString(4, exp);
+			ResultSet rs = cardStatement.executeQuery();
+
 			JsonObject responseJsonObject = new JsonObject();
 
 			if (!rs.isBeforeFirst()) { // wrong card information given
@@ -86,9 +91,9 @@ public class PaymentServlet extends HttpServlet {
 				responseJsonObject.addProperty("message", "success");
 
 				// get customer id
-				User user = (User) session.getAttribute("email");
+				User user = (User) session.getAttribute("user");
 				int customerId = user.getId();
-//				System.out.println("Sale customerId: " + customerId);
+				System.out.println("Sale customerId: " + customerId);
 
 				synchronized (cartList) { // add a record to sales table for each entry in cartList
 					// construct sales query
@@ -109,14 +114,13 @@ public class PaymentServlet extends HttpServlet {
 						salesQuery += movieEntryQuery;
 					}
 //					System.out.println("PaymentServlet query: " + salesQuery);
-					statement2.executeUpdate(salesQuery); // perform insert to sales table
+					insertSalesStatement.executeUpdate(salesQuery); // perform insert to sales table
 					cartList.clear(); // clear cart once purchase is complete
 				}
 			}
 			response.getWriter().write(responseJsonObject.toString());
 			rs.close();
-			statement.close();
-			statement2.close();
+			cardStatement.close();
 			dbcon.close();
 		} catch (IOException | SQLException e) {
 			e.printStackTrace();

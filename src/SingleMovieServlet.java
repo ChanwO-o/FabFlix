@@ -41,31 +41,31 @@ public class SingleMovieServlet extends HttpServlet {
 		try {
 			// Get a connection from dataSource
 			Connection dbcon = dataSource.getConnection();
+			dbcon.setAutoCommit(false);
 
-			Statement statement = dbcon.createStatement();
-			Statement statement2 = dbcon.createStatement();
-			String query = "select movies.title, movies.year, movies.director, group_concat(distinct stars.id order by stars.id) as stars_id, " +
-					"group_concat(distinct genres.name order by genres.name) as genres, group_concat(distinct stars.name order by stars.id) as stars,ratings.rating " +
-					"from movies, genres, stars,stars_in_movies,genres_in_movies,ratings " +
-					"where movies.id = genres_in_movies.movieId " +
-					"and genres_in_movies.genreId=genres.id " +
-					"and stars_in_movies.movieId=movies.id " +
-					"and stars_in_movies.starId=stars.id " +
-					"and ratings.movieId=movies.id " +
-					"and movies.id='" + id + "'";
-			ResultSet rs = statement.executeQuery(query);
+			String query = 	"select movies.id,movies.title,movies.year,movies.director,ratings.rating,group_concat(distinct stars.id order by stars.id) as stars_id,"+
+			"substring_index(group_concat(distinct genres.name separator ','), ',', 3) as g,"+
+			"group_concat(distinct stars.name order by stars.id) as stars from movies inner join genres_in_movies on movies.id=genres_in_movies.movieId"+
+			" left join ratings on ratings.movieId=movies.id inner join genres on "+
+			" genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId "+
+			" inner join stars on stars_in_movies.starId=stars.id and movies.id =? group by movies.id";
+			PreparedStatement statement = dbcon.prepareStatement(query);
+			statement.setString(1, id);
+			ResultSet rs = statement.executeQuery();
 
 			JsonArray jsonArray = new JsonArray();
 			ArrayList<String> temp = new ArrayList<String>();
 			ArrayList<String> temp2 = new ArrayList<String>();
 			JsonObject jsonObject = new JsonObject();
 
+
 			// Iterate through each row of rs
 			while (rs.next()) {
+//				System.out.println("stars_id = " + rs.getString("stars_id"));
 				String movie_title = rs.getString("title");
 				String movie_year = rs.getString("year");
 				String movie_director = rs.getString("director");
-				String movie_genres = rs.getString("genres");
+				String movie_genres = rs.getString("g");
 				// String movie_stars = rs.getString("stars");
 				Collections.addAll(temp, rs.getString("stars_id").split(","));
 				Collections.addAll(temp2, rs.getString("stars").split(","));
@@ -82,14 +82,17 @@ public class SingleMovieServlet extends HttpServlet {
 				jsonArray.add(jsonObject);
 			}
 
+			PreparedStatement statement2 = null;
 			ArrayList<String> value = new ArrayList<String>();
 			for (int i = 0; i < temp.size(); i++) {
 				String query2 = "SELECT starID, COUNT(*) as sample " +
 						"FROM stars_in_movies, movies " +
-						"where stars_in_movies.movieId= movies.id " +
-						"and starID = " + "'" + temp.get(i) + "' " +
+						"where stars_in_movies.movieId = movies.id " +
+						"and starID = ? " +
 						"GROUP BY starID";
-				ResultSet rs2 = statement2.executeQuery(query2);
+				statement2 = dbcon.prepareStatement(query2);
+				statement2.setString(1, temp.get(i));
+				ResultSet rs2 = statement2.executeQuery();
 				rs2.next();
 				value.add(rs2.getString("sample"));
 
@@ -97,11 +100,17 @@ public class SingleMovieServlet extends HttpServlet {
 					rs2.close();
 				}
 			}
-			statement2.close();
+			System.out.println("value = " + value);
+			if (statement2 != null)
+				statement2.close();
+			System.out.println("temp = "+temp);
+			System.out.println("temp2 = " + temp2);
 
 			for (int n = 0; n < temp.size(); n++) {
+				System.out.println("checkvalue" + value);
 				for (int m = 0; m < temp.size() - n - 1; m++) {
-					if ((value.get(m).compareTo(value.get(m + 1))) < 0) {
+
+					if (Integer.parseInt(value.get(m))< Integer.parseInt(value.get(m+1))) {
 						String swapString = value.get(m);
 						value.set(m, value.get(m + 1));
 						value.set(m + 1, swapString);
@@ -111,7 +120,7 @@ public class SingleMovieServlet extends HttpServlet {
 						String swapString3 = temp2.get(m);
 						temp2.set(m, temp2.get(m + 1));
 						temp2.set(m + 1, swapString3);
-					} else if ((value.get(m).compareTo(value.get(m + 1))) == 0) {
+					} else if (Integer.parseInt(value.get(m))== Integer.parseInt(value.get(m+1))) {
 						if (temp2.get(m).compareTo(temp2.get(m + 1)) > 0) {
 							String swapString = value.get(m);
 							value.set(m, value.get(m + 1));
@@ -126,6 +135,7 @@ public class SingleMovieServlet extends HttpServlet {
 					}
 				}
 			}
+			System.out.println("value = " + value);
 			String k2 = "";
 			String k = "";
 //			System.out.println("stars_id list =" + temp);

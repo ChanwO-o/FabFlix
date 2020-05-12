@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Employee Dashboard</title>
+	<link rel="stylesheet" href="reset.css"/>
+	<link rel="stylesheet" href="common.css"/>
+	<link rel="stylesheet" href="dashboard.css"/>
+
+	<link rel="stylesheet" href="search.css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+
+<!-- header -->
+<div id="header">
+	<span class="gradtext">FabFlix Employee</span>
+</div>
+
+<div id="logout">
+	<ul class="menu_list">
+		<li class="home">
+			<button type="button" class="btn_home" onclick="location.href='dashboard.html'">Home</button>
+		</li>
+		<li class="GO TO MAINPAGE">
+			<button type="button" class="btn_logout" onclick="location.href='mainpage.html'">CHECK OUT MAINPAGE</button>
+		</li>
+		<li class="logout">
+			<button type="button" class="btn_logout" onclick="location.href='login.html'">Logout</button>
+		</li>
+	</ul>
+</div>
+<!-- header end -->
+
+<!-- contents -->
+<div id="content" class="clearfix">
+	<div class="section_main">
+		<div class="search_section">
+
+			<div class="advancedsearch">
+				<h2>Add a new Star</h2>
+				<br>
+				<form id="addstar_form" class="example" method="GET" action="#">
+					<input type="text" placeholder="Name" name="name">
+					<input type="text" placeholder="Birth year (optional)" name="birthyear">
+					<button type="submit"><i class="fa fa-search"> Add Star</i></button>
+				</form>
+				<br>
+				<h2>Add a new Movie</h2>
+				<br>
+				<form id="addmovie_form" class="example" method="GET" action="#">
+					<input type="text" placeholder="Movie Title" name="title">
+					<input type="text" placeholder="Movie Year" name="year">
+					<input type="text" placeholder="Movie Director" name="director">
+					<input type="text" placeholder="Star Name" name="star_name">
+					<input type="text" placeholder="Single Genre" name="genre">
+					<button type="submit"><i class="fa fa-search"> Add Movie</i></button>
+				</form>
+				<form action="metadata" method="get">
+					<h2>Show Database Metadata</h2>
+					<br>
+					<br>
+					<input type="submit" name="showMetadata" value="Show Metadata" class="submit" />
+				</form>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script src="dashboard.js"></script>
+</body>
+</html>

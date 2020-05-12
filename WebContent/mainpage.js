@@ -21,17 +21,22 @@ function handleResult(resultData) {
 	for (let i = 0; i < resultData.length; i++) {
 		console.log(resultData[i]['genre_name']);
 		rowHTML += '<a href="movielist.html?pn=10&pg=1&genres=' + resultData[i]['genre_name'] + '">' + resultData[i]['genre_name'] + " | " + '</a>';
-		if (i % 4 === 0 && i !== 0)
-			rowHTML += "<br>"
+		// if (i % 4 === 0 && i !== 0)
+		// 	rowHTML += "<br>"
 	}
+	var requesttime = new Date().getTime()-start_time;
+	console.log("time messure = " + requesttime);
 	starInfoElement.append(rowHTML);
 	// $("#movie_info").html("<a href=\"html_images.asp\">HTML bbb</a>");
+
 }
+var start_time= new Date().getTime();
 
 jQuery.ajax({
 	dataType: "json",  // Setting return data type
 	method: "GET",// Setting request method
 	cache: true,
 	url: "api/mainpage",
-	success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+	// Setting callback function to handle data returned successfully by the singleMovieStar
+	success:(resultData) => handleResult(resultData)
 });

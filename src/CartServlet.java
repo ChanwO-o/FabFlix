@@ -10,10 +10,7 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,18 +91,16 @@ public class CartServlet extends HttpServlet {
 
 		try {
 			Connection dbcon = dataSource.getConnection(); // Get a connection from dataSource
-			Statement statement = dbcon.createStatement(); // Declare our statement
+			dbcon.setAutoCommit(false);
 			String query = "select movies.id,movies.title,movies.year,movies.director," +
-					"group_concat(distinct genres.name separator ',') as genres,group_concat(distinct stars.name separator ',') as stars,ratings.rating " +
-					"from movies, ratings, genres, genres_in_movies, stars, stars_in_movies " +
-					"where ratings.movieId=movies.id and movies.id in (";
+					"group_concat(distinct genres.name separator ',') as genres,group_concat(distinct stars.name separator ',') as stars " +
+					"from movies,  genres, genres_in_movies, stars, stars_in_movies " +
+					" where movies.id in (";
 
 			// append each movie id in cart to query
-			int entryCounter = 0;
-			for (Map.Entry<String, Integer> movieEntry : cartList.entrySet()) {
-				entryCounter++;
-				query += "'" + movieEntry.getKey() + "'";
-				if (entryCounter != cartList.size())
+			for (int i = 0; i < cartList.size(); ++i) {
+				query += "?";
+				if (i != cartList.size() - 1)
 					query += ",";
 			}
 			query += ") "; // closing bracket for movieId group
@@ -115,7 +110,15 @@ public class CartServlet extends HttpServlet {
 					"group by movies.id"; // finish the query
 			System.out.println("query: " + query);
 
-			ResultSet rs = statement.executeQuery(query);
+			PreparedStatement statement = dbcon.prepareStatement(query);
+			int entryCounter = 0;
+			for (Map.Entry<String, Integer> movieEntry : cartList.entrySet()) {
+				entryCounter++;
+				statement.setString(entryCounter, movieEntry.getKey());
+			}
+			ResultSet rs = statement.executeQuery();
+			dbcon.commit();
+
 			JsonArray jsonArray = new JsonArray();
 
 			while (rs.next()) {
@@ -125,7 +128,7 @@ public class CartServlet extends HttpServlet {
 				String movie_director = rs.getString("director");
 				String movie_genres = rs.getString("genres");
 				String movie_stars = rs.getString("stars");
-				String movie_rating = rs.getString("rating");
+//				String movie_rating = rs.getString("rating");
 
 				// Create a JsonObject based on the data we retrieve from rs
 				JsonObject jsonObject = new JsonObject();
@@ -135,7 +138,7 @@ public class CartServlet extends HttpServlet {
 				jsonObject.addProperty("movie_director", movie_director);
 				jsonObject.addProperty("movie_genres", movie_genres);
 				jsonObject.addProperty("movie_stars", movie_stars);
-				jsonObject.addProperty("movie_rating", movie_rating);
+//				jsonObject.addProperty("movie_rating", movie_rating);
 				jsonObject.addProperty("movie_price", generateMoviePrice(movie_id));
 				jsonObject.addProperty("movie_quantity", cartList.get(movie_id));
 				jsonArray.add(jsonObject);
