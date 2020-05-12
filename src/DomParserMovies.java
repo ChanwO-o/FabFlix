@@ -381,7 +381,7 @@ public class DomParserMovies {
 
 		//call run example
 		try {
-			dpe.run("mains-short-short.xml");
+			dpe.run("mains243.xml");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

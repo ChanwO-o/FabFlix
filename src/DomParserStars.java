@@ -220,7 +220,7 @@ public class DomParserStars {
 
 		//call run example
 		try {
-			dpe.run("actors-shortshort.xml");
+			dpe.run("actors63.xml");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
