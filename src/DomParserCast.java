@@ -194,6 +194,7 @@ public class DomParserCast {
 
 		try {
 			Connection dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
+			dbcon.setAutoCommit(false);
 
 			String existingMovieQuery = "SELECT movies.id as movieId, stars.id as starId from movies, stars where movies.title = ? and stars.name = ?;";
 
@@ -219,6 +220,7 @@ public class DomParserCast {
 						}
 					}
 					statement.close();
+					dbcon.commit();
 				}
 			}
 			dbcon.close();
