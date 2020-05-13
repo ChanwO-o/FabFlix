@@ -8,7 +8,7 @@ Fabflix is a full stack web application that displays information on movies and 
 Watch the demos here:
 * Project1: https://www.youtube.com/watch?v=ZovyHm_lWuY
 * Project2: https://www.youtube.com/watch?v=_Wm3XJblF2s
-* Project3 (part 1): https://www.youtube.com/watch?v=QLT-3lY_34M
+* Project3 (part 1): https://youtu.be/zswZRMRpi0A
 * Project3 (part 2): https://www.youtube.com/watch?v=oLcK7vvRGkI
 
 
