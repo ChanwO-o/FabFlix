@@ -1,0 +1,3 @@
+Bad Star element: a Star{name:, birthYear:0}
+Bad Star element: a Star{name:, birthYear:0}
+Bad Star element: a Star{name:, birthYear:0}
