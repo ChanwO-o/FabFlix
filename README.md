@@ -1,3 +1,4 @@
+
 # FabFlix
 
 ### CS122b Spring 2020, Team 131
@@ -7,6 +8,8 @@ Fabflix is a full stack web application that displays information on movies and 
 Watch the demos here:
 * Project1: https://www.youtube.com/watch?v=ZovyHm_lWuY
 * Project2: https://www.youtube.com/watch?v=_Wm3XJblF2s
+* Project3 (part 1): https://www.youtube.com/watch?v=QLT-3lY_34M
+* Project3 (part 2): https://www.youtube.com/watch?v=oLcK7vvRGkI
 
 
 ## Built With
@@ -66,9 +69,58 @@ Then we can query for substrings using the **'LIKE'** keyword in SQL.
 ```
 
 
+## Prepared Statements
+Prepared Statements are used to read/write to the database.
+Links to files that use Prepared Statements:
+* [https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/src/MainPageServlet.java](https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/src/MainPageServlet.java)
+* https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/src/MovieListServlet.java
+* https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/src/LoginServlet.java
+* https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/src/SingleStarServlet.java
+* https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/src/SingleMovieServlet.java
+* https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/src/PaymentServlet.java
+
+
+## Inconsistency Data
+Inconsistently parsed XML data is logged into files in (name-of-xml-file).txt format.
+Example: 
+[https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/inconsistencies-mains243.xml.txt](https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/inconsistencies-mains243.xml.txt)
+
+
+
+## Optimization Strategies
+* #### Set conditions for existing (duplicate) data
+e.g. Treat 'Drama' and 'drama ' as the same genre
+We defined a Genre class where the .equals() and hashcode() methods were overridden to return the same values for similar names.
+```
+@Override
+public boolean equals(Object o) {
+	if (o == this)
+		return true;
+	if (!(o instanceof Genre))
+		return false;
+	Genre g = (Genre) o;
+	// treat same-spelled names as the same genre
+	return g.getName().toLowerCase().equals(getName().toLowerCase());
+}
+
+public int hashCode() {
+    return name.toLowerCase().hashCode();
+}
+```
+Then, adding to the Set() of Genre objects will automatically negate duplicate adds.
+
+* #### Organize data into HashMap
+HashMaps are great for searching data in O(1) time. When parsing cast.xml, data is organized by movies to stars, in a 1 : n ratio. So, the data can be placed as such:
+```
+Map<String movieTitle, List<Star> stars>
+```
+
+
+
 ## Authors
 
 * **Chan Woo Park** - *Frontend & cloud*
 * **Sung Soo Kim** - *Backend database*
 
-*Workload was equally distributed*
+*Workload was equally distributed (pair-programming)*
+*Notice to TA: Sung Soo Kim had to leave back to his home country due to COVID-19. He did not have access to an environment for the week. *
