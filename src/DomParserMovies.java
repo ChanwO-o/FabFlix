@@ -58,12 +58,8 @@ public class DomParserMovies {
 			//parse using builder to get DOM representation of the XML file
 			dom = db.parse(filename);
 
-		} catch (ParserConfigurationException pce) {
+		} catch (ParserConfigurationException | SAXException | IOException pce) {
 			pce.printStackTrace();
-		} catch (SAXException se) {
-			se.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
 		}
 	}
 
@@ -248,52 +244,57 @@ public class DomParserMovies {
 		String sqlPw = "mypassword";
 		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 
+		Connection dbcon = null;
+		PreparedStatement statement = null, in = null;
+		Statement statement1 = null;
+		ResultSet rs = null, rs2 = null;
 		try {
-			Connection dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
-
+			dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
 			String existingStarQuery = "SELECT id from movies where title = ? and year = ? and director = ?;";
-
 			int count = 0;
 			for (Movie movie : myMovies) {
-				PreparedStatement statement = dbcon.prepareStatement(existingStarQuery);
+				statement = dbcon.prepareStatement(existingStarQuery);
 				statement.setString(1, movie.getTitle());
 				statement.setInt(2, movie.getYear());
 				statement.setString(3, movie.getDirector());
-				ResultSet rs= statement.executeQuery();
+				rs= statement.executeQuery();
 
 				count++;
 //				System.out.println("current movie = " + count);
 
-				if(rs.next())
+				if (rs.next())
 				{
 //					System.out.println("movie already exists; skip" + count + " " + movie.getTitle());
 				}
 				else
 				{
 					String newMovieQuery = "Select max(id) as id from movies";
-					Statement statement1 = dbcon.createStatement();
-					ResultSet rs2 = statement1.executeQuery(newMovieQuery);
+					statement1 = dbcon.createStatement();
+					rs2 = statement1.executeQuery(newMovieQuery);
 					rs2.next();
 					int newId = Integer.parseInt(rs2.getString("id").substring(2)) + 1 ;
 					String setId= "tt0" + newId;
-					rs2.close();
-					statement1.close();
 
 					String addMovieQuery = "INSERT into movies VALUES(?,?,?,?)";
-					PreparedStatement in = dbcon.prepareStatement(addMovieQuery);
+					in = dbcon.prepareStatement(addMovieQuery);
 					in.setString(1, setId);
 					in.setString(2, movie.getTitle());
 					in.setInt(3, movie.getYear());
 					in.setString(4, movie.getDirector());
 					in.executeUpdate();
-					in.close();
 				}
-				statement.close();
 			}
-			dbcon.close();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
+		}
+		finally {
+			try { if (dbcon != null) dbcon.close(); } catch (Exception ignored) {}
+			try { if (statement != null) statement.close(); } catch (Exception ignored) {}
+			try { if (in != null) in.close(); } catch (Exception ignored) {}
+			try { if (statement1 != null) statement1.close(); } catch (Exception ignored) {}
+			try { if (rs != null) rs.close(); } catch (Exception ignored) {}
+			try { if (rs2 != null) rs2.close(); } catch (Exception ignored) {}
 		}
 	}
 
@@ -302,16 +303,19 @@ public class DomParserMovies {
 		String sqlPw = "mypassword";
 		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 
+		Connection dbcon = null;
+		PreparedStatement statement = null, in = null;
+		ResultSet rs = null;
 		try {
-			Connection dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
+			dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
 
 			String existingGenreQuery = "SELECT id from genres where name = ?;";
 
 			int count = 0;
 			for (Genre genre : myGenres) {
-				PreparedStatement statement = dbcon.prepareStatement(existingGenreQuery);
+				statement = dbcon.prepareStatement(existingGenreQuery);
 				statement.setString(1, genre.getName());
-				ResultSet rs= statement.executeQuery();
+				rs = statement.executeQuery();
 
 				count++;
 //				System.out.println("current genre = " + count);
@@ -323,18 +327,21 @@ public class DomParserMovies {
 				else
 				{
 					String addGenreQuery = "INSERT into genres VALUES(?,?)";
-					PreparedStatement in = dbcon.prepareStatement(addGenreQuery);
+					in = dbcon.prepareStatement(addGenreQuery);
 					in.setNull(1, Types.INTEGER);
 					in.setString(2, genre.getName());
 					in.executeUpdate();
-					in.close();
 				}
-				statement.close();
 			}
-			dbcon.close();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
+		}
+		finally {
+			try { if (dbcon != null) dbcon.close(); } catch (Exception ignored) {}
+			try { if (statement != null) statement.close(); } catch (Exception ignored) {}
+			try { if (in != null) in.close(); } catch (Exception ignored) {}
+			try { if (rs != null) rs.close(); } catch (Exception ignored) {}
 		}
 	}
 
@@ -343,35 +350,41 @@ public class DomParserMovies {
 		String sqlPw = "mypassword";
 		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 
+		Connection dbcon = null;
+		PreparedStatement statement = null, in = null;
+		ResultSet rs = null;
 		try {
-			Connection dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
+			dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
 
 			String existingMovieQuery = "SELECT movies.id as movieId, genres.id as genreId from movies, genres where movies.title = ? and genres.name = ?;";
 
 			for (Movie movie : myMovies) {
-				PreparedStatement statement = dbcon.prepareStatement(existingMovieQuery);
+				statement = dbcon.prepareStatement(existingMovieQuery);
 				statement.setString(1, movie.getTitle());
 
 				for (Genre genre : movie.getGenres()) {
 					statement.setString(2, genre.getName());
-					ResultSet rs = statement.executeQuery();
+					rs = statement.executeQuery();
 
 					if(rs.next()) // movie and genre exist; can link the two into genres_in_movies
 					{
 						String addGenreQuery = "INSERT into genres_in_movies VALUES(?,?)";
-						PreparedStatement in = dbcon.prepareStatement(addGenreQuery);
+						in = dbcon.prepareStatement(addGenreQuery);
 						in.setInt(1, rs.getInt("genreId"));
 						in.setString(2, rs.getString("movieId"));
 						in.executeUpdate();
-						in.close();
 					}
 				}
-				statement.close();
 			}
-			dbcon.close();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
+		}
+		finally {
+			try { if (dbcon != null) dbcon.close(); } catch (Exception ignored) {}
+			try { if (statement != null) statement.close(); } catch (Exception ignored) {}
+			try { if (in != null) in.close(); } catch (Exception ignored) {}
+			try { if (rs != null) rs.close(); } catch (Exception ignored) {}
 		}
 	}
 

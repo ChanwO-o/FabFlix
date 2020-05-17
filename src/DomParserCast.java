@@ -49,12 +49,8 @@ public class DomParserCast {
 			//parse using builder to get DOM representation of the XML file
 			dom = db.parse(filename);
 
-		} catch (ParserConfigurationException pce) {
+		} catch (ParserConfigurationException | SAXException | IOException pce) {
 			pce.printStackTrace();
-		} catch (SAXException se) {
-			se.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
 		}
 	}
 
@@ -78,8 +74,8 @@ public class DomParserCast {
 			Node dirfilmsTag = dirfilmsTags.item(i);
 			Map<String, List<Star>> directorMap = new HashMap<>(); // put director's map
 
-			String title = null;
-			ArrayList<Star> stars = null;
+			String title;
+			ArrayList<Star> stars;
 			for (int j = 0; j < dirfilmsTag.getChildNodes().getLength(); ++j) {
 				Node dataTag = dirfilmsTag.getChildNodes().item(j);
 //				System.out.println("dataTag: " + dataTag.getNodeName());
@@ -192,41 +188,45 @@ public class DomParserCast {
 		String sqlPw = "mypassword";
 		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 
+		Connection dbcon = null;
+		PreparedStatement statement = null, in = null;
+		ResultSet rs = null;
 		try {
-			Connection dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
+			dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
 			dbcon.setAutoCommit(false);
 
 			String existingMovieQuery = "SELECT movies.id as movieId, stars.id as starId from movies, stars where movies.title = ? and stars.name = ?;";
 
-			int count = 0;
 			for (Map<String, List<Star>> directorMap : myCast) { // title : {stars}
-				count++;
-//				System.out.println(count);
+				//				System.out.println(count);
 				for (Map.Entry<String, List<Star>> titleStars : directorMap.entrySet()) {
-					PreparedStatement statement = dbcon.prepareStatement(existingMovieQuery);
+					statement = dbcon.prepareStatement(existingMovieQuery);
 					statement.setString(1, titleStars.getKey());
 
 					for (Star star : titleStars.getValue()) {
 						statement.setString(2, star.getName());
-						ResultSet rs = statement.executeQuery();
+						rs = statement.executeQuery();
 
 						if (rs.next()) {
 							String query = "INSERT INTO stars_in_movies VALUES(?,?)";
-							PreparedStatement in = dbcon.prepareStatement(query);
+							in = dbcon.prepareStatement(query);
 							in.setString(1, rs.getString("starId"));
 							in.setString(2, rs.getString("movieId"));
 							in.executeUpdate();
-							in.close();
 						}
 					}
-					statement.close();
 					dbcon.commit();
 				}
 			}
-			dbcon.close();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
+		}
+		finally {
+			try { if (dbcon != null) dbcon.close(); } catch (Exception ignored) {}
+			try { if (statement != null) statement.close(); } catch (Exception ignored) {}
+			try { if (in != null) in.close(); } catch (Exception ignored) {}
+			try { if (rs != null) rs.close(); } catch (Exception ignored) {}
 		}
 	}
 

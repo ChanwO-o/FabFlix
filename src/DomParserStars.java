@@ -55,12 +55,8 @@ public class DomParserStars {
 			//parse using builder to get DOM representation of the XML file
 			dom = db.parse(filename);
 
-		} catch (ParserConfigurationException pce) {
+		} catch (ParserConfigurationException | SAXException | IOException pce) {
 			pce.printStackTrace();
-		} catch (SAXException se) {
-			se.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
 		}
 	}
 
@@ -168,16 +164,20 @@ public class DomParserStars {
 		String sqlPw = "mypassword";
 		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 
+		Connection dbcon = null;
+		PreparedStatement statement = null, in = null;
+		Statement statement1 = null;
+		ResultSet rs = null, rs2 = null;
 		try {
-			Connection dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
+			dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
 
 			String existingStarQuery = "SELECT id from stars where name = ? and birthYear = ?;";
 
 			for (Star star : myStars) {
-				PreparedStatement statement = dbcon.prepareStatement(existingStarQuery);
+				statement = dbcon.prepareStatement(existingStarQuery);
 				statement.setString(1, star.getName());
 				statement.setInt(2, star.getBirthYear());
-				ResultSet rs= statement.executeQuery();
+				rs= statement.executeQuery();
 				if(rs.next())
 				{
 //					System.out.println("star already exists; skip");
@@ -185,16 +185,14 @@ public class DomParserStars {
 				else
 				{
 					String newstarQuery = "Select max(id) as id from stars";
-					Statement statement1 = dbcon.createStatement();
-					ResultSet rs2 = statement1.executeQuery(newstarQuery);
+					statement1 = dbcon.createStatement();
+					rs2 = statement1.executeQuery(newstarQuery);
 					rs2.next();
 					int newId = Integer.parseInt(rs2.getString("id").substring(2)) +1 ;
 					String setId= "nm" + newId;
-					rs2.close();
-					statement1.close();
 
 					String addStarQuery = "INSERT into stars VALUES(?,?,?)";
-					PreparedStatement in = dbcon.prepareStatement(addStarQuery);
+					in = dbcon.prepareStatement(addStarQuery);
 					in.setString(1, setId);
 					in.setString(2, star.getName());
 					if (star.getBirthYear() == 0)
@@ -202,15 +200,20 @@ public class DomParserStars {
 					else
 						in.setInt(3, star.getBirthYear());
 					in.executeUpdate();
-					in.close();
 
 				}
-				statement.close();
 			}
-			dbcon.close();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
+		}
+		finally {
+			try { if (dbcon != null) dbcon.close(); } catch (Exception ignored) {}
+			try { if (statement != null) statement.close(); } catch (Exception ignored) {}
+			try { if (in != null) in.close(); } catch (Exception ignored) {}
+			try { if (statement1 != null) statement1.close(); } catch (Exception ignored) {}
+			try { if (rs != null) rs.close(); } catch (Exception ignored) {}
+			try { if (rs2 != null) rs2.close(); } catch (Exception ignored) {}
 		}
 	}
 
