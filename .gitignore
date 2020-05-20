@@ -6,6 +6,13 @@
 
 # hide data files
 *.xml
+# but don't ignore pom.xml
+!/web/pom.xml
+# and don't ignore web.xml
+!/web/WebContent/WEB-INF/web.xml
+
+# hide parser output files
+inconsistencies*
 
 # certs/keys
 *.pem
@@ -107,7 +114,7 @@ cmake-build-debug/
 ## Plugin-specific files:
 
 # IntelliJ
-/out/
+/web/out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -164,9 +171,10 @@ hs_err_pid*
 
 ### Java-Web ###
 ## ignoring target file
-target/
+web/target/
 
 ### Maven ###
+
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup

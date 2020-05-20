@@ -26,7 +26,7 @@ public class DomParserMovies {
 	}
 
 	public void run(String filename) throws IOException {
-		String inconsistenciesFilename = "inconsistencies-" + filename + ".txt";
+		String inconsistenciesFilename = "parsers/inconsistencies-" + filename + ".txt";
 		writer = new BufferedWriter(new FileWriter(inconsistenciesFilename));
 
 		//parse the xml file and get the dom object
@@ -56,7 +56,7 @@ public class DomParserMovies {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
 			//parse using builder to get DOM representation of the XML file
-			dom = db.parse(filename);
+			dom = db.parse("parsers/" + filename);
 
 		} catch (ParserConfigurationException | SAXException | IOException pce) {
 			pce.printStackTrace();
