@@ -4,14 +4,12 @@
 # token for Google ReCaptcha
 /web/src/RecaptchaConstants.java
 
-# hide data files
-*.xml
-# but don't ignore pom.xml
-!/web/pom.xml
-# and don't ignore web.xml
-!/web/WebContent/WEB-INF/web.xml
+# localhost data source connection
+/web/WebContent/META-INF
 
-# hide parser output files
+# parser data files
+parsers/*.xml
+# parser output files
 inconsistencies*
 
 # certs/keys
