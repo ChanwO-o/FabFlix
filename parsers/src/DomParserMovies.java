@@ -14,15 +14,15 @@ import java.sql.*;
 import java.util.*;
 
 public class DomParserMovies {
-	List<Movie> myMovies;
-	Set<Genre> myGenres;
+	List<ParsedMovie> myParsedMovies;
+	Set<ParsedGenre> myParsedGenres;
 	Document dom;
 	BufferedWriter writer;
 
 	public DomParserMovies() {
 		//create a list to hold the Movie objects
-		myMovies = new ArrayList<>();
-		myGenres = new HashSet<>();
+		myParsedMovies = new ArrayList<>();
+		myParsedGenres = new HashSet<>();
 	}
 
 	public void run(String filename) throws IOException {
@@ -84,7 +84,7 @@ public class DomParserMovies {
 
 			// get director / films
 			String director = null;
-			ArrayList<Movie> movies = null;
+			ArrayList<ParsedMovie> parsedMovies = null;
 			for (int j = 0; j < directorfilmsTag.getChildNodes().getLength(); ++j) {
 				Node directorOrFilms = directorfilmsTag.getChildNodes().item(j);
 //				System.out.println("directorOrFilm: " + directorOrFilms.getNodeName());
@@ -93,13 +93,13 @@ public class DomParserMovies {
 //					System.out.println("director name found: " + director);
 				}
 				else if (directorOrFilms.getNodeName().equals("films")) {
-					movies = getMovies(directorOrFilms, director);
+					parsedMovies = getMovies(directorOrFilms, director);
 				}
 			}
 
-			if (movies != null) {
+			if (parsedMovies != null) {
 //				System.out.println("director: " + director + "; parsed " + movies.size() + " movies");
-				myMovies.addAll(movies);
+				myParsedMovies.addAll(parsedMovies);
 			}
 		}
 	}
@@ -120,8 +120,8 @@ public class DomParserMovies {
 	/**
 	 * Get list of movies from a <films></films> node
 	 */
-	private ArrayList<Movie> getMovies(Node filmsNode, String director) throws IOException {
-		ArrayList<Movie> result = new ArrayList<>();
+	private ArrayList<ParsedMovie> getMovies(Node filmsNode, String director) throws IOException {
+		ArrayList<ParsedMovie> result = new ArrayList<>();
 		NodeList filmNodes = filmsNode.getChildNodes();
 		for (int i = 0; i < filmNodes.getLength(); ++i) {
 			Node filmNode = filmNodes.item(i);
@@ -129,7 +129,7 @@ public class DomParserMovies {
 
 			String title = null;
 			int year = 0;
-			List<Genre> genresForThisMovie = new ArrayList<>();
+			List<ParsedGenre> genresForThisMovie = new ArrayList<>();
 
 			for (int j = 0; j < filmData.getLength(); ++j) {
 				Node data = filmData.item(j);
@@ -147,7 +147,7 @@ public class DomParserMovies {
 					NodeList catNodes = data.getChildNodes();
 					for (int k = 0; k < catNodes.getLength(); ++k) {
 						String genreName = catNodes.item(k).getTextContent();
-						Genre g = new Genre(genreName);
+						ParsedGenre g = new ParsedGenre(genreName);
 						if (genreName == null || genreName.trim().isEmpty()) { // exclude genres with empty names
 //							System.out.println("Bad Genre element: cat " + g);
 							writer.write("Bad Genre element: cat " + g);
@@ -156,17 +156,17 @@ public class DomParserMovies {
 						}
 //						System.out.println(catNodes.item(k).getNodeName() + " " + genreName);
 						genresForThisMovie.add(g);
-						if (myGenres.contains(g)) {
+						if (myParsedGenres.contains(g)) {
 //							System.out.println("Genre already exists: " + g);
 							writer.write("Genre already exists: " + g);
 							writer.newLine();
 						}
 						else
-							myGenres.add(new Genre(genreName));
+							myParsedGenres.add(new ParsedGenre(genreName));
 					}
 				}
 			}
-			Movie m = new Movie(title, year, director, genresForThisMovie);
+			ParsedMovie m = new ParsedMovie(title, year, director, genresForThisMovie);
 			if (title == null || title.isEmpty()) {
 //				System.out.println("Bad Movie element: t " + m);
 				writer.write("Bad Movie element: t " + m);
@@ -226,8 +226,8 @@ public class DomParserMovies {
 	 * Iterate through the list and print the content to console
 	 */
 	private void printData() {
-		System.out.println("No of movies '" + myMovies.size() + "'.");
-		System.out.println("No of genres '" + myGenres.size() + "'.");
+		System.out.println("No of movies '" + myParsedMovies.size() + "'.");
+		System.out.println("No of genres '" + myParsedGenres.size() + "'.");
 
 //		Iterator<Movie> it = myMovies.iterator();
 //		while (it.hasNext()) {
@@ -252,11 +252,11 @@ public class DomParserMovies {
 			dbcon = DriverManager.getConnection(loginUrl, sqlId, sqlPw);
 			String existingStarQuery = "SELECT id from movies where title = ? and year = ? and director = ?;";
 			int count = 0;
-			for (Movie movie : myMovies) {
+			for (ParsedMovie parsedMovie : myParsedMovies) {
 				statement = dbcon.prepareStatement(existingStarQuery);
-				statement.setString(1, movie.getTitle());
-				statement.setInt(2, movie.getYear());
-				statement.setString(3, movie.getDirector());
+				statement.setString(1, parsedMovie.getTitle());
+				statement.setInt(2, parsedMovie.getYear());
+				statement.setString(3, parsedMovie.getDirector());
 				rs= statement.executeQuery();
 
 				count++;
@@ -278,9 +278,9 @@ public class DomParserMovies {
 					String addMovieQuery = "INSERT into movies VALUES(?,?,?,?)";
 					in = dbcon.prepareStatement(addMovieQuery);
 					in.setString(1, setId);
-					in.setString(2, movie.getTitle());
-					in.setInt(3, movie.getYear());
-					in.setString(4, movie.getDirector());
+					in.setString(2, parsedMovie.getTitle());
+					in.setInt(3, parsedMovie.getYear());
+					in.setString(4, parsedMovie.getDirector());
 					in.executeUpdate();
 				}
 			}
@@ -312,9 +312,9 @@ public class DomParserMovies {
 			String existingGenreQuery = "SELECT id from genres where name = ?;";
 
 			int count = 0;
-			for (Genre genre : myGenres) {
+			for (ParsedGenre parsedGenre : myParsedGenres) {
 				statement = dbcon.prepareStatement(existingGenreQuery);
-				statement.setString(1, genre.getName());
+				statement.setString(1, parsedGenre.getName());
 				rs = statement.executeQuery();
 
 				count++;
@@ -329,7 +329,7 @@ public class DomParserMovies {
 					String addGenreQuery = "INSERT into genres VALUES(?,?)";
 					in = dbcon.prepareStatement(addGenreQuery);
 					in.setNull(1, Types.INTEGER);
-					in.setString(2, genre.getName());
+					in.setString(2, parsedGenre.getName());
 					in.executeUpdate();
 				}
 			}
@@ -358,12 +358,12 @@ public class DomParserMovies {
 
 			String existingMovieQuery = "SELECT movies.id as movieId, genres.id as genreId from movies, genres where movies.title = ? and genres.name = ?;";
 
-			for (Movie movie : myMovies) {
+			for (ParsedMovie parsedMovie : myParsedMovies) {
 				statement = dbcon.prepareStatement(existingMovieQuery);
-				statement.setString(1, movie.getTitle());
+				statement.setString(1, parsedMovie.getTitle());
 
-				for (Genre genre : movie.getGenres()) {
-					statement.setString(2, genre.getName());
+				for (ParsedGenre parsedGenre : parsedMovie.getParsedGenres()) {
+					statement.setString(2, parsedGenre.getName());
 					rs = statement.executeQuery();
 
 					if(rs.next()) // movie and genre exist; can link the two into genres_in_movies

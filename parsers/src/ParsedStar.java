@@ -1,14 +1,14 @@
-public class Star {
+public class ParsedStar {
 //	private String id;
 	private String name;
 	private int birthYear;
 
-	public Star(String name) {
+	public ParsedStar(String name) {
 		this.name = name;
 		birthYear = 0;
 	}
 
-	public Star(String name, int birthYear) {
+	public ParsedStar(String name, int birthYear) {
 		this.name = name;
 		this.birthYear = birthYear;
 	}
