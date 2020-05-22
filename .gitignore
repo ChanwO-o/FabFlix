@@ -2,7 +2,7 @@
 .idea/
 
 # token for Google ReCaptcha
-/src/RecaptchaConstants.java
+/web/src/RecaptchaConstants.java
 
 # hide data files
 *.xml
@@ -172,6 +172,7 @@ hs_err_pid*
 ### Java-Web ###
 ## ignoring target file
 web/target/
+/target
 
 ### Maven ###
 
