@@ -41,16 +41,21 @@ public class LoginServlet extends HttpServlet {
 		int idResult = -1; // get id from query below
 		String password = request.getParameter("password");
 
-		try { // first, check if captcha success
-			RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+		if (gRecaptchaResponse != null) { // captcha exists (request is from web)
+			try { // first, check if captcha success
+				RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("Invalid Recaptcha response; login failed");
+				responseJsonObject.addProperty("status", "fail");
+				responseJsonObject.addProperty("message", "captcha failed");
+				response.getWriter().write(responseJsonObject.toString());
+				return;
+			}
 		}
-		catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Invalid Recaptcha response; login failed");
-			responseJsonObject.addProperty("status", "fail");
-			responseJsonObject.addProperty("message", "captcha failed");
-			response.getWriter().write(responseJsonObject.toString());
-			return;
+		else {
+			// no captcha, do nothing (request is from mobile); proceed to credential verification
+			System.out.println("Request from mobile");
 		}
 
 		// now try verifying credentials
