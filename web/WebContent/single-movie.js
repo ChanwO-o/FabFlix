@@ -106,13 +106,41 @@ function addToCart(movie_id) {
 
 // Get id from URL
 let movie_id = getParameterByName('id');
+let fulltext= getParameterByName('fulltext');
 let check_counter = getParameterByName('check_counter');
 console.log("CHECK COUNTER IN SINGLE MOVIE PAGE" + check_counter);
+if (check_counter ==null)
+	check_counter=1;
+
 // Makes the HTTP GET request and registers on success callback function handleResult
-jQuery.ajax({
-	dataType: "json",  // Setting return data type
-	method: "GET",// Setting request method
-	cache: true,
-	url: "api/single-movie?id=" + movie_id + "&check_counter=" + check_counter,
-	success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
-});
+if(fulltext!=null && fulltext.length > 0)
+{
+	console.log("fulltext search");
+	jQuery.ajax({
+		dataType: "json",  // Setting return data type
+		method: "GET",// Setting request method
+		cache: true,
+		data:{
+			title: fulltext
+		},
+		url: "api/single-movie?title="+fulltext+"&check_counter="+check_counter,
+		// data: {
+		// 	first_sortby: first_sortby,
+		// 	second_sortby: second_sortby,
+		// 	pg: pg,
+		// 	pn: pn,
+		// 	title_start: title_start
+		// },
+		success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+
+	});
+}
+else {
+	jQuery.ajax({
+		dataType: "json",  // Setting return data type
+		method: "GET",// Setting request method
+		cache: true,
+		url: "api/single-movie?id=" + movie_id + "&check_counter=" + check_counter,
+		success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+	});
+}

@@ -2,12 +2,21 @@
 <html>
 <head>
 	<title>FabFlix Home</title>
+	<!-- Using jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<!-- include jquery autocomplete JS  -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.7/jquery.autocomplete.min.js"></script>
+
+	<!-- Bootstrap for CSS -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="reset.css"/>
 	<link rel="stylesheet" href="common.css"/>
 	<link rel="stylesheet" href="mainpage.css"/>
 
 	<link rel="stylesheet" href="search.css"/>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 
 <body>
@@ -30,6 +39,18 @@
 		</li>
 	</ul>
 </div>
+<div id = "fulltextsearch" style="">
+	<form class="container" method="GET" action="single-movie.html">
+		<input type="text" name="fulltext" id="autocomplete"
+			   class="autocomplete-searchbox form-control"
+			   placeholder="Search movies!"/>
+		<button type="submit" style="padding:15px;"><i class="fa fa-search"></i></button>
+	</form>
+</div>
+<br>
+<br>
+<br>
+<script src="index.js"></script>
 <!-- header end -->
 
 <!-- contents -->
@@ -38,13 +59,13 @@
 		<div class="search_section">
 
 			<!-- General Search -->
-<!--			<div class="generalsearch">-->
-<!--				<h2>Search movies</h2>-->
-<!--				<form class="example" action="mainpage.html">-->
-<!--					<input type="text" placeholder="Search.." name="search">-->
-<!--					<button type="submit"><i class="fa fa-search" onclick="location.href='mainpage.html'"></i></button>-->
-<!--				</form>-->
-<!--			</div>-->
+			<!--			<div class="generalsearch">-->
+			<!--				<h2>Search movies</h2>-->
+			<!--				<form class="example" action="mainpage.html">-->
+			<!--					<input type="text" placeholder="Search.." name="search">-->
+			<!--					<button type="submit"><i class="fa fa-search" onclick="location.href='mainpage.html'"></i></button>-->
+			<!--				</form>-->
+			<!--			</div>-->
 			<!-- End General Search -->
 
 			<!-- Advanced Search -->
@@ -128,10 +149,9 @@
 
 <!-- contents end -->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>-->
 <script src="mainpage.js"></script>
 </body>
 </html>

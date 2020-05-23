@@ -2,7 +2,9 @@
 .idea/
 
 # token for Google ReCaptcha
-/src/RecaptchaConstants.java
+/web/src/RecaptchaConstants.java
+
+/target
 
 # hide data files
 *.xml
