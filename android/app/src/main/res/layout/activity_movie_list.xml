@@ -6,13 +6,96 @@
 	android:layout_height="match_parent"
 	tools:context=".MovieListActivity">
 
+	<LinearLayout
+		android:id="@+id/llMovieListHeader"
+		android:layout_width="match_parent"
+		android:layout_height="50dp"
+		android:orientation="horizontal"
+		app:layout_constraintBottom_toTopOf="@id/rvMovieList"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_chainStyle="spread_inside">
+
+		<TextView
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="3"
+			android:gravity="center"
+			android:text="Title"
+			android:textSize="15sp"
+			android:textStyle="bold" />
+
+		<TextView
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			android:gravity="center"
+			android:text="Year"
+			android:textSize="15sp"
+			android:textStyle="bold" />
+
+		<TextView
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="2"
+			android:gravity="center"
+			android:text="Director"
+			android:textSize="15sp"
+			android:textStyle="bold" />
+
+		<TextView
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="2"
+			android:gravity="center"
+			android:text="Genres"
+			android:textSize="15sp"
+			android:textStyle="bold" />
+
+		<TextView
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="2"
+			android:gravity="center"
+			android:text="Stars"
+			android:textSize="15sp"
+			android:textStyle="bold" />
+
+	</LinearLayout>
+
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/rvMovieList"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		app:layout_constraintBottom_toTopOf="parent"
+		android:layout_height="0dp"
+		app:layout_constraintBottom_toTopOf="@id/llMovieListFooter"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintTop_toBottomOf="@id/llMovieListHeader" />
+
+	<LinearLayout
+		android:id="@+id/llMovieListFooter"
+		android:layout_width="match_parent"
+		android:layout_height="50dp"
+		android:gravity="center_horizontal"
+		android:orientation="horizontal"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/rvMovieList">
+
+		<Button
+			android:id="@+id/bMovieListPrevious"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:text="Previous" />
+
+		<Button
+			android:id="@+id/bMovieListNext"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:text="Next" />
+
+	</LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,6 +16,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
 	private List<Movie> movies;
 	private OnItemClickListener listener;
 
+	public static final int NUM_COLUMNS = 5;
+
 	public MovieListAdapter() {
 		movies = new ArrayList<>();
 	}
@@ -34,8 +36,12 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
 	@Override
 	public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 		Movie movie = movies.get(position);
-		Log.d("MovieListAdapter.onBindViewHolder()", "binding position: " + position + ", movie name: " + movie.getName());
-		holder.tvMovieListRowTitle.setText(movie.getName());
+		Log.d("MovieListAdapter.onBindViewHolder()", "binding position: " + position + ", movie name: " + movie.getTitle());
+		holder.tvMovieListRowTitle.setText(movie.getTitle());
+		holder.tvMovieListRowYear.setText(String.valueOf(movie.getYear()));
+		holder.tvMovieListRowDirector.setText(movie.getDirector());
+		holder.tvMovieListRowGenres.setText("genres here");
+		holder.tvMovieListRowStars.setText("stars here");
 	}
 
 	@Override
@@ -58,11 +64,15 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
 	}
 
 	class ViewHolder extends RecyclerView.ViewHolder {
-		private TextView tvMovieListRowTitle;
+		private TextView tvMovieListRowTitle, tvMovieListRowYear, tvMovieListRowDirector, tvMovieListRowGenres, tvMovieListRowStars;
 
 		public ViewHolder(View itemView) {
 			super(itemView);
 			tvMovieListRowTitle = itemView.findViewById(R.id.tvMovieListRowTitle);
+			tvMovieListRowYear = itemView.findViewById(R.id.tvMovieListRowYear);
+			tvMovieListRowDirector = itemView.findViewById(R.id.tvMovieListRowDirector);
+			tvMovieListRowGenres = itemView.findViewById(R.id.tvMovieListRowGenres);
+			tvMovieListRowStars = itemView.findViewById(R.id.tvMovieListRowStars);
 			itemView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {

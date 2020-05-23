@@ -2,6 +2,7 @@ package com.parkchanwoo.fabflixmobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,13 +23,30 @@ public class MovieListActivity extends AppCompatActivity {
 		rvMovieList = findViewById(R.id.rvMovieList);
 
 		final ArrayList<Movie> movies = new ArrayList<>();
-		movies.add(new Movie("The Terminal", (short) 2004));
-		movies.add(new Movie("The Final Season", (short) 2007));
+		movies.add(new Movie("The Terminal", (short) 2004, "Steven Spielberg"));
+		movies.add(new Movie("The Final Season", (short) 2007, "David Mickey Evans"));
+		movies.add(new Movie("The Terminal", (short) 2004, "Steven Spielberg"));
+		movies.add(new Movie("The Final Season", (short) 2007, "David Mickey Evans"));
+		movies.add(new Movie("The Terminal", (short) 2004, "Steven Spielberg"));
+		movies.add(new Movie("The Final Season", (short) 2007, "David Mickey Evans"));
+		movies.add(new Movie("The Terminal", (short) 2004, "Steven Spielberg"));
+		movies.add(new Movie("The Final Season", (short) 2007, "David Mickey Evans"));
+		movies.add(new Movie("The Terminal", (short) 2004, "Steven Spielberg"));
+		movies.add(new Movie("The Final Season", (short) 2007, "David Mickey Evans"));
+		movies.add(new Movie("The Terminal", (short) 2004, "Steven Spielberg"));
+		movies.add(new Movie("The Final Season", (short) 2007, "David Mickey Evans"));
+		movies.add(new Movie("The Terminal", (short) 2004, "Steven Spielberg"));
+		movies.add(new Movie("The Final Season", (short) 2007, "David Mickey Evans"));
+		movies.add(new Movie("The Terminal", (short) 2004, "Steven Spielberg"));
+		movies.add(new Movie("The Final Season", (short) 2007, "David Mickey Evans"));
 
 		MovieListAdapter movieListAdapter = new MovieListAdapter(movies);
 		Log.d("MovieListActivity.onCreate()", "adapter size: " + movieListAdapter.getItemCount());
 
 		rvMovieList.setLayoutManager(new LinearLayoutManager(this));
+//		rvMovieList.setLayoutManager(new GridLayoutManager(this, MovieListAdapter.NUM_COLUMNS));
+//		ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.item_offset);
+//		rvMovieList.addItemDecoration(itemDecoration);
 		rvMovieList.setHasFixedSize(true);
 		rvMovieList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 		rvMovieList.setAdapter(movieListAdapter);
