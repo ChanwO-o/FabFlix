@@ -16,13 +16,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
-	private EditText etUsername;
-	private EditText etPassword;
+	private EditText etUsername, etPassword;
 	private TextView tvLoginMessage;
 	private Button bLogin;
 	private String url;
@@ -61,12 +63,27 @@ public class LoginActivity extends AppCompatActivity {
 		final StringRequest loginRequest = new StringRequest(Request.Method.POST, url + "login", new Response.Listener<String>() {
 			@Override
 			public void onResponse(String response) {
-				//TODO should parse the json response to redirect to appropriate functions.
-				Log.d("LoginActivity.login()", "success: " + response);
-				//initialize the activity(page)/destination
-				Intent listPage = new Intent(LoginActivity.this, MovieListActivity.class);
-				//without starting the activity/page, nothing would happen
-				startActivity(listPage);
+				Log.d("LoginActivity.login()", "login response: " + response);
+				try {
+					JSONObject jsonObject = new JSONObject(response);
+					String status = (String) jsonObject.get("status");
+					if (status.equals("fail")) {
+						Log.d("LoginActivity.login()", "login failed!");
+						tvLoginMessage.setText("Login failed!");
+						etUsername.setError("Invalid credentials");
+						etPassword.setError("Invalid credentials");
+					}
+					else {
+						Log.d("LoginActivity.login()", "login success!");
+						//initialize the activity(page)/destination
+						Intent listPage = new Intent(LoginActivity.this, MovieListActivity.class);
+						//without starting the activity/page, nothing would happen
+						startActivity(listPage);
+					}
+
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			}
 		},
 				new Response.ErrorListener() {
@@ -74,13 +91,14 @@ public class LoginActivity extends AppCompatActivity {
 					public void onErrorResponse(VolleyError error) {
 						// error
 						Log.d("LoginActivity.login()", "error: " + error.toString());
+						tvLoginMessage.setText("Timeout Please try again");
 					}
 				}) {
 			@Override
 			protected Map<String, String> getParams() {
 				// Post request form data
 				final Map<String, String> params = new HashMap<>();
-				params.put("username", etUsername.getText().toString());
+				params.put("email", etUsername.getText().toString());
 				params.put("password", etPassword.getText().toString());
 
 				return params;
@@ -89,6 +107,5 @@ public class LoginActivity extends AppCompatActivity {
 
 		// !important: queue.add is where the login request is actually sent
 		queue.add(loginRequest);
-
 	}
 }

@@ -27,16 +27,14 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
 	@NonNull
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		Log.d("MovieListAdapter.onCreateViewHolder()", "yup");
 		View rowItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_movie, parent, false);
 		return new ViewHolder(rowItem);
 	}
 
 	@Override
 	public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-		Log.d("MovieListAdapter.onBindViewHolder()", "binding position: " + position);
 		Movie movie = movies.get(position);
-		Log.d("MovieListAdapter.onBindViewHolder()", "name of movie at position: " + movie.getName());
+		Log.d("MovieListAdapter.onBindViewHolder()", "binding position: " + position + ", movie name: " + movie.getName());
 		holder.tvMovieListRowTitle.setText(movie.getName());
 	}
 
