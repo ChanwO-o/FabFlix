@@ -9,8 +9,8 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,15 +59,19 @@ public class LoginServlet extends HttpServlet {
 		}
 
 		// now try verifying credentials
+		Connection dbcon = null;
+		PreparedStatement statement = null;
+		ResultSet rs = null;
 		try {
 			if (VerifyPassword.verifyCredentialsUser(email, password)) { // login success: set this user into the session
 				System.out.println("credentials verified");
 
+				String getUserIdQuery = "SELECT id from customers where email=?";
 				// get user's id
-				Connection dbcon = dataSource.getConnection();
-				Statement statement = dbcon.createStatement();
-				String getUserIdQuery = String.format("SELECT id from customers where email='%s'", email);
-				ResultSet rs = statement.executeQuery(getUserIdQuery);
+				dbcon = dataSource.getConnection();
+				statement = dbcon.prepareStatement(getUserIdQuery);
+				statement.setString(1, email);
+				rs = statement.executeQuery();
 				rs.next();
 				idResult = rs.getInt("id");
 				System.out.println("assigning user id: " + idResult);
@@ -89,6 +93,9 @@ public class LoginServlet extends HttpServlet {
 		}
 		finally {
 			response.getWriter().write(responseJsonObject.toString());
+			try { if (rs != null) rs.close(); } catch (Exception ignored) {}
+			try { if (statement != null) statement.close(); } catch (Exception ignored) {}
+			try { if (dbcon != null) dbcon.close(); } catch (Exception ignored) {}
 		}
 	}
 }
