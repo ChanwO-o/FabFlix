@@ -138,7 +138,7 @@ public class FullTextSearchServlet extends HttpServlet {
 //            System.out.println(movielist);
 //            for (String id : movielist.keySet())
 //            {
-//                String movieName = movielist.get(id);
+
 ////                System.out.println("id="+id + " title= " + movieName);
 //
 //                if (movieName.toLowerCase().contains(query.toLowerCase()))
