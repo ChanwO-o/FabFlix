@@ -6,10 +6,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -32,7 +34,7 @@ public class MovieListActivity extends AppCompatActivity {
 	private static final int PAGESIZE = 20; // max number of Movie items per page
 
 	private RecyclerView rvMovieList;
-	MovieListAdapter movieListAdapter;
+	private MovieListAdapter movieListAdapter;
 	private ProgressBar pbMovieList;
 	private String url = "https://18.209.31.65:8443/cs122b-spring20-team-131/api/";
 
@@ -44,6 +46,14 @@ public class MovieListActivity extends AppCompatActivity {
 		rvMovieList = findViewById(R.id.rvMovieList);
 		pbMovieList = findViewById(R.id.pbMovieList);
 		movieListAdapter = new MovieListAdapter();
+		movieListAdapter.setOnItemClickListener(new MovieListAdapter.OnItemClickListener() {
+			@Override
+			public void onItemClick(Movie movie) {
+				Intent intent = new Intent(MovieListActivity.this, SingleMovieActivity.class);
+				intent.putExtra("movie", movie);
+				startActivity(intent);
+			}
+		});
 
 		final RequestQueue queue = NetworkManager.sharedManager(this).queue;
 		final StringRequest movieListRequest = new StringRequest(Request.Method.GET, url + "movies", new Response.Listener<String>() {

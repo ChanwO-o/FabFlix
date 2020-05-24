@@ -1,10 +1,11 @@
 package com.parkchanwoo.fabflixmobile;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Movie {
+public class Movie implements Serializable {
 	private String movieId, title, director;
 	private short year;
 	private short rating;
