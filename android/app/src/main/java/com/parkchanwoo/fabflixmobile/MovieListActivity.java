@@ -10,8 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -35,16 +34,17 @@ public class MovieListActivity extends AppCompatActivity {
 
 	private RecyclerView rvMovieList;
 	private MovieListAdapter movieListAdapter;
-	private ProgressBar pbMovieList;
+	private LinearLayout llLoadingMovieListLayout;
 	private String url = "https://18.209.31.65:8443/cs122b-spring20-team-131/api/";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_movie_list);
+		goFullScreen();
 
 		rvMovieList = findViewById(R.id.rvMovieList);
-		pbMovieList = findViewById(R.id.pbMovieList);
+		llLoadingMovieListLayout = findViewById(R.id.llLoadingMovieListLayout);
 		movieListAdapter = new MovieListAdapter();
 		movieListAdapter.setOnItemClickListener(new MovieListAdapter.OnItemClickListener() {
 			@Override
@@ -64,7 +64,7 @@ public class MovieListActivity extends AppCompatActivity {
 					JSONArray jsonArray = new JSONArray(response);
 					ArrayList<Movie> movies = parseMovies(jsonArray);
 					refreshMovieList(movies);
-					pbMovieList.setVisibility(View.INVISIBLE);
+					llLoadingMovieListLayout.setVisibility(View.INVISIBLE);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -92,6 +92,12 @@ public class MovieListActivity extends AppCompatActivity {
 		Log.d("fabflixandroid", "movieListRequest: " + movieListRequest);
 		movieListRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 		queue.add(movieListRequest);
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		goFullScreen();
 	}
 
 	private ArrayList<Movie> parseMovies(JSONArray jsonArray) throws JSONException {
@@ -124,5 +130,12 @@ public class MovieListActivity extends AppCompatActivity {
 		rvMovieList.setHasFixedSize(true);
 		rvMovieList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 		rvMovieList.setAdapter(movieListAdapter);
+	}
+
+	private void goFullScreen() {
+		int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+				| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+				| View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+		getWindow().getDecorView().setSystemUiVisibility(uiOptions);
 	}
 }

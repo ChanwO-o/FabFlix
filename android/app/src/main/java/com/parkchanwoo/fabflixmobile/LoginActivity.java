@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.kusu.loadingbutton.LoadingButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
 	private EditText etUsername, etPassword;
 	private TextView tvLoginMessage;
-	private Button bLogin;
+	private LoadingButton bLogin;
 	private String url;
 
 	@Override
@@ -35,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		// upon creation, inflate and initialize the layout
 		setContentView(R.layout.activity_login);
+		goFullScreen();
+
 		etUsername = findViewById(R.id.etUsername);
 		etPassword = findViewById(R.id.etPassword);
 		tvLoginMessage = findViewById(R.id.tvLoginMessage);
@@ -50,14 +53,19 @@ public class LoginActivity extends AppCompatActivity {
 		bLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				bLogin.showLoading();
 				login();
 			}
 		});
 	}
 
-	public void login() {
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		goFullScreen();
+	}
 
-		tvLoginMessage.setText("Trying to login");
+	public void login() {
 		// Use the same network queue across our application
 		final RequestQueue queue = NetworkManager.sharedManager(this).queue;
 		//request type is POST
@@ -70,11 +78,13 @@ public class LoginActivity extends AppCompatActivity {
 					String status = (String) jsonObject.get("status");
 					if (status.equals("fail")) {
 						Log.d("fabflixandroid", "login failed!");
+						bLogin.hideLoading();
 						tvLoginMessage.setText("Login failed!");
 						etUsername.setError("Invalid credentials");
 						etPassword.setError("Invalid credentials");
 					}
 					else {
+						bLogin.hideLoading();
 						Log.d("fabflixandroid", "login success!");
 						//initialize the activity(page)/destination
 						Intent listPage = new Intent(LoginActivity.this, MovieListActivity.class);
@@ -90,9 +100,8 @@ public class LoginActivity extends AppCompatActivity {
 				new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						// error
 						Log.d("fabflixandroid", "error: " + error.toString());
-						tvLoginMessage.setText("Timeout Please try again");
+						tvLoginMessage.setText("Login Timeout: Please try again");
 					}
 				}) {
 			@Override
@@ -109,5 +118,12 @@ public class LoginActivity extends AppCompatActivity {
 		loginRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 		// !important: queue.add is where the login request is actually sent
 		queue.add(loginRequest);
+	}
+
+	private void goFullScreen() {
+		int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+				| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+				| View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+		getWindow().getDecorView().setSystemUiVisibility(uiOptions);
 	}
 }

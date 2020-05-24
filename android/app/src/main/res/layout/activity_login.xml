@@ -14,7 +14,8 @@
 		android:layout_centerHorizontal="true"
 		android:text="FabFlix"
 		android:textColor="@color/red"
-		android:textSize="40sp"
+		android:textSize="50sp"
+		android:textStyle="bold"
 		app:layout_constraintBottom_toTopOf="@id/etUsername"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -30,6 +31,8 @@
 		android:ems="10"
 		android:focusable="true"
 		android:hint="Username"
+		android:textColor="@android:color/white"
+		android:textColorHint="@android:color/white"
 		app:layout_constraintBottom_toTopOf="@id/etPassword"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -43,6 +46,8 @@
 		android:ems="10"
 		android:hint="Password"
 		android:inputType="textPassword"
+		android:textColor="@android:color/white"
+		android:textColorHint="@android:color/white"
 		app:layout_constraintBottom_toTopOf="@id/tvLoginMessage"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -61,15 +66,20 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/etPassword" />
 
-	<Button
+	<com.kusu.loadingbutton.LoadingButton
 		android:id="@+id/bLogin"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="15dp"
+		android:layout_width="100dp"
+		android:layout_height="50dp"
+		android:layout_marginTop="20dp"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
 		android:text="Login"
+		android:textColor="@color/white"
+		app:lb_buttonColor="@color/black"
+		app:lb_isCircular="true"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/tvLoginMessage" />
+		app:layout_constraintTop_toBottomOf="@id/tvLoginMessage"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
