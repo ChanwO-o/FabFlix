@@ -98,4 +98,14 @@
 
 	</LinearLayout>
 
+	<ProgressBar
+		android:id="@+id/pbMovieList"
+		style="?android:attr/progressBarStyle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintBottom_toBottomOf="@id/rvMovieList"
+		app:layout_constraintEnd_toEndOf="@id/rvMovieList"
+		app:layout_constraintStart_toStartOf="@id/rvMovieList"
+		app:layout_constraintTop_toTopOf="@id/rvMovieList" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

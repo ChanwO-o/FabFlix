@@ -40,8 +40,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
 		holder.tvMovieListRowTitle.setText(movie.getTitle());
 		holder.tvMovieListRowYear.setText(String.valueOf(movie.getYear()));
 		holder.tvMovieListRowDirector.setText(movie.getDirector());
-		holder.tvMovieListRowGenres.setText("genres here");
-		holder.tvMovieListRowStars.setText("stars here");
+		holder.tvMovieListRowGenres.setText(movie.getGenreNamesAsString(3));
+		holder.tvMovieListRowStars.setText(movie.getStarNamesAsString(3));
 	}
 
 	@Override

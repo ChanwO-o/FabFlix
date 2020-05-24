@@ -44,7 +44,7 @@
 		android:gravity="center"
 		android:maxLines="3"
 		android:text="genres"
-		android:textSize="15sp" />
+		android:textSize="10sp" />
 
 	<TextView
 		android:id="@+id/tvMovieListRowStars"
@@ -54,6 +54,6 @@
 		android:gravity="center"
 		android:maxLines="3"
 		android:text="stars"
-		android:textSize="15sp" />
+		android:textSize="10sp" />
 
 </LinearLayout>
