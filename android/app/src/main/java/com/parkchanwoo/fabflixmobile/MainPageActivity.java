@@ -80,6 +80,32 @@ public class MainPageActivity extends AppCompatActivity {
 			}
 		});
 
+		fsvMovieSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
+			@Override
+			public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
+				MovieSuggestion movieSuggestion = (MovieSuggestion) searchSuggestion;
+//				Toast.makeText(MainPageActivity.this, "suggestion clicked: " + movieSuggestion.getMovieEntryId() + " " + movieSuggestion.getMovieTitle(), Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(MainPageActivity.this, SingleMovieActivity.class);
+//				intent.putExtra("movieId", movieSuggestion.getMovieEntryId());
+				intent.putExtra("movieTitle", movieSuggestion.getMovieTitle());
+				startActivity(intent);
+			}
+
+			@Override
+			public void onSearchAction(String query) {
+//				Toast.makeText(MainPageActivity.this, "query: " + query, Toast.LENGTH_SHORT).show();
+				hideKeyboard();
+				String searchTerm = fsvMovieSearchView.getQuery();
+				if (searchTerm == null || searchTerm.isEmpty()) {
+					Toast.makeText(MainPageActivity.this, "Search field is empty", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				Intent intent = new Intent(MainPageActivity.this, MovieListActivity.class);
+				intent.putExtra("search", searchTerm);
+				startActivity(intent);
+			}
+		});
+
 		bMainPageSearch.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -7,16 +7,32 @@ import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 
 public class MovieSuggestion implements SearchSuggestion {
 
-	private String movieId, movieTitle;
+	private String movieEntryId, movieTitle;
 
-	public MovieSuggestion(String movieId, String movieTitle) {
-		this.movieId = movieId;
+	public MovieSuggestion(String movieEntryId, String movieTitle) {
+		this.movieEntryId = movieEntryId;
 		this.movieTitle = movieTitle;
 	}
 
 	public MovieSuggestion(Parcel in) {
-		movieId = in.readString();
+		movieEntryId = in.readString();
 		movieTitle = in.readString();
+	}
+
+	public String getMovieEntryId() {
+		return movieEntryId;
+	}
+
+	public void setMovieEntryId(String movieEntryId) {
+		this.movieEntryId = movieEntryId;
+	}
+
+	public String getMovieTitle() {
+		return movieTitle;
+	}
+
+	public void setMovieTitle(String movieTitle) {
+		this.movieTitle = movieTitle;
 	}
 
 	public static final Parcelable.Creator<MovieSuggestion> CREATOR
@@ -42,7 +58,7 @@ public class MovieSuggestion implements SearchSuggestion {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(this.movieId);
+		dest.writeString(this.movieEntryId);
 		dest.writeString(this.movieTitle);
 	}
 }
