@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -35,7 +36,11 @@ public class MovieListActivity extends AppCompatActivity {
 	private RecyclerView rvMovieList;
 	private MovieListAdapter movieListAdapter;
 	private LinearLayout llLoadingMovieListLayout;
-	private static final String URL = "https://18.209.31.65:8443/cs122b-spring20-team-131/api/movies?title=%s&year=&director=&star=&pn=%d&pg=%d";
+	private Button bMovieListPrevious, bMovieListNext;
+
+	private String searchTerm;
+
+	private static final String URL = "https://18.209.31.65:8443/cs122b-spring20-team-131/api/movies?title=%s&year=&director=&star=";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,31 @@ public class MovieListActivity extends AppCompatActivity {
 
 		rvMovieList = findViewById(R.id.rvMovieList);
 		llLoadingMovieListLayout = findViewById(R.id.llLoadingMovieListLayout);
+		bMovieListPrevious = findViewById(R.id.bMovieListPrevious);
+		bMovieListNext = findViewById(R.id.bMovieListNext);
+
+		bMovieListPrevious.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (movieListAdapter.getPageNum() == 1) {
+					Toast.makeText(MovieListActivity.this, "At first page", Toast.LENGTH_SHORT).show();
+					return; // min pageNum is 1
+				}
+				movieListAdapter.previousPage();
+				llLoadingMovieListLayout.setVisibility(View.VISIBLE);
+				makeMovieSearchRequest(searchTerm);
+			}
+		});
+
+		bMovieListNext.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				movieListAdapter.nextPage();
+				llLoadingMovieListLayout.setVisibility(View.VISIBLE);
+				makeMovieSearchRequest(searchTerm);
+			}
+		});
+
 		movieListAdapter = new MovieListAdapter();
 		movieListAdapter.setOnItemClickListener(new MovieListAdapter.OnItemClickListener() {
 			@Override
@@ -56,9 +86,8 @@ public class MovieListActivity extends AppCompatActivity {
 		});
 
 		Intent intent = getIntent(); // get search term from main page
-		String searchTerm = intent.getStringExtra("search");
+		searchTerm = intent.getStringExtra("search");
 		makeMovieSearchRequest(searchTerm);
-
 	}
 
 	@Override
@@ -68,7 +97,7 @@ public class MovieListActivity extends AppCompatActivity {
 	}
 
 	private void makeMovieSearchRequest(String title) {
-		String finalUrl = String.format(Locale.getDefault(), URL, title, 10, 1);
+		String finalUrl = String.format(Locale.getDefault(), URL, title);
 		Log.d("fabflixandroid", "finalUrl: " + finalUrl);
 		final RequestQueue queue = NetworkManager.sharedManager(this).queue;
 		final StringRequest movieListRequest = new StringRequest(Request.Method.GET, finalUrl, new Response.Listener<String>() {
@@ -101,7 +130,7 @@ public class MovieListActivity extends AppCompatActivity {
 		ArrayList<Movie> result = new ArrayList<>();
 		for (int i = 0; i < jsonArray.length(); ++i) {
 			JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-			Log.d("fabflixandroid", "jsonObject: " + jsonObject);
+//			Log.d("fabflixandroid", "jsonObject: " + jsonObject);
 
 			String movieId = jsonObject.getString("movie_id");
 			String starIds = jsonObject.getString("star_id");

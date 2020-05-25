@@ -15,6 +15,8 @@ import java.util.List;
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder> {
 	private List<Movie> movies;
 	private OnItemClickListener listener;
+	private static final int ITEMS_PER_PAGE = 20;
+	private int pageNum = 1;
 
 	public static final int NUM_COLUMNS = 5;
 
@@ -36,7 +38,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
 	@Override
 	public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 		Movie movie = movies.get(position);
-		Log.d("MovieListAdapter.onBindViewHolder()", "binding position: " + position + ", movie name: " + movie.getTitle());
 		holder.tvMovieListRowTitle.setText(movie.getTitle());
 		holder.tvMovieListRowYear.setText(String.valueOf(movie.getYear()));
 		holder.tvMovieListRowDirector.setText(movie.getDirector());
@@ -54,13 +55,41 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
 		return movies;
 	}
 
+	/**
+	 * Extract all Movie objects that should be on current page, set as adapter's dataset
+	 */
 	public void setMovies(List<Movie> movies) {
-		this.movies = movies;
+		// 0 ~ 19: (pageNum - 1) * ipp <= i < pageNum * ipp
+		// 20 ~ 39: (pageNum - 1) * ipp < i < pageNum * ipp
+
+		ArrayList<Movie> currentPageMovies = new ArrayList<>();
+		Log.d("fabflixandroid", "bounds: " + (pageNum - 1) * ITEMS_PER_PAGE + " ~ " + (pageNum * ITEMS_PER_PAGE));
+		for (int i = 0; i < movies.size(); ++i) {
+			if ((pageNum - 1) * ITEMS_PER_PAGE <= i && i < (pageNum * ITEMS_PER_PAGE))
+				currentPageMovies.add(movies.get(i));
+		}
+		this.movies = currentPageMovies;
 		notifyDataSetChanged();
 	}
 
 	public Movie getMovieAt(int position) {
 		return movies.get(position);
+	}
+
+	public int getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(int pageNum) {
+		this.pageNum = pageNum;
+	}
+
+	public void nextPage() {
+		this.pageNum++;
+	}
+
+	public void previousPage() {
+		this.pageNum--;
 	}
 
 	class ViewHolder extends RecyclerView.ViewHolder {
