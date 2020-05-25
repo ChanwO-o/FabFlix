@@ -6,6 +6,30 @@
 	android:layout_height="match_parent"
 	tools:context=".MainPageActivity">
 
+	<com.arlib.floatingsearchview.FloatingSearchView
+		android:id="@+id/fsvMainPage"
+		android:layout_width="match_parent"
+		android:layout_height="100dp"
+		android:layout_marginTop="50dp"
+		app:floatingSearch_close_search_on_keyboard_dismiss="true"
+		app:floatingSearch_leftActionMode="showSearch"
+		app:floatingSearch_searchBarMarginLeft="10dp"
+		app:floatingSearch_searchBarMarginRight="10dp"
+		app:floatingSearch_searchBarMarginTop="10dp"
+		app:floatingSearch_searchHint="Search..."
+		app:floatingSearch_showSearchKey="true"
+		app:floatingSearch_suggestionsListAnimDuration="250"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
 
+	<Button
+		android:id="@+id/bMainPageSearch"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Search Movies"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/fsvMainPage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

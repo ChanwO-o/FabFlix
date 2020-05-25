@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
 						bLogin.hideLoading();
 						Log.d("fabflixandroid", "login success!");
 						//initialize the activity(page)/destination
-						Intent listPage = new Intent(LoginActivity.this, MovieListActivity.class);
+						Intent listPage = new Intent(LoginActivity.this, MainPageActivity.class);
 						//without starting the activity/page, nothing would happen
 						startActivity(listPage);
 					}

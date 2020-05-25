@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -24,9 +25,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
 public class MovieListActivity extends AppCompatActivity {
 
@@ -35,7 +35,7 @@ public class MovieListActivity extends AppCompatActivity {
 	private RecyclerView rvMovieList;
 	private MovieListAdapter movieListAdapter;
 	private LinearLayout llLoadingMovieListLayout;
-	private String url = "https://18.209.31.65:8443/cs122b-spring20-team-131/api/";
+	private static final String URL = "https://18.209.31.65:8443/cs122b-spring20-team-131/api/movies?title=%s&year=&director=&star=&pn=%d&pg=%d";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +55,23 @@ public class MovieListActivity extends AppCompatActivity {
 			}
 		});
 
+		Intent intent = getIntent(); // get search term from main page
+		String searchTerm = intent.getStringExtra("search");
+		makeMovieSearchRequest(searchTerm);
+
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		goFullScreen();
+	}
+
+	private void makeMovieSearchRequest(String title) {
+		String finalUrl = String.format(Locale.getDefault(), URL, title, 10, 1);
+		Log.d("fabflixandroid", "finalUrl: " + finalUrl);
 		final RequestQueue queue = NetworkManager.sharedManager(this).queue;
-		final StringRequest movieListRequest = new StringRequest(Request.Method.GET, url + "movies", new Response.Listener<String>() {
+		final StringRequest movieListRequest = new StringRequest(Request.Method.GET, finalUrl, new Response.Listener<String>() {
 			@Override
 			public void onResponse(String response) {
 //				Log.d("fabflixandroid", "MovieList response: " + response);
@@ -67,6 +82,7 @@ public class MovieListActivity extends AppCompatActivity {
 					llLoadingMovieListLayout.setVisibility(View.INVISIBLE);
 				} catch (JSONException e) {
 					e.printStackTrace();
+					Log.d("fabflixandroid", "error: " + e.getMessage());
 				}
 			}
 		},
@@ -75,29 +91,10 @@ public class MovieListActivity extends AppCompatActivity {
 					public void onErrorResponse(VolleyError error) {
 						Log.d("fabflixandroid", "error: " + error.toString()); // error
 					}
-				}) {
-			@Override
-			protected Map<String, String> getParams() {
-				// Post request form data
-				final Map<String, String> params = new HashMap<>();
-				params.put("title", "term");
-				params.put("year", "");
-				params.put("director", "");
-				params.put("star", "");
-				params.put("pn", String.valueOf(PAGESIZE));
-				params.put("pg", String.valueOf(1));
-				return params;
-			}
-		};
+				});
 		Log.d("fabflixandroid", "movieListRequest: " + movieListRequest);
 		movieListRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 		queue.add(movieListRequest);
-	}
-
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus) {
-		super.onWindowFocusChanged(hasFocus);
-		goFullScreen();
 	}
 
 	private ArrayList<Movie> parseMovies(JSONArray jsonArray) throws JSONException {
@@ -111,7 +108,7 @@ public class MovieListActivity extends AppCompatActivity {
 			String movieTitle = jsonObject.getString("movie_title");
 			short movieYear = (short) jsonObject.getDouble("movie_year");
 			String movieDirector = jsonObject.getString("movie_director");
-			short movieRating = (short) jsonObject.getDouble("movie_rating");
+			String movieRating = jsonObject.getString("movie_rating");
 			String genreNames = jsonObject.getString("movie_genres");
 			String starNames = jsonObject.getString("movie_stars");
 
