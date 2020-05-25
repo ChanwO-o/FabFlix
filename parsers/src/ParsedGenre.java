@@ -1,10 +1,10 @@
 import java.util.HashSet;
 import java.util.Set;
 
-public class Genre {
+public class ParsedGenre {
 	private String name;
 
-	public Genre(String name) {
+	public ParsedGenre(String name) {
 		this.name = name;
 	}
 
@@ -20,9 +20,9 @@ public class Genre {
 	public boolean equals(Object o) {
 		if (o == this)
 			return true;
-		if (!(o instanceof Genre))
+		if (!(o instanceof ParsedGenre))
 			return false;
-		Genre g = (Genre) o;
+		ParsedGenre g = (ParsedGenre) o;
 		return g.getName().toLowerCase().equals(getName().toLowerCase()); // treat same-spelled names as the same genre
 	}
 
@@ -39,12 +39,12 @@ public class Genre {
 	} // treat same-spelled names as the same genre
 
 	public static void main(String[] args) {
-		Genre g1 = new Genre("asdf");
-		Genre g2 = new Genre("asdf");
-		Set<Genre> myGenres = new HashSet<>();
-		myGenres.add(g1);
-		myGenres.add(g2);
+		ParsedGenre g1 = new ParsedGenre("asdf");
+		ParsedGenre g2 = new ParsedGenre("asdf");
+		Set<ParsedGenre> myParsedGenres = new HashSet<>();
+		myParsedGenres.add(g1);
+		myParsedGenres.add(g2);
 //		System.out.println(g1.equals(g2));
-		System.out.println(myGenres.size());
+		System.out.println(myParsedGenres.size());
 	}
 }

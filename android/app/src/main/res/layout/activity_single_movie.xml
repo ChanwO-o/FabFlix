@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".SingleMovieActivity">
+
+
+	<TextView
+		android:id="@+id/tvSingleMovieTitle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="20dp"
+		android:fontFamily="monospace"
+		android:gravity="center_horizontal"
+		android:text="Movie title"
+		android:textColor="@android:color/white"
+		android:textSize="36sp"
+		android:textStyle="bold"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<TableLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="70dp"
+		android:stretchColumns="1"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/tvSingleMovieTitle">
+
+		<TableRow
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:minHeight="40dp">
+
+			<TextView
+				android:layout_gravity="center_vertical"
+				android:padding="3dip"
+				android:text="Year released: "
+				android:textColor="@color/black"
+				android:textSize="18sp"
+				android:textStyle="bold" />
+
+			<TextView
+				android:id="@+id/tvSingleMovieYear"
+				android:layout_width="0dp"
+				android:layout_gravity="center"
+				android:gravity="center"
+				android:maxLines="5"
+				android:padding="3dip"
+				android:textColor="@android:color/white"
+				android:textSize="12sp" />
+		</TableRow>
+
+		<TableRow
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:minHeight="40dp">
+
+			<TextView
+				android:layout_gravity="center_vertical"
+				android:padding="3dip"
+				android:text="Director: "
+				android:textColor="@color/black"
+				android:textSize="18sp"
+				android:textStyle="bold" />
+
+			<TextView
+				android:id="@+id/tvSingleMovieDirector"
+				android:layout_width="0dp"
+				android:layout_gravity="center"
+				android:gravity="center"
+				android:maxLines="5"
+				android:padding="3dip"
+				android:textColor="@android:color/white"
+				android:textSize="12sp" />
+		</TableRow>
+
+		<TableRow
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:minHeight="40dp">
+
+			<TextView
+				android:layout_gravity="center_vertical"
+				android:padding="3dip"
+				android:text="Genres: "
+				android:textColor="@color/black"
+				android:textSize="18sp"
+				android:textStyle="bold" />
+
+			<TextView
+				android:id="@+id/tvSingleMovieGenres"
+				android:layout_width="0dp"
+				android:layout_gravity="center"
+				android:gravity="center"
+				android:maxLines="5"
+				android:padding="3dip"
+				android:textColor="@android:color/white"
+				android:textSize="12sp" />
+		</TableRow>
+
+		<TableRow
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:minHeight="40dp">
+
+			<TextView
+				android:layout_gravity="center_vertical"
+				android:padding="3dip"
+				android:text="Stars: "
+				android:textColor="@color/black"
+				android:textSize="18sp"
+				android:textStyle="bold" />
+
+			<TextView
+				android:id="@+id/tvSingleMovieStars"
+				android:layout_width="0dp"
+				android:layout_gravity="center"
+				android:gravity="center"
+				android:maxLines="5"
+				android:padding="3dip"
+				android:textColor="@android:color/white"
+				android:textSize="12sp" />
+		</TableRow>
+	</TableLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
