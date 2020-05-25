@@ -23,7 +23,7 @@ function handleResult(resultData) {
 	// populate the movie info h3
 	// find the empty h3 body by id "movie_info"
 	let movieInfoElement = jQuery("#movie_info");
-
+	console.log("resultDAta= " + resultData[0]);
 	// append two html <p> created to the h3 body, which will refresh the page
 	$.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + resultData[0]["movie_title"], function (json) {
 		//console.log(json.results[0].poster_path);
@@ -45,18 +45,26 @@ function handleResult(resultData) {
 		else {
 			rowHTML = "<img src=" + '"' + "no_image.png" + '"' + " width=" + "100 " + "height=" + "100/>";
 		}
-		var genres_array = resultData[0]["movie_genres"].split(',');
-		let temp_1 = "<p> Genres: ";
-		for (let i = 0; i < genres_array.length; ++i) {
-			if (i === genres_array.length - 1) {
-				temp_1 +=
-					'<a href="movielist.html?genres=' + genres_array[i] +'&pn=10&pg=1' + '">' + genres_array[i]
-					+ '</a>';
-			} else {
-				temp_1 +=
-					'<a href="movielist.html?genres=' + genres_array[i] +'&pn=10&pg=1' + '">'
-					+ genres_array[i] + ',' +   // display star_name for the link text
-					'</a>';
+		var genres_array;
+		let temp_1;
+		if(resultData[0]["movie_gners"]==null)
+		{
+			temp_1="<p> Genres: null";
+		}
+		else {
+			genres_array = resultData[0]["movie_genres"].split(',');
+			temp_1 = "<p> Genres: ";
+			for (let i = 0; i < genres_array.length; ++i) {
+				if (i === genres_array.length - 1) {
+					temp_1 +=
+						'<a href="movielist.html?genres=' + genres_array[i] + '&pn=10&pg=1' + '">' + genres_array[i]
+						+ '</a>';
+				} else {
+					temp_1 +=
+						'<a href="movielist.html?genres=' + genres_array[i] + '&pn=10&pg=1' + '">'
+						+ genres_array[i] + ',' +   // display star_name for the link text
+						'</a>';
+				}
 			}
 		}
 		temp_1 += "</p><p> Stars in Movies: ";
@@ -106,13 +114,41 @@ function addToCart(movie_id) {
 
 // Get id from URL
 let movie_id = getParameterByName('id');
+let fulltext= getParameterByName('fulltext');
 let check_counter = getParameterByName('check_counter');
 console.log("CHECK COUNTER IN SINGLE MOVIE PAGE" + check_counter);
+if (check_counter ==null)
+	check_counter=1;
+
 // Makes the HTTP GET request and registers on success callback function handleResult
-jQuery.ajax({
-	dataType: "json",  // Setting return data type
-	method: "GET",// Setting request method
-	cache: true,
-	url: "api/single-movie?id=" + movie_id + "&check_counter=" + check_counter,
-	success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
-});
+if(fulltext!=null && fulltext.length > 0)
+{
+	console.log("fulltext search");
+	jQuery.ajax({
+		dataType: "json",  // Setting return data type
+		method: "GET",// Setting request method
+		cache: true,
+		data:{
+			title: fulltext
+		},
+		url: "api/single-movie?title="+fulltext+"&check_counter="+check_counter,
+		// data: {
+		// 	first_sortby: first_sortby,
+		// 	second_sortby: second_sortby,
+		// 	pg: pg,
+		// 	pn: pn,
+		// 	title_start: title_start
+		// },
+		success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+
+	});
+}
+else {
+	jQuery.ajax({
+		dataType: "json",  // Setting return data type
+		method: "GET",// Setting request method
+		cache: true,
+		url: "api/single-movie?id=" + movie_id + "&check_counter=" + check_counter,
+		success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+	});
+}

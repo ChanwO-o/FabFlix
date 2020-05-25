@@ -57,7 +57,7 @@ public class MainPageServlet extends HttpServlet {
 			statement.close();
 			dbcon.close();
 		} catch (Exception e) {
-		    e.printStackTrace();
+			e.printStackTrace();
 			// write error message JSON object to output
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("errorMessage", e.getMessage());

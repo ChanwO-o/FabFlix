@@ -4,6 +4,9 @@
 # token for Google ReCaptcha
 /web/src/RecaptchaConstants.java
 
+# target dir
+/target
+
 # localhost data source connection
 /web/WebContent/META-INF
 

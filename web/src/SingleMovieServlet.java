@@ -32,8 +32,34 @@ public class SingleMovieServlet extends HttpServlet {
 		response.setContentType("application/json"); // Response mime type
 
 		// Retrieve parameter id from url request.
-		String id = request.getParameter("id");
-//		System.out.println("id: " + id);
+		String id="";
+		String title = request.getParameter("title");
+		System.out.println("title = " + title);
+		if(title!=null && !title.isEmpty())
+		{
+			try {
+				Connection dbcon = dataSource.getConnection();
+				String query = "select id from movies where title=?";
+				PreparedStatement statement = dbcon.prepareStatement(query);
+				statement.setString(1, title);
+				ResultSet rs = statement.executeQuery();
+				if(rs.next())
+				{
+					id = rs.getString("id");
+				}
+				rs.close();
+				statement.close();
+				dbcon.close();
+			}
+
+			catch (Exception e) {
+				e.printStackTrace();
+				response.setStatus(500);
+			}
+		}
+		else
+			id = request.getParameter("id");
+		System.out.println("id: " + id);
 
 		// Output stream to STDOUT
 		PrintWriter out = response.getWriter();
@@ -44,11 +70,11 @@ public class SingleMovieServlet extends HttpServlet {
 			dbcon.setAutoCommit(false);
 
 			String query = 	"select movies.id,movies.title,movies.year,movies.director,ratings.rating,group_concat(distinct stars.id order by stars.id) as stars_id,"+
-			"substring_index(group_concat(distinct genres.name separator ','), ',', 3) as g,"+
-			"group_concat(distinct stars.name order by stars.id) as stars from movies inner join genres_in_movies on movies.id=genres_in_movies.movieId"+
-			" left join ratings on ratings.movieId=movies.id inner join genres on "+
-			" genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId "+
-			" inner join stars on stars_in_movies.starId=stars.id and movies.id =? group by movies.id";
+					"substring_index(group_concat(distinct genres.name separator ','), ',', 3) as g,"+
+					"group_concat(distinct stars.name order by stars.id) as stars from movies left join genres_in_movies on movies.id=genres_in_movies.movieId"+
+					" left join ratings on ratings.movieId=movies.id left join genres on "+
+					" genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId "+
+					" inner join stars on stars_in_movies.starId=stars.id and movies.id =? group by movies.id";
 			PreparedStatement statement = dbcon.prepareStatement(query);
 			statement.setString(1, id);
 			ResultSet rs = statement.executeQuery();
