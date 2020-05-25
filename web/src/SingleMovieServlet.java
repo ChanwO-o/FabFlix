@@ -71,8 +71,8 @@ public class SingleMovieServlet extends HttpServlet {
 
 			String query = 	"select movies.id,movies.title,movies.year,movies.director,ratings.rating,group_concat(distinct stars.id order by stars.id) as stars_id,"+
 					"substring_index(group_concat(distinct genres.name separator ','), ',', 3) as g,"+
-					"group_concat(distinct stars.name order by stars.id) as stars from movies inner join genres_in_movies on movies.id=genres_in_movies.movieId"+
-					" left join ratings on ratings.movieId=movies.id inner join genres on "+
+					"group_concat(distinct stars.name order by stars.id) as stars from movies left join genres_in_movies on movies.id=genres_in_movies.movieId"+
+					" left join ratings on ratings.movieId=movies.id left join genres on "+
 					" genres.id=genres_in_movies.genreId inner join stars_in_movies on movies.id=stars_in_movies.movieId "+
 					" inner join stars on stars_in_movies.starId=stars.id and movies.id =? group by movies.id";
 			PreparedStatement statement = dbcon.prepareStatement(query);

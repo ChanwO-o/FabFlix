@@ -23,7 +23,7 @@ function handleResult(resultData) {
 	// populate the movie info h3
 	// find the empty h3 body by id "movie_info"
 	let movieInfoElement = jQuery("#movie_info");
-
+	console.log("resultDAta= " + resultData[0]);
 	// append two html <p> created to the h3 body, which will refresh the page
 	$.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + resultData[0]["movie_title"], function (json) {
 		//console.log(json.results[0].poster_path);
@@ -45,18 +45,26 @@ function handleResult(resultData) {
 		else {
 			rowHTML = "<img src=" + '"' + "no_image.png" + '"' + " width=" + "100 " + "height=" + "100/>";
 		}
-		var genres_array = resultData[0]["movie_genres"].split(',');
-		let temp_1 = "<p> Genres: ";
-		for (let i = 0; i < genres_array.length; ++i) {
-			if (i === genres_array.length - 1) {
-				temp_1 +=
-					'<a href="movielist.html?genres=' + genres_array[i] +'&pn=10&pg=1' + '">' + genres_array[i]
-					+ '</a>';
-			} else {
-				temp_1 +=
-					'<a href="movielist.html?genres=' + genres_array[i] +'&pn=10&pg=1' + '">'
-					+ genres_array[i] + ',' +   // display star_name for the link text
-					'</a>';
+		var genres_array;
+		let temp_1;
+		if(resultData[0]["movie_gners"]==null)
+		{
+			temp_1="<p> Genres: null";
+		}
+		else {
+			genres_array = resultData[0]["movie_genres"].split(',');
+			temp_1 = "<p> Genres: ";
+			for (let i = 0; i < genres_array.length; ++i) {
+				if (i === genres_array.length - 1) {
+					temp_1 +=
+						'<a href="movielist.html?genres=' + genres_array[i] + '&pn=10&pg=1' + '">' + genres_array[i]
+						+ '</a>';
+				} else {
+					temp_1 +=
+						'<a href="movielist.html?genres=' + genres_array[i] + '&pn=10&pg=1' + '">'
+						+ genres_array[i] + ',' +   // display star_name for the link text
+						'</a>';
+				}
 			}
 		}
 		temp_1 += "</p><p> Stars in Movies: ";
