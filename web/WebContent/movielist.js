@@ -1,4 +1,10 @@
-function handleMovieResult(resultData) {
+/**
+ * Handles the data returned by the API, read the jsonObject and populate data into html elements
+ * @param resultData jsonObject
+ */
+function handleMovieResult(resultData)
+{
+	console.log("3131");
 	// Find the empty table body by id "movie_table_body"
 	let movieTableBodyElement = jQuery("#movie_table_body");
 	if (pg == null || pg === "") {
@@ -31,40 +37,56 @@ function handleMovieResult(resultData) {
 			"</td>";
 		rowHTML += "<td>" + resultData[i]["movie_year"] + "</td>";
 		rowHTML += "<td>" + resultData[i]["movie_director"] + "</td>";
-		let genres_array = resultData[i]["movie_genres"].split(',');
-		rowHTML += "<td>";
-		for (let j = 0; j < 3; ++j) {
-			if (genres_array[j] !== undefined) {
-				if (j === 2 || (genres_array[j + 1] === undefined && (j + 1) < 3)) {
-					rowHTML +=
-						'<a href="movielist.html?pn=10&pg=1&genres=' + genres_array[j] + '">' + genres_array[j]
-						+ '</a>';
-				} else {
-					rowHTML +=
-						'<a href="movielist.html?pn=10&pg=1&genres=' + genres_array[j] + '">' + genres_array[j]
-						+ ',' +   // display star_name for the link text
-						'</a>';
+		let genres_array = null;
+		if (resultData[i]["movie_genres"] ==null)
+		{
+			rowHTML += "<td>";
+			rowHTML += "<p>null</p>";
+		}
+		else {
+			genres_array = resultData[i]["movie_genres"].split(',');
+			rowHTML += "<td>";
+			for (let j = 0; j < 3; ++j) {
+				if (genres_array[j] !== undefined) {
+					if (j === 2 || (genres_array[j + 1] === undefined && (j + 1) < 3)) {
+						rowHTML +=
+							'<a href="movielist.html?pn=10&pg=1&genres=' + genres_array[j] + '">' + genres_array[j]
+							+ '</a>';
+					} else {
+						rowHTML +=
+							'<a href="movielist.html?pn=10&pg=1&genres=' + genres_array[j] + '">' + genres_array[j]
+							+ ',' +   // display star_name for the link text
+							'</a>';
+					}
 				}
 			}
 		}
-
 		rowHTML += "</td>";
 		// stars hyperlinks
 		rowHTML += "<td>";
-		var stars_array = resultData[i]["movie_stars"].split(',');
-		var stars_id_array = resultData[i]["star_id"].split(',');
+		var stars_array=null;
+		var stars_id_array=null;
+		if (resultData[i]["movie_stars"] ==null)
+		{
+			rowHTML += "<p>null</p>";
+		}
+		else {
+			stars_array = resultData[i]["movie_stars"].split(',');
+			stars_id_array = resultData[i]["star_id"].split(',');
 
-		for (let j = 0; j < 3; ++j) {
-			if (stars_array[j] !== undefined) {
-				if (j === 2 || (stars_array[j + 1] === undefined && (j + 1) < 3)) {
-					rowHTML +=
-						'<a href="single-star.html?id=' + stars_id_array[j] + '&check_counter=1' + '">' + stars_array[j]
-						+ '</a>';
-				} else {
-					rowHTML +=
-						'<a href="single-star.html?id=' + stars_id_array[j] + '&check_counter=1' + '">'
-						+ stars_array[j] + ',' +   // display star_name for the link text
-						'</a>';
+
+			for (let j = 0; j < 3; ++j) {
+				if (stars_array[j] !== undefined) {
+					if (j === 2 || (stars_array[j + 1] === undefined && (j + 1) < 3)) {
+						rowHTML +=
+							'<a href="single-star.html?id=' + stars_id_array[j] + '&check_counter=1' + '">' + stars_array[j]
+							+ '</a>';
+					} else {
+						rowHTML +=
+							'<a href="single-star.html?id=' + stars_id_array[j] + '&check_counter=1' + '">'
+							+ stars_array[j] + ',' +   // display star_name for the link text
+							'</a>';
+					}
 				}
 			}
 		}
@@ -131,32 +153,33 @@ let title_start = getParameterByName('title_start');
 let first_sortby = getParameterByName('first_sortby');
 let pn = getParameterByName('pn');
 let pg = getParameterByName('pg');
+let fulltext= getParameterByName('fulltext');
 
 let second_sortby = getParameterByName('second_sortby');
-
-if (title_start != null && title_start.length > 0) {
+if(fulltext !=null && fulltext.length>0)
+{
 	jQuery.ajax({
 		dataType: "json",  // Setting return data type
 		method: "GET",// Setting request method
 		cache: true,
-		url: "api/movies",
 		data: {
-			first_sortby: first_sortby,
-			second_sortby: second_sortby,
-			pg: pg,
-			pn: pn,
-			title_start: title_start
+			fulltext:fulltext
 		},
-		success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+		url: "api/movies",
 
+		success: (resultData) => {
+			handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+		},
+		// error: (resultData) => {
+		// 	handleMovieResult(resultData);
+		// 	console.log((resultData));
+		// 	console.log("RESULT = " + resultData);
+		// 	console.log("ERROR!!!!!!");
+		// }
 	});
-} else {
-	let test = getParameterByName('genres');
-	let first_sortby = getParameterByName('first_sortby');
-	let second_sortby = getParameterByName('second_sortby');
-	var start_time= new Date().getTime();
-	if (test != null && test.length > 1) {
-
+}
+else {
+	if (title_start != null && title_start.length > 0) {
 		jQuery.ajax({
 			dataType: "json",  // Setting return data type
 			method: "GET",// Setting request method
@@ -165,40 +188,71 @@ if (title_start != null && title_start.length > 0) {
 			data: {
 				first_sortby: first_sortby,
 				second_sortby: second_sortby,
-				genres: test,
+				pg: pg,
+				pn: pn,
+				title_start: title_start
 			},
 			success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+
 		});
 	} else {
-		let queryString = window.location.href.split('?');
+		let test = getParameterByName('genres');
+		let first_sortby = getParameterByName('first_sortby');
+		let second_sortby = getParameterByName('second_sortby');
+		var start_time = new Date().getTime();
+		if (test != null && test.length > 1) {
+
+			jQuery.ajax({
+				dataType: "json",  // Setting return data type
+				method: "GET",// Setting request method
+				cache: true,
+				url: "api/movies",
+				data: {
+					first_sortby: first_sortby,
+					second_sortby: second_sortby,
+					genres: test,
+				},
+				success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the singleMovieStar
+			});
+		} else {
+			let queryString = window.location.href.split('?');
 
 
-		if (queryString.length > 1) {
-			let params = queryString[1].split('&');
-			if (params.length > 0) {
-				let first_sortby = getParameterByName('first_sortby');
-				let second_sortby = getParameterByName('second_sortby');
-				let title = params[0].substr(6);
-				let year = params[1].substr(5);
-				let director = params[2].substr(9);
-				let star = params[3].substr(5);
-				jQuery.ajax({
-					dataType: "json", // Setting return data type
-					method: "GET", // Setting request method
-					cache: true,
-					url: "api/movies",
-					data: {
-						first_sortby: first_sortby,
-						second_sortby: second_sortby,
-						title: title,
-						year: year,
-						director: director,
-						star: star,
-						pn: "10",
-						pg: "1"
-					},
-					success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
-				});
+			if (queryString.length > 1) {
+				let params = queryString[1].split('&');
+				if (params.length > 0) {
+					let first_sortby = getParameterByName('first_sortby');
+					let second_sortby = getParameterByName('second_sortby');
+					let title = params[0].substr(6);
+					let year = params[1].substr(5);
+					let director = params[2].substr(9);
+					let star = params[3].substr(5);
+					jQuery.ajax({
+						dataType: "json", // Setting return data type
+						method: "GET", // Setting request method
+						cache: true,
+						url: "api/movies",
+						data: {
+							first_sortby: first_sortby,
+							second_sortby: second_sortby,
+							title: title,
+							year: year,
+							director: director,
+							star: star,
+							pn: "10",
+							pg: "1"
+						},
+						success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
+					});
+				} else {
+					jQuery.ajax({
+						dataType: "json", // Setting return data type
+						method: "GET", // Setting request method
+						cache: true,
+						url: "api/movies",
+						success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
+					});
+				}
 			} else {
 				jQuery.ajax({
 					dataType: "json", // Setting return data type
@@ -208,14 +262,6 @@ if (title_start != null && title_start.length > 0) {
 					success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
 				});
 			}
-		} else {
-			jQuery.ajax({
-				dataType: "json", // Setting return data type
-				method: "GET", // Setting request method
-				cache: true,
-				url: "api/movies",
-				success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the MovieListServlet
-			});
 		}
 	}
 }

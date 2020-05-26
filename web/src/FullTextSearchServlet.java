@@ -42,7 +42,7 @@ public class FullTextSearchServlet extends HttpServlet {
                 count++;
                 String id = rs.getString("id");
                 String title=rs.getString("title");
-                System.out.println("ID = " + id + "Title = " + title);
+//                System.out.println("ID = " + id + "Title = " + title);
                 movielist.put(id,title);
             }
             System.out.println(count);

@@ -96,6 +96,7 @@ $('#autocomplete').autocomplete({
     },
     onSelect: function(suggestion) {
         handleSelectSuggestion(suggestion)
+        $("#container").submit();
     },
     // set delay time
     deferRequestBy: 300,
