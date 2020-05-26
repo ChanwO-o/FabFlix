@@ -10,6 +10,9 @@
 # localhost data source connection
 /web/WebContent/META-INF
 
+# apk
+*.apk
+
 # parser data files
 parsers/*.xml
 # parser output files

@@ -10,6 +10,7 @@ Watch the demos here:
 * Project2: https://www.youtube.com/watch?v=_Wm3XJblF2s
 * Project3 (part 1): https://youtu.be/zswZRMRpi0A
 * Project3 (part 2): https://www.youtube.com/watch?v=oLcK7vvRGkI
+* Project4: 
 
 
 ## Built With
@@ -21,7 +22,7 @@ Watch the demos here:
 * HTML, CSS, JavaScript - Frontend technologies
 
 
-## Installation
+## Installation - web
 
 1 ) Clone the git repository
 ```
@@ -31,7 +32,7 @@ cd cs122b-spring20-team-131
 
 2 ) Install dependencies
 ```
-mvn package
+mvn clean package
 ```
 
 3 ) Export .war file & deploy to Tomcat
@@ -40,6 +41,13 @@ mv cs122b-spring20-team131.war ~/path-to-your-tomcat-installation/webapps
 ```
 
 4 ) View app on browser: visit localhost:8080 to view running app in your browser.
+
+
+## Installation - Android
+
+1 ) Transfer .apk file to your physical device
+
+2 ) Launch .apk file. Give permission to install from external sources
 
 
 ## Substring matching design
@@ -117,10 +125,11 @@ Map<String movieTitle, List<Star> stars>
 
 
 
-## Authors
+## Authors & Contribution
 
-* **Chan Woo Park** - *Frontend & cloud*
-* **Sung Soo Kim** - *Backend database*
+* **Chan Woo Park** - *Frontend, Cloud, Tomcat, Android*
+* **Sung Soo Kim** - *Backend database queries, Servlets, Full-text search*
+
 
 *Workload was equally distributed (pair-programming)*
 *Notice to TA: Sung Soo Kim had to leave back to his home country due to COVID-19. He did not have access to an environment for the week. *
