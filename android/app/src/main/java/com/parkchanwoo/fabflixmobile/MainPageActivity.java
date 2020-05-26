@@ -83,6 +83,8 @@ public class MainPageActivity extends AppCompatActivity {
 		fsvMovieSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
 			@Override
 			public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
+				hideKeyboard();
+				goFullScreen();
 				MovieSuggestion movieSuggestion = (MovieSuggestion) searchSuggestion;
 //				Toast.makeText(MainPageActivity.this, "suggestion clicked: " + movieSuggestion.getMovieEntryId() + " " + movieSuggestion.getMovieTitle(), Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(MainPageActivity.this, SingleMovieActivity.class);

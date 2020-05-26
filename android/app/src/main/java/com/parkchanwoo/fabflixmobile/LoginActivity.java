@@ -2,10 +2,12 @@ package com.parkchanwoo.fabflixmobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -53,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
 		bLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				hideKeyboard();
+				goFullScreen();
 				bLogin.showLoading();
 				login();
 			}
@@ -118,6 +122,17 @@ public class LoginActivity extends AppCompatActivity {
 		loginRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 		// !important: queue.add is where the login request is actually sent
 		queue.add(loginRequest);
+	}
+
+	private void hideKeyboard() {
+		InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+		//Find the currently focused view, so we can grab the correct window token from it.
+		View view = getCurrentFocus();
+		//If no view currently has focus, create a new one, just so we can grab a window token from it
+		if (view == null) {
+			view = new View(this);
+		}
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
 	private void goFullScreen() {

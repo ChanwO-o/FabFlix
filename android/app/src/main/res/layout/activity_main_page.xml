@@ -6,31 +6,63 @@
 	android:layout_height="match_parent"
 	tools:context=".MainPageActivity">
 
-	<com.arlib.floatingsearchview.FloatingSearchView
-		android:id="@+id/fsvMainPage"
+	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="550dp"
-		app:floatingSearch_close_search_on_keyboard_dismiss="true"
-		app:floatingSearch_leftActionMode="showSearch"
-		app:floatingSearch_searchBarMarginLeft="10dp"
-		app:floatingSearch_searchBarMarginRight="10dp"
-		app:floatingSearch_searchBarMarginTop="10dp"
-		app:floatingSearch_searchHint="Search..."
-		app:floatingSearch_showSearchKey="true"
-		app:floatingSearch_suggestionsListAnimDuration="250"
-		app:layout_constraintBottom_toTopOf="@id/bMainPageSearch"
+		android:layout_height="match_parent"
+		android:layout_margin="10dp"
+		android:orientation="horizontal"
+		app:layout_constraintBottom_toTopOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
+
+		<com.arlib.floatingsearchview.FloatingSearchView
+			android:id="@+id/fsvMainPage"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="6"
+			android:padding="5dp"
+			app:floatingSearch_close_search_on_keyboard_dismiss="true"
+			app:floatingSearch_leftActionMode="showSearch"
+			app:floatingSearch_searchHint="Search movies"
+			app:floatingSearch_showSearchKey="true"
+			app:floatingSearch_suggestionsListAnimDuration="250" />
+
+		<ImageView
+			android:id="@+id/bMainPageSearch"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp"
+			android:layout_weight="1"
+			android:background="@color/white"
+			android:padding="5dp"
+			android:src="@android:drawable/ic_menu_search" />
+
+	</LinearLayout>
+
+	<TextView
+		android:id="@+id/tvFullTextSupported"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Full-Text Supported"
+		android:textAlignment="center"
+		android:textColor="@color/white"
+		android:textSize="25sp"
+		android:textStyle="bold"
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
 
-	<Button
-		android:id="@+id/bMainPageSearch"
+	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Search Movies"
-		app:layout_constraintBottom_toBottomOf="parent"
+		android:text="Search by Movie Titles"
+		android:textAlignment="center"
+		android:textColor="@color/white"
+		android:textSize="15sp"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/fsvMainPage" />
+		app:layout_constraintTop_toBottomOf="@id/tvFullTextSupported" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
