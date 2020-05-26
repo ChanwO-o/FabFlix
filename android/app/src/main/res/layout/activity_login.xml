@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".LoginActivity">
+
+
+	<TextView
+		android:id="@+id/tvTitle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:text="FabFlix"
+		android:textColor="@color/red"
+		android:textSize="50sp"
+		android:textStyle="bold"
+		app:layout_constraintBottom_toTopOf="@id/etUsername"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintVertical_bias=".3"
+		app:layout_constraintVertical_chainStyle="packed" />
+
+	<EditText
+		android:id="@+id/etUsername"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="80dp"
+		android:ems="10"
+		android:focusable="true"
+		android:hint="Username"
+		android:textColor="@android:color/white"
+		android:textColorHint="@android:color/white"
+		app:layout_constraintBottom_toTopOf="@id/etPassword"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+	<EditText
+		android:id="@+id/etPassword"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/etUsername"
+		android:ems="10"
+		android:hint="Password"
+		android:inputType="textPassword"
+		android:textColor="@android:color/white"
+		android:textColorHint="@android:color/white"
+		app:layout_constraintBottom_toTopOf="@id/tvLoginMessage"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/etUsername" />
+
+	<TextView
+		android:id="@+id/tvLoginMessage"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="30dp"
+		android:text=""
+		android:textColor="@color/red"
+		android:textSize="12sp"
+		app:layout_constraintBottom_toTopOf="@id/bLogin"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/etPassword" />
+
+	<com.kusu.loadingbutton.LoadingButton
+		android:id="@+id/bLogin"
+		android:layout_width="100dp"
+		android:layout_height="50dp"
+		android:layout_marginTop="20dp"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:text="Login"
+		android:textColor="@color/white"
+		app:lb_buttonColor="@color/black"
+		app:lb_isCircular="true"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/tvLoginMessage"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

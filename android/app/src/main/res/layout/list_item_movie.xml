@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="70dp"
+	android:background="@color/gray"
+	android:orientation="horizontal">
+
+	<TextView
+		android:id="@+id/tvMovieListRowTitle"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="3"
+		android:gravity="center"
+		android:maxLines="3"
+		android:text="title"
+		android:textSize="15sp"
+		android:textStyle="bold" />
+
+	<TextView
+		android:id="@+id/tvMovieListRowYear"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1"
+		android:gravity="center"
+		android:maxLines="1"
+		android:text="year"
+		android:textSize="15sp" />
+
+	<TextView
+		android:id="@+id/tvMovieListRowDirector"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="2"
+		android:gravity="center"
+		android:maxLines="3"
+		android:text="director"
+		android:textSize="10sp" />
+
+	<TextView
+		android:id="@+id/tvMovieListRowGenres"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="2"
+		android:gravity="center"
+		android:maxLines="3"
+		android:text="genres"
+		android:textSize="10sp" />
+
+	<TextView
+		android:id="@+id/tvMovieListRowStars"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="2"
+		android:gravity="center"
+		android:maxLines="3"
+		android:text="stars"
+		android:textSize="10sp" />
+
+</LinearLayout>

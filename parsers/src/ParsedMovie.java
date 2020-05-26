@@ -1,24 +1,24 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Movie {
+public class ParsedMovie {
 	private String title;
 	private int year;
 	private String director;
-	private List<Genre> genres;
+	private List<ParsedGenre> parsedGenres;
 
-	public Movie(String title, int year, String director) {
+	public ParsedMovie(String title, int year, String director) {
 		this.title = title;
 		this.year = year;
 		this.director = director;
-		genres = new ArrayList<>();
+		parsedGenres = new ArrayList<>();
 	}
 
-	public Movie(String title, int year, String director, List<Genre> genres) {
+	public ParsedMovie(String title, int year, String director, List<ParsedGenre> parsedGenres) {
 		this.title = title;
 		this.year = year;
 		this.director = director;
-		this.genres = genres;
+		this.parsedGenres = parsedGenres;
 	}
 
 	public String getTitle() {
@@ -45,20 +45,20 @@ public class Movie {
 		this.director = director;
 	}
 
-	public List<Genre> getGenres() {
-		return genres;
+	public List<ParsedGenre> getParsedGenres() {
+		return parsedGenres;
 	}
 
-	public void setGenres(List<Genre> genres) {
-		this.genres = genres;
+	public void setParsedGenres(List<ParsedGenre> parsedGenres) {
+		this.parsedGenres = parsedGenres;
 	}
 
-	public void addGenre(Genre genre) {
-		this.genres.add(genre);
+	public void addGenre(ParsedGenre parsedGenre) {
+		this.parsedGenres.add(parsedGenre);
 	}
 
 	public void clearGenres() {
-		this.genres.clear();
+		this.parsedGenres.clear();
 	}
 
 	public String toString() {
@@ -66,7 +66,7 @@ public class Movie {
 		sb.append("Movie{title:").append(getTitle());
 		sb.append(", year:").append(getYear());
 		sb.append(", director:").append(getDirector());
-		sb.append(", genres:").append(getGenres()).append("}");
+		sb.append(", genres:").append(getParsedGenres()).append("}");
 		return sb.toString();
 	}
 }

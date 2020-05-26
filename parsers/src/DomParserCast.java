@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DomParserCast {
-	List<Map<String, List<Star>>> myCast;
+	List<Map<String, List<ParsedStar>>> myCast;
 	Document dom;
 	BufferedWriter writer;
 
@@ -72,17 +72,17 @@ public class DomParserCast {
 //			System.out.println("dirfilmsTags # " + i);
 			// the dirfilmsTags tag to work on
 			Node dirfilmsTag = dirfilmsTags.item(i);
-			Map<String, List<Star>> directorMap = new HashMap<>(); // put director's map
+			Map<String, List<ParsedStar>> directorMap = new HashMap<>(); // put director's map
 
 			String title;
-			ArrayList<Star> stars;
+			ArrayList<ParsedStar> parsedStars;
 			for (int j = 0; j < dirfilmsTag.getChildNodes().getLength(); ++j) {
 				Node dataTag = dirfilmsTag.getChildNodes().item(j);
 //				System.out.println("dataTag: " + dataTag.getNodeName());
 				if (dataTag.getNodeName().equals("filmc")) {
 					title = getMovieTitle(dataTag);
-					stars = getStars(dataTag);
-					directorMap.put(title, stars);
+					parsedStars = getStars(dataTag);
+					directorMap.put(title, parsedStars);
 				}
 			}
 //			System.out.println(directorMap);
@@ -122,8 +122,8 @@ public class DomParserCast {
 	/**
 	 * Get list of stars from a <filmc></filmc> node
 	 */
-	private ArrayList<Star> getStars(Node filmcNode) throws IOException {
-		ArrayList<Star> result = new ArrayList<>();
+	private ArrayList<ParsedStar> getStars(Node filmcNode) throws IOException {
+		ArrayList<ParsedStar> result = new ArrayList<>();
 		NodeList mNodes = filmcNode.getChildNodes();
 
 		for (int j = 1; j < mNodes.getLength(); ++j) {
@@ -133,7 +133,7 @@ public class DomParserCast {
 
 				if (mDataTag.getNodeName().equals("a")) {
 					String starName = mDataTag.getTextContent();
-					Star s = new Star(starName);
+					ParsedStar s = new ParsedStar(starName);
 					if (starName == null || starName.isEmpty()) {
 //						System.out.println("Bad Star element: a " + s);
 						writer.write("Bad Star element: a " + s);
@@ -197,14 +197,14 @@ public class DomParserCast {
 
 			String existingMovieQuery = "SELECT movies.id as movieId, stars.id as starId from movies, stars where movies.title = ? and stars.name = ?;";
 
-			for (Map<String, List<Star>> directorMap : myCast) { // title : {stars}
+			for (Map<String, List<ParsedStar>> directorMap : myCast) { // title : {stars}
 				//				System.out.println(count);
-				for (Map.Entry<String, List<Star>> titleStars : directorMap.entrySet()) {
+				for (Map.Entry<String, List<ParsedStar>> titleStars : directorMap.entrySet()) {
 					statement = dbcon.prepareStatement(existingMovieQuery);
 					statement.setString(1, titleStars.getKey());
 
-					for (Star star : titleStars.getValue()) {
-						statement.setString(2, star.getName());
+					for (ParsedStar parsedStar : titleStars.getValue()) {
+						statement.setString(2, parsedStar.getName());
 						rs = statement.executeQuery();
 
 						if (rs.next()) {

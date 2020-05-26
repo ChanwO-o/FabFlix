@@ -15,13 +15,13 @@ import java.util.Iterator;
 import java.util.List;
 
 public class DomParserStars {
-	List<Star> myStars;
+	List<ParsedStar> myParsedStars;
 	Document dom;
 	BufferedWriter writer;
 
 	public DomParserStars() {
 		//create a list to hold the star objects
-		myStars = new ArrayList<>();
+		myParsedStars = new ArrayList<>();
 	}
 
 	public void run(String filename) throws IOException {
@@ -78,11 +78,11 @@ public class DomParserStars {
 				Element el = (Element) actorNodesList.item(i);
 
 				//get the Star object
-				Star s = getStar(el);
+				ParsedStar s = getStar(el);
 
 				//add it to list
 				if (s != null)
-					myStars.add(s);
+					myParsedStars.add(s);
 			}
 		}
 	}
@@ -90,7 +90,7 @@ public class DomParserStars {
 	/**
 	 * Create a Star object out of passed xml element
 	 */
-	private Star getStar(Element empEl) throws IOException {
+	private ParsedStar getStar(Element empEl) throws IOException {
 
 		//for each <star> element get text or int values of stagename, dob
 		String name = getTextValue(empEl, "stagename");
@@ -98,7 +98,7 @@ public class DomParserStars {
 //		System.out.println("name: " + name + " dob: " + dob);
 
 		//Create a new Star with the value read from the xml nodes
-		Star s = new Star(name, dob);
+		ParsedStar s = new ParsedStar(name, dob);
 
 		// report inconsistency if no name
 		if (name == null || name.isEmpty()) {
@@ -113,7 +113,7 @@ public class DomParserStars {
 	/**
 	 * Write inconsistency star data
 	 */
-	private void writeInconsistency(Star s) {
+	private void writeInconsistency(ParsedStar s) {
 
 	}
 
@@ -149,8 +149,8 @@ public class DomParserStars {
 	 * Iterate through the list and print the content to console
 	 */
 	private void printData() {
-		System.out.println("No of Stars '" + myStars.size() + "'.");
-		Iterator<Star> it = myStars.iterator();
+		System.out.println("No of Stars '" + myParsedStars.size() + "'.");
+		Iterator<ParsedStar> it = myParsedStars.iterator();
 //		while (it.hasNext()) {
 //			System.out.println(it.next().toString());
 //		}
@@ -173,10 +173,10 @@ public class DomParserStars {
 
 			String existingStarQuery = "SELECT id from stars where name = ? and birthYear = ?;";
 
-			for (Star star : myStars) {
+			for (ParsedStar parsedStar : myParsedStars) {
 				statement = dbcon.prepareStatement(existingStarQuery);
-				statement.setString(1, star.getName());
-				statement.setInt(2, star.getBirthYear());
+				statement.setString(1, parsedStar.getName());
+				statement.setInt(2, parsedStar.getBirthYear());
 				rs= statement.executeQuery();
 				if(rs.next())
 				{
@@ -194,11 +194,11 @@ public class DomParserStars {
 					String addStarQuery = "INSERT into stars VALUES(?,?,?)";
 					in = dbcon.prepareStatement(addStarQuery);
 					in.setString(1, setId);
-					in.setString(2, star.getName());
-					if (star.getBirthYear() == 0)
+					in.setString(2, parsedStar.getName());
+					if (parsedStar.getBirthYear() == 0)
 						in.setNull(3, Types.INTEGER);
 					else
-						in.setInt(3, star.getBirthYear());
+						in.setInt(3, parsedStar.getBirthYear());
 					in.executeUpdate();
 
 				}
