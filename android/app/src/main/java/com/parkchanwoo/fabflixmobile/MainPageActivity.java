@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -30,7 +29,6 @@ import java.util.Locale;
 public class MainPageActivity extends AppCompatActivity {
 
 	private FloatingSearchView fsvMovieSearchView;
-	private Button bMainPageSearch;
 
 	private static final String URL = "https://18.209.31.65:8443/cs122b-spring20-team-131/fulltext?query=%s";
 
@@ -42,7 +40,6 @@ public class MainPageActivity extends AppCompatActivity {
 		goFullScreen();
 
 		fsvMovieSearchView = findViewById(R.id.fsvMainPage);
-		bMainPageSearch = findViewById(R.id.bMainPageSearch);
 
 		fsvMovieSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
 			@Override
@@ -96,21 +93,6 @@ public class MainPageActivity extends AppCompatActivity {
 			@Override
 			public void onSearchAction(String query) {
 //				Toast.makeText(MainPageActivity.this, "query: " + query, Toast.LENGTH_SHORT).show();
-				hideKeyboard();
-				String searchTerm = fsvMovieSearchView.getQuery();
-				if (searchTerm == null || searchTerm.isEmpty()) {
-					Toast.makeText(MainPageActivity.this, "Search field is empty", Toast.LENGTH_SHORT).show();
-					return;
-				}
-				Intent intent = new Intent(MainPageActivity.this, MovieListActivity.class);
-				intent.putExtra("search", searchTerm);
-				startActivity(intent);
-			}
-		});
-
-		bMainPageSearch.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
 				hideKeyboard();
 				String searchTerm = fsvMovieSearchView.getQuery();
 				if (searchTerm == null || searchTerm.isEmpty()) {
