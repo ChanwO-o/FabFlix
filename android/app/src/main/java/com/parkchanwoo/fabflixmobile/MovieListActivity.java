@@ -40,7 +40,8 @@ public class MovieListActivity extends AppCompatActivity {
 
 	private String searchTerm;
 
-	private static final String URL = "https://18.209.31.65:8443/cs122b-spring20-team-131/api/movies?title=%s&year=&director=&star=";
+//	private static final String URL = "https://18.209.31.65:8443/cs122b-spring20-team-131/api/movies?title=%s&year=&director=&star=";
+	private static final String URL = "https://18.209.31.65:8443/cs122b-spring20-team-131/api/movies?fulltext=%s";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
