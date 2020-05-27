@@ -10,7 +10,9 @@ Watch the demos here:
 * Project2: https://www.youtube.com/watch?v=_Wm3XJblF2s
 * Project3 (part 1): https://youtu.be/zswZRMRpi0A
 * Project3 (part 2): https://www.youtube.com/watch?v=oLcK7vvRGkI
-* Project4: https://www.youtube.com/watch?v=dgpF1f1_ezs
+* Project4 (web demo): https://www.youtube.com/watch?v=mOnUfLHXKDQ
+* Project4 (Android demo): https://www.youtube.com/watch?v=CSyq0X2EUPs
+* Project4 (Android demo, screen recording): https://www.youtube.com/watch?v=pu4MgbKMyYY
 
 
 ## Built With
