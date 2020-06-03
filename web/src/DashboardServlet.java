@@ -22,6 +22,9 @@ public class DashboardServlet extends HttpServlet {
 	@Resource(name = "jdbc/moviedb")
 	private DataSource dataSource;
 
+	@Resource(name = "jdbc/masterdb")
+	private DataSource masterDataSource;
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 //		System.out.println(request.getRequestURI());
 
@@ -144,7 +147,7 @@ public class DashboardServlet extends HttpServlet {
 				String newId = "nm" + (Integer.parseInt(lastStarId.substring(2)) + 1); // get integer portion of id + 1
 				System.out.println("new star id: " + newId);
 				dbcon.close();
-				Connection dbcon2 = dataSource.getConnection();
+				Connection dbcon2 = masterDataSource.getConnection();
 				dbcon2.setAutoCommit(false);
 				String insertStarQuery = "INSERT INTO stars VALUES (?, ?, ?)";
 				//

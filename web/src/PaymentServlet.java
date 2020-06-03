@@ -21,6 +21,9 @@ public class PaymentServlet extends HttpServlet {
 	@Resource(name = "jdbc/moviedb")
 	private DataSource dataSource;
 
+	@Resource(name = "jdbc/masterdb")
+	private DataSource masterDataSource;
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// Get a instance of current session on the request
 		HttpSession session = request.getSession();
@@ -66,7 +69,7 @@ public class PaymentServlet extends HttpServlet {
 		System.out.println("fname: " + fname + " lname: " + lname + " card: " + card + " exp: " + exp);
 
 		try {
-			Connection dbcon = dataSource.getConnection();
+			Connection dbcon = masterDataSource.getConnection();
 			dbcon.setAutoCommit(true);
 			Statement insertSalesStatement = dbcon.createStatement();
 
