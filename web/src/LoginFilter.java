@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Servlet Filter implementation class LoginFilter
  */
-@WebFilter(filterName = "LoginFilter", urlPatterns = "/*")
+@WebFilter(filterName = "LoginFilter", urlPatterns = "/loginfilter")
 public class LoginFilter implements Filter {
 	private final ArrayList<String> allowedURIs = new ArrayList<>();
 
