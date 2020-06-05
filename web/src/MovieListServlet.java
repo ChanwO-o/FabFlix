@@ -2,12 +2,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -31,6 +32,24 @@ public class MovieListServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// measure TS performance
+		long startTimeTs = System.nanoTime();
+//		System.out.println("startTimeTs: " + startTimeTs);
+
+		String contextPath = getServletContext().getRealPath("/");
+		String filePath = contextPath + "\\TJ_TS.txt";
+		File perfLogFile = new File(filePath);
+		FileWriter writer;
+
+		if (!perfLogFile.exists()) {
+			perfLogFile.createNewFile();
+			writer = new FileWriter(perfLogFile, false);
+//			System.out.println("new file created at " + filePath);
+		}
+		else {
+			writer = new FileWriter(perfLogFile, true);
+		}
+
 		response.setContentType("application/json"); // Response mime type
 
 		// Retrieve parameters from url request, replacing '+' (url param behavior) to spaces
@@ -281,6 +300,10 @@ public class MovieListServlet extends HttpServlet {
 						}
 					} else {
 						try {
+							// measure TJ performance
+							long startTimeTj = System.nanoTime();
+//							System.out.println("startTimeTj: " + startTimeTj);
+
 							// Get a connection from dataSource
 							Connection dbcon = dataSource.getConnection();
 							dbcon.setAutoCommit(false);
@@ -322,6 +345,15 @@ public class MovieListServlet extends HttpServlet {
 							// Perform the query
 							ResultSet rs = statement.executeQuery();
 							dbcon.commit();
+
+							// measure TJ for this query
+							long endTimeTj = System.nanoTime();
+							long elapsedTimeTj = endTimeTj - startTimeTj; // elapsed time in nano seconds
+//							System.out.println("TJ: " + elapsedTimeTj);
+
+							synchronized (writer) {
+								writer.write(elapsedTimeTj + " ");
+							}
 
 							JsonArray jsonArray = new JsonArray();
 
@@ -642,5 +674,17 @@ public class MovieListServlet extends HttpServlet {
 				}
 			}
 		}
+
+		// measure TS (entire servlet execution time)
+		long endTimeTs = System.nanoTime();
+		long elapsedTimeTs = endTimeTs - startTimeTs; // elapsed time in nano seconds
+//		System.out.println("TS: " + elapsedTimeTs);
+
+		synchronized (writer) {
+			writer.write(elapsedTimeTs + "\n");
+		}
+
+		writer.flush();
+		writer.close();
 	}
 }
