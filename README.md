@@ -1,137 +1,108 @@
+- # General
+    - #### Team#: 131
+    
+    - #### Names: Chan Woo Park, Sung Soo Kim
+    
+    - #### Project 5 Video Demo Link: https://youtu.be/JDgKM5jj6fk
 
-# FabFlix
+    - #### Instruction of deployment:
+    
+    1 ) Clone the git repository
+    ```
+    git clone https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131.git
+    cd cs122b-spring20-team-131
+    ```
+    
+    2 ) Install dependencies
+    ```
+    mvn clean package
+    ```
+    
+    3 ) Export .war file & deploy to Tomcat
+    ```
+    mv cs122b-spring20-team131.war ~/path-to-your-tomcat-installation/webapps
+    ```
+    
+    4 ) View app on browser: visit localhost:8080 to view running app in your browser.
 
-### CS122b Spring 2020, Team 131
-
-Fabflix is a full stack web application that displays information on movies and stars.
-
-Watch the demos here:
-* Project1: https://www.youtube.com/watch?v=ZovyHm_lWuY
-* Project2: https://www.youtube.com/watch?v=_Wm3XJblF2s
-* Project3 (part 1): https://youtu.be/zswZRMRpi0A
-* Project3 (part 2): https://www.youtube.com/watch?v=oLcK7vvRGkI
-* Project4 (web demo): https://www.youtube.com/watch?v=mOnUfLHXKDQ
-* Project4 (Android demo): https://www.youtube.com/watch?v=CSyq0X2EUPs
-* Project4 (Android demo, screen recording): https://www.youtube.com/watch?v=pu4MgbKMyYY
-
-
-## Built With
-
-* [Amazon Web Services](https://aws.amazon.com/) - Cloud platform deployment
-* [TomCat](https://tomcat.apache.org/) - Web server
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [MySQL](https://www.mysql.com/) - Database and queries
-* HTML, CSS, JavaScript - Frontend technologies
-
-
-## Installation - web
-
-1 ) Clone the git repository
-```
-git clone https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131.git
-cd cs122b-spring20-team-131
-```
-
-2 ) Install dependencies
-```
-mvn clean package
-```
-
-3 ) Export .war file & deploy to Tomcat
-```
-mv cs122b-spring20-team131.war ~/path-to-your-tomcat-installation/webapps
-```
-
-4 ) View app on browser: visit localhost:8080 to view running app in your browser.
+    - #### Collaborations and Work Distribution:
+        Chan Woo Park: Connection pooling, TS/TJ calculation
+        Sung Soo Kim: Master/slave replication, JMeter configuration & performance measurement
 
 
-## Installation - Android
+- # Connection Pooling
+    - #### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
+    web/src/CartServlet.java
+    web/src/LoginServlet.java
+    web/src/MainPageServlet.java
+    web/src/MetadataServlet.java
+    web/src/MovieListServlet.java
+    web/src/SingleMovieServlet.java
+    web/src/SingleStarServlet.java
+    
+    - #### Explain how Connection Pooling is utilized in the Fabflix code.
+    Establishing connections to the database is a resource-heavy task, and thus connection pooling is used to reuse existing connections.
+    Most servlets in our Fabflix code use Connection objects to communicate with the database.
+    When needed, a servlet calls the getConnection() method on the DataSource object.
+    When Connection Pooling is activated, the following setup is made on the datasource object:
+    ```
+    Context initContext = new InitialContext();
+    Context envContext = (Context) initContext.lookup("java:/comp/env");
+    dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
+    ```
+    This way, dataSource.getConnection() will now retrieve existing connections.
+    
+    - #### Explain how Connection Pooling works with two backend SQL.
+    When executing reading operations, pooled Connections can work with either database instance (master or slave).
+    When writing to the database, the connections must go to the master database.
 
-1 ) Transfer .apk file to your physical device
+- # Master/Slave
+    - #### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
+    web/src/PaymentServlet.java
+    web/src/DashboardServlet.java
 
-2 ) Launch .apk file. Give permission to install from external sources
+    - #### How read/write requests were routed to Master/Slave SQL?
+    We added a second data source tag in the context.xml file that points to the master SQL instance.
+    As a result, context.xml contains two resource tags:
+    
+    1) moviedb : allows load balancer to choose which SQL instance to redirect to
+    2) masterdb: always sends request to master SQL instance
+    
+    For any reading operation, either SQL instance can be used. This is because both instances are synced, and will provide the most updated data.
+    For writing operations, the masterdb must be used. This is where we specified the masterdb data source in our two Servlets above.
+    
+    ```
+    Connection dbcon = masterDataSource.getConnection();
+    ```
 
+- # JMeter TS/TJ Time Logs
+    - #### Instructions of how to use the `log_processing.py` script to process the JMeter logs.
+    
+    1 ) Install python3
+    
+    2 ) Edit log_processing.py. On line 2, change the variable filename to the name of your JMeter log file
+    ```
+        filename = 'jmeter_log.txt'
+    ```
+    
+    3 ) Run the python script
+    ```
+        python log_processing.py
+    ```
+    
+    4 ) The TJ and TS values of the log file will be displayed.
 
-## Substring matching design
+- # JMeter TS/TJ Time Measurement Report
 
-When searching for movies, users have the following options for performing advanced search queries
-(Database queries are called in **MovieListServlet.java**):
+| **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | ![img/single-1.png](path to image in img/)   | 168                        | 5.358938                            | 4.80465                   | Linear           |
+| Case 2: HTTP/10 threads                        | ![img/single-10.png](path to image in img/)   | 420                        | 29.58407                            | 26.57975                  | Linear           |
+| Case 3: HTTPS/10 threads                       | ![img/single-https-10.png](path to image in img/)   | 904                        | 47.101473                           | 41.631454                 | Average increases drastically           |
+| Case 4: HTTP/10 threads/No connection pooling  | ![img/single-nopool-10.png](path to image in img/)   | 3360                       | 98.188716                           | 91.848728                 | Average decreases           |
 
-Substrings are passed through url parameters. One default behavior of url parameters is that it treats spaces as '+' characters.
-So first we must replace these back to spaces:
-```
-if(title!=null)
-    title= title.replace('+',' ');
-```
-Then we can query for substrings using the **'LIKE'** keyword in SQL.
-
-* title starts with character
-```
- ..and movies.title like 'A%';
-```
-* title includes string
-```
- ..and movies.title like '%A%';
-```
-* director/star includes string
-```
- ..and movies.director like '%cam%';
-```
-
-
-## Prepared Statements
-Prepared Statements are used to read/write to the database.
-Links to files that use Prepared Statements:
-* [https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/src/MainPageServlet.java](https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/src/MainPageServlet.java)
-* https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/src/MovieListServlet.java
-* https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/src/LoginServlet.java
-* https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/src/SingleStarServlet.java
-* https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/src/SingleMovieServlet.java
-* https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/src/PaymentServlet.java
-
-
-## Inconsistency Data
-Inconsistently parsed XML data is logged into files in (name-of-xml-file).txt format.
-Example: 
-[https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/inconsistencies-mains243.xml.txt](https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131/blob/master/inconsistencies-mains243.xml.txt)
-
-
-
-## Optimization Strategies
-* #### Set conditions for existing (duplicate) data
-e.g. Treat 'Drama' and 'drama ' as the same genre
-We defined a Genre class where the .equals() and hashcode() methods were overridden to return the same values for similar names.
-```
-@Override
-public boolean equals(Object o) {
-	if (o == this)
-		return true;
-	if (!(o instanceof Genre))
-		return false;
-	Genre g = (Genre) o;
-	// treat same-spelled names as the same genre
-	return g.getName().toLowerCase().equals(getName().toLowerCase());
-}
-
-public int hashCode() {
-    return name.toLowerCase().hashCode();
-}
-```
-Then, adding to the Set() of Genre objects will automatically negate duplicate adds.
-
-* #### Organize data into HashMap
-HashMaps are great for searching data in O(1) time. When parsing cast.xml, data is organized by movies to stars, in a 1 : n ratio. So, the data can be placed as such:
-```
-Map<String movieTitle, List<Star> stars>
-```
-
-
-
-## Authors & Contribution
-
-* **Chan Woo Park** - *Frontend, Cloud, Tomcat, Android*
-* **Sung Soo Kim** - *Backend database queries, Servlets, Full-text search*
-
-
-*Workload was equally distributed (pair-programming)*
-*Notice to TA: Sung Soo Kim had to leave back to his home country due to COVID-19. He did not have access to an environment for the week. *
+| **Scaled Version Test Plan**                   | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | ![img/scaled-1.png](path to image in img/)   | 903                        |     78.554848                             | 34.366108                        | Decreased average           |
+| Case 2: HTTP/10 threads                        | ![img/scaled-10.png](path to image in img/)   | 7604                         | 576.688429                                  | 244.700625                        | Error           |
+| Case 3: HTTP/10 threads/No connection pooling  | ![img/scaled-nopool-10.png](path to image in img/)   | 9586                       | 855.783953                          | 572.586797                | Linear           |

@@ -1,6 +1,8 @@
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -68,6 +70,9 @@ public class LoginServlet extends HttpServlet {
 
 				String getUserIdQuery = "SELECT id from customers where email=?";
 				// get user's id
+				Context initContext = new InitialContext();
+				Context envContext = (Context) initContext.lookup("java:/comp/env");
+				dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
 				dbcon = dataSource.getConnection();
 				statement = dbcon.prepareStatement(getUserIdQuery);
 				statement.setString(1, email);

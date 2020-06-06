@@ -2,6 +2,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -81,6 +83,9 @@ public class MovieListServlet extends HttpServlet {
 			tokenStringBuilder.append("'");
 			JsonArray jsonArray = new JsonArray();
 			try {
+				Context initContext = new InitialContext();
+				Context envContext = (Context) initContext.lookup("java:/comp/env");
+				dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
 				Connection dbcon = dataSource.getConnection();
 				String fullTextSearchQuery = "SELECT * FROM ft WHERE MATCH (entry) AGAINST (? IN BOOLEAN MODE) limit 100";
 				PreparedStatement statement = dbcon.prepareStatement(fullTextSearchQuery);
@@ -169,6 +174,9 @@ public class MovieListServlet extends HttpServlet {
 							(director == null || director.equals("")) && (star == null || star.equals(""))) {
 						if ((title_start == null) || title_start == "") {
 							try {
+								Context initContext = new InitialContext();
+								Context envContext = (Context) initContext.lookup("java:/comp/env");
+								dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
 								// Get a connection from dataSource
 								Connection dbcon = dataSource.getConnection();
 
@@ -227,7 +235,9 @@ public class MovieListServlet extends HttpServlet {
 							out.close();
 						} else {
 							try {
-								// Get a connection from dataSource
+								Context initContext = new InitialContext();
+								Context envContext = (Context) initContext.lookup("java:/comp/env");
+								dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
 								Connection dbcon = dataSource.getConnection();
 								dbcon.setAutoCommit(false);
 
@@ -304,7 +314,9 @@ public class MovieListServlet extends HttpServlet {
 							long startTimeTj = System.nanoTime();
 //							System.out.println("startTimeTj: " + startTimeTj);
 
-							// Get a connection from dataSource
+							Context initContext = new InitialContext();
+							Context envContext = (Context) initContext.lookup("java:/comp/env");
+							dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
 							Connection dbcon = dataSource.getConnection();
 							dbcon.setAutoCommit(false);
 
@@ -403,8 +415,9 @@ public class MovieListServlet extends HttpServlet {
 					}
 				} else { // browse by genres query on
 					try {
-
-						// Get a connection from dataSource
+						Context initContext = new InitialContext();
+						Context envContext = (Context) initContext.lookup("java:/comp/env");
+						dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
 						Connection dbcon = dataSource.getConnection();
 						// Declare our statement
 						//					Statement statement = dbcon.createStatement();
@@ -529,7 +542,9 @@ public class MovieListServlet extends HttpServlet {
 				}
 			} else { // sorting here
 				try {
-					// Get a connection from dataSource
+					Context initContext = new InitialContext();
+					Context envContext = (Context) initContext.lookup("java:/comp/env");
+					dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
 					Connection dbcon = dataSource.getConnection();
 					dbcon.setAutoCommit(false);
 
