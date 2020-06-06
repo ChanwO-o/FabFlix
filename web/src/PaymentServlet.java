@@ -1,6 +1,9 @@
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -69,6 +72,9 @@ public class PaymentServlet extends HttpServlet {
 		System.out.println("fname: " + fname + " lname: " + lname + " card: " + card + " exp: " + exp);
 
 		try {
+			Context initContext = new InitialContext();
+			Context envContext = (Context) initContext.lookup("java:/comp/env");
+			masterDataSource = (DataSource) envContext.lookup("jdbc/masterdb");
 			Connection dbcon = masterDataSource.getConnection();
 			dbcon.setAutoCommit(true);
 			Statement insertSalesStatement = dbcon.createStatement();
@@ -125,7 +131,7 @@ public class PaymentServlet extends HttpServlet {
 			rs.close();
 			cardStatement.close();
 			dbcon.close();
-		} catch (IOException | SQLException e) {
+		} catch (IOException | SQLException | NamingException e) {
 			e.printStackTrace();
 		}
 	}
