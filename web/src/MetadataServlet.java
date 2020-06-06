@@ -1,6 +1,8 @@
 import java.io.*;
 import java.sql.*;
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -46,7 +48,9 @@ public class MetadataServlet extends HttpServlet {
             System.out.println(p);
             if (request.getParameter("showMetadata") != null)
             {
-
+                Context initContext = new InitialContext();
+                Context envContext = (Context) initContext.lookup("java:/comp/env");
+                dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
                 Connection dbcon = dataSource.getConnection();
                 DatabaseMetaData metadata = dbcon.getMetaData();
 

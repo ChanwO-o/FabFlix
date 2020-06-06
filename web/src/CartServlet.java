@@ -2,6 +2,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -90,6 +93,9 @@ public class CartServlet extends HttpServlet {
 		}
 
 		try {
+			Context initContext = new InitialContext();
+			Context envContext = (Context) initContext.lookup("java:/comp/env");
+			dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
 			Connection dbcon = dataSource.getConnection(); // Get a connection from dataSource
 			dbcon.setAutoCommit(false);
 			String query = "select movies.id,movies.title,movies.year,movies.director," +
@@ -153,7 +159,7 @@ public class CartServlet extends HttpServlet {
 			rs.close();
 			statement.close();
 			dbcon.close();
-		} catch (SQLException e) {
+		} catch (SQLException | NamingException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 			JsonObject jsonObject = new JsonObject();

@@ -2,6 +2,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +24,9 @@ public class DashboardServlet extends HttpServlet {
 
 	@Resource(name = "jdbc/moviedb")
 	private DataSource dataSource;
+
+	@Resource(name = "jdbc/masterdb")
+	private DataSource masterDataSource;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 //		System.out.println(request.getRequestURI());
@@ -43,6 +49,9 @@ public class DashboardServlet extends HttpServlet {
 			if(title == null || director == null || year == null || genre == null || star_name == null)
 				return;
 			try{
+				Context initContext = new InitialContext();
+				Context envContext = (Context) initContext.lookup("java:/comp/env");
+				dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
 				Connection dbcon = dataSource.getConnection();
 
 				// check if movie exists
@@ -122,13 +131,16 @@ public class DashboardServlet extends HttpServlet {
 				out.write(jsonArray.toString());
 				dbcon3.close();
 			}
-			catch (SQLException e) {
+			catch (SQLException | NamingException e) {
 				e.printStackTrace();
 			}
 			out.close();
 		}
 		else { // add star
 			try {
+				Context initContext = new InitialContext();
+				Context envContext = (Context) initContext.lookup("java:/comp/env");
+				dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
 				Connection dbcon = dataSource.getConnection();
 				dbcon.setAutoCommit(false);
 
@@ -144,7 +156,7 @@ public class DashboardServlet extends HttpServlet {
 				String newId = "nm" + (Integer.parseInt(lastStarId.substring(2)) + 1); // get integer portion of id + 1
 				System.out.println("new star id: " + newId);
 				dbcon.close();
-				Connection dbcon2 = dataSource.getConnection();
+				Connection dbcon2 = masterDataSource.getConnection();
 				dbcon2.setAutoCommit(false);
 				String insertStarQuery = "INSERT INTO stars VALUES (?, ?, ?)";
 				//
@@ -174,7 +186,7 @@ public class DashboardServlet extends HttpServlet {
 				jsonArray.add(jsonObject);
 //				response.getWriter().write(jsonArray.toString());
 				response.getWriter().write(jsonArray.toString());
-			} catch (SQLException e) {
+			} catch (SQLException | NamingException e) {
 				e.printStackTrace();
 			}
 		}
