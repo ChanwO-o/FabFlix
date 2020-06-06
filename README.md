@@ -27,18 +27,19 @@
 
     - #### Collaborations and Work Distribution:
         Chan Woo Park: Connection pooling, TS/TJ calculation
+        
         Sung Soo Kim: Master/slave replication, JMeter configuration & performance measurement
 
 
 - # Connection Pooling
     - #### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
-    web/src/CartServlet.java
-    web/src/LoginServlet.java
-    web/src/MainPageServlet.java
-    web/src/MetadataServlet.java
-    web/src/MovieListServlet.java
-    web/src/SingleMovieServlet.java
-    web/src/SingleStarServlet.java
+    * web/src/CartServlet.java
+    * web/src/LoginServlet.java
+    * web/src/MainPageServlet.java
+    * web/src/MetadataServlet.java
+    * web/src/MovieListServlet.java
+    * web/src/SingleMovieServlet.java
+    * web/src/SingleStarServlet.java
     
     - #### Explain how Connection Pooling is utilized in the Fabflix code.
     Establishing connections to the database is a resource-heavy task, and thus connection pooling is used to reuse existing connections.
@@ -82,12 +83,12 @@
     
     2 ) Edit log_processing.py. On line 2, change the variable filename to the name of your JMeter log file
     ```
-        filename = 'jmeter_log.txt'
+    filename = 'jmeter_log.txt'
     ```
     
     3 ) Run the python script
     ```
-        python log_processing.py
+    python log_processing.py
     ```
     
     4 ) The TJ and TS values of the log file will be displayed.
@@ -96,13 +97,13 @@
 
 | **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
 |------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
-| Case 1: HTTP/1 thread                          | ![img/single-1.png](path to image in img/)   | 168                        | 5.358938                            | 4.80465                   | Linear           |
-| Case 2: HTTP/10 threads                        | ![img/single-10.png](path to image in img/)   | 420                        | 29.58407                            | 26.57975                  | Linear           |
-| Case 3: HTTPS/10 threads                       | ![img/single-https-10.png](path to image in img/)   | 904                        | 47.101473                           | 41.631454                 | Average increases drastically           |
-| Case 4: HTTP/10 threads/No connection pooling  | ![img/single-nopool-10.png](path to image in img/)   | 3360                       | 98.188716                           | 91.848728                 | Average decreases           |
+| Case 1: HTTP/1 thread                          | ![](img/single-1.png)   | 168                        | 5.358938                            | 4.80465                   | Linear           |
+| Case 2: HTTP/10 threads                        | ![](img/single-10.png)   | 420                        | 29.58407                            | 26.57975                  | Linear           |
+| Case 3: HTTPS/10 threads                       | ![](img/single-https-10.png)   | 904                        | 47.101473                           | 41.631454                 | Average increases drastically           |
+| Case 4: HTTP/10 threads/No connection pooling  | ![](img/single-nopool-10.png)   | 3360                       | 98.188716                           | 91.848728                 | Average decreases           |
 
 | **Scaled Version Test Plan**                   | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
 |------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
-| Case 1: HTTP/1 thread                          | ![img/scaled-1.png](path to image in img/)   | 903                        |     78.554848                             | 34.366108                        | Decreased average           |
-| Case 2: HTTP/10 threads                        | ![img/scaled-10.png](path to image in img/)   | 7604                         | 576.688429                                  | 244.700625                        | Error           |
-| Case 3: HTTP/10 threads/No connection pooling  | ![img/scaled-nopool-10.png](path to image in img/)   | 9586                       | 855.783953                          | 572.586797                | Linear           |
+| Case 1: HTTP/1 thread                          | ![](img/scaled-1.png)   | 903                        |     78.554848                             | 34.366108                        | Decreased average           |
+| Case 2: HTTP/10 threads                        | ![](img/scaled-10.png)   | 7604                         | 576.688429                                  | 244.700625                        | Error           |
+| Case 3: HTTP/10 threads/No connection pooling  | ![](img/scaled-nopool-10.png)   | 9586                       | 855.783953                          | 572.586797                | Linear           |
