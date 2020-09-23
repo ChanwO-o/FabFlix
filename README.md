@@ -1,21 +1,24 @@
-- # General
-    - #### Team#: 131
-    
-    - #### Names: Chan Woo Park, Sung Soo Kim
-    
-    - #### Authentication, Search & Sorting, cart: https://youtu.be/_Wm3XJblF2s
-    - #### Full-text search: https://youtu.be/mOnUfLHXKDQ
-    - #### Android app Demo I: https://youtu.be/pu4MgbKMyYY
-    - #### Android app Demo II: https://youtu.be/CSyq0X2EUPs
-    - #### Master/slave servers, HTTP testing: https://youtu.be/KML-va-tUH8
-    - #### Deploy Tomcat & pages UI: https://youtu.be/ZovyHm_lWuY
+# FabFlix
 
-    - #### Instruction of deployment:
+Fabflix is a full stack web application that displays information on movies and stars.
+Developers: Chan Woo Park, Sung Soo Kim
     
-    1 ) Clone the git repository
+
+## **Demos**
+    
+    - #### [Authentication, Search & Sorting, cart](https://youtu.be/_Wm3XJblF2s "Authentication, Search & Sorting, cart")
+    - #### [Full-text search](https://youtu.be/mOnUfLHXKDQ "Full-text search")
+    - #### [Android app Demo I](https://youtu.be/pu4MgbKMyYY "Android app Demo I")
+    - #### [Android app Demo II](https://youtu.be/CSyq0X2EUPs "Android app Demo II")
+    - #### [Master/slave servers, HTTP testing](https://youtu.be/KML-va-tUH8 "Master/slave servers, HTTP testing")
+    - #### [Deploy Tomcat & pages UI](https://youtu.be/ZovyHm_lWuY "Deploy Tomcat & pages UI")
+
+## Instruction of deployment
+    
+    1 ) Download source, or clone the git repository
     ```
-    git clone https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-131.git
-    cd cs122b-spring20-team-131
+    git clone https://github.com/ChanwO-o/FabFlix.git
+    cd FabFlix
     ```
     
     2 ) Install dependencies
@@ -37,7 +40,7 @@
 
 
 - # Connection Pooling
-    - #### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
+    The following source/configuration files use JDBC connection pooling:
     * web/src/CartServlet.java
     * web/src/LoginServlet.java
     * web/src/MainPageServlet.java
@@ -46,7 +49,7 @@
     * web/src/SingleMovieServlet.java
     * web/src/SingleStarServlet.java
     
-    - #### Explain how Connection Pooling is utilized in the Fabflix code.
+
     Establishing connections to the database is a resource-heavy task, and thus connection pooling is used to reuse existing connections.
     Most servlets in our Fabflix code use Connection objects to communicate with the database.
     When needed, a servlet calls the getConnection() method on the DataSource object.
