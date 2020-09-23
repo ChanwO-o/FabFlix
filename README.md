@@ -1,8 +1,16 @@
-# FabFlix
+# FabFlix 🍿🥤
 
 Fabflix is a full stack web application that displays information on movies and stars.
+
 Developers: Chan Woo Park, Sung Soo Kim
     
+## Built With
+
+* [Amazon Web Services](https://aws.amazon.com/) - Cloud platform deployment
+* [TomCat](https://tomcat.apache.org/) - Web server
+* [Maven](https://maven.apache.org/) - Dependency Management
+* [MySQL](https://www.mysql.com/) - Database and queries
+* HTML, CSS, JavaScript - Frontend technologies
 
 ## **Demos**
     
@@ -13,28 +21,117 @@ Developers: Chan Woo Park, Sung Soo Kim
 - [Master/slave servers, HTTP testing](https://youtu.be/KML-va-tUH8 "Master/slave servers, HTTP testing")
 - [Deploy Tomcat & pages UI](https://youtu.be/ZovyHm_lWuY "Deploy Tomcat & pages UI")
 
-## Instruction of deployment
+## Installation (web)
 
-1 ) Download source, or clone the git repository
+1. Download source, or clone the git repository
 ```
 git clone https://github.com/ChanwO-o/FabFlix.git
 cd FabFlix
 ```
 
-2 ) Install dependencies
+2. Install dependencies
 ```
 mvn clean package
 ```
 
-3 ) Export .war file & deploy to Tomcat
+3. Export .war file & deploy to Tomcat
 ```
 mv cs122b-spring20-team131.war ~/path-to-your-tomcat-installation/webapps
 ```
 
-4 ) View app on browser: visit localhost:8080 to view running app in your browser.
+4. View app on browser: visit localhost:8080 to view running app in your browser.
 
 
-# Connection Pooling
+## Installation (Android)
+
+1. Download & transfer .apk file to your physical device
+
+2. Launch .apk file. Give permission to install from external sources
+
+
+
+
+# Development techniques
+The remainder of this document will explain different techniques used in the development of this app
+
+
+
+
+### Substring matching design
+
+When searching for movies, users have the following options for performing advanced search queries
+(Database queries are called in **MovieListServlet.java**):
+
+Substrings are passed through url parameters. One default behavior of url parameters is that it treats spaces as '+' characters.
+So first we must replace these back to spaces:
+```
+if(title!=null)
+    title= title.replace('+',' ');
+```
+Then we can query for substrings using the **'LIKE'** keyword in SQL.
+
+* title starts with character
+```
+ ..and movies.title like 'A%';
+```
+* title includes string
+```
+ ..and movies.title like '%A%';
+```
+* director/star includes string
+```
+ ..and movies.director like '%cam%';
+```
+
+
+### Prepared Statements
+Prepared Statements are used to read/write to the database.
+Files that use Prepared Statements:
+* src/MainPageServlet.java
+* src/MovieListServlet.java
+* src/LoginServlet.java
+* src/SingleStarServlet.java
+* src/SingleMovieServlet.java
+* src/PaymentServlet.java
+
+
+### Inconsistency Data
+Inconsistently parsed XML data is logged into files in (name-of-xml-file).txt format.
+Example can be found at:  `inconsistencies-mains243.xml.txt`
+
+
+
+### Optimization Strategies
+* #### Set conditions for existing (duplicate) data
+e.g. Treat 'Drama' and 'drama ' as the same genre
+We defined a Genre class where the .equals() and hashcode() methods were overridden to return the same values for similar names.
+```
+	@Override
+	public boolean equals(Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof Genre))
+			return false;
+		Genre g = (Genre) o;
+		// treat same-spelled names as the same genre
+		return g.getName().toLowerCase().equals(getName().toLowerCase());
+	}
+
+	public int hashCode() {
+		return name.toLowerCase().hashCode();
+	}
+```
+Then, adding to the Set() of Genre objects will automatically negate duplicate adds.
+
+* #### Organize data into HashMap
+HashMaps are great for searching data in O(1) time. When parsing cast.xml, data is organized by movies to stars, in a 1 : n ratio. So, the data can be placed as such:
+```
+Map<String movieTitle, List<Star> stars>
+```
+
+
+
+## Connection Pooling
 The following source/configuration files use JDBC connection pooling:
 * web/src/CartServlet.java
 * web/src/LoginServlet.java
