@@ -3,7 +3,12 @@
     
     - #### Names: Chan Woo Park, Sung Soo Kim
     
-    - #### Project 5 Video Demo Link: https://youtu.be/KML-va-tUH8
+    - #### Authentication, Search & Sorting, cart: https://youtu.be/_Wm3XJblF2s
+    - #### Full-text search: https://youtu.be/mOnUfLHXKDQ
+    - #### Android app Demo I: https://youtu.be/pu4MgbKMyYY
+    - #### Android app Demo II: https://youtu.be/CSyq0X2EUPs
+    - #### Master/slave servers, HTTP testing: https://youtu.be/KML-va-tUH8
+    - #### Deploy Tomcat & pages UI: https://youtu.be/ZovyHm_lWuY
 
     - #### Instruction of deployment:
     
